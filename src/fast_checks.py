@@ -22,7 +22,9 @@ def run_fast_checks(bridge, request):
     assert len(first['context']['skill'].splitlines()) <= 40
     assert context.get({'chat_id': 'fixture', 'include_skill': True, 'design_namespace': 'place:333'})['skipped']
     assert context.get({'chat_id': 'fast', 'mode': 'FAST', 'include_skill': True})['skipped']
+    assert context.get({'chat_id': 'fast', 'include_skill': True})['skipped']
     assert context.get({'chat_id': 'read', 'rules_read': True, 'include_skill': True, 'design_namespace': 'place:333'})['skipped']
+    assert context.get({'chat_id': 'read', 'include_skill': True, 'design_namespace': 'place:333'})['skipped']
     assert not context.get({'chat_id': 'separate'})['skipped']
     large = {'content': [{'type': 'text', 'text': 'A' * 6000}, {'type': 'text', 'text': 'B' * 3000}], 'structuredContent': {'dump': 'X' * 10000}, 'isError': True}
     compact = RobloxGateway.compact(large)

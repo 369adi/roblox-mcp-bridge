@@ -64,7 +64,7 @@ class RobloxContext:
 
     def get(self, args):
         chat = self.workspace._text(args.get('chat_id'), 'chat_id', 200)
-        mode = args.get('mode', 'NORMAL').upper()
+        mode = args.get('mode', self.chats.get(chat, {}).get('mode', 'NORMAL')).upper()
         if mode not in ('NORMAL', 'FAST'):
             raise ValueError('mode must be NORMAL or FAST')
         with self.lock:
@@ -72,8 +72,10 @@ class RobloxContext:
             self.chats = {k: v for k, v in self.chats.items() if now - v['time'] < 86400}
             state = self.chats.get(chat, {'time': now, 'loaded': set(), 'mode': mode})
             state['mode'], state['time'] = mode, now
+            if args.get('rules_read'):
+                state['skip'] = True
             result = {'mode': mode, 'context': {}}
-            if mode != 'FAST' and not args.get('rules_read', False):
+            if mode != 'FAST' and not state.get('skip', False):
                 if 'rules' not in state['loaded']:
                     result['context']['rules'] = self.workspace.recall({'namespace': 'global', 'id': 'roblox-rules'})['notes']
                     state['loaded'].add('rules')
