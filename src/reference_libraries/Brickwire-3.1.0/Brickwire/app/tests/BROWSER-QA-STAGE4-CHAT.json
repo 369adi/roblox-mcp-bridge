@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "errors": [],
+  "checks": [
+    "real provider configuration saved without keys",
+    "API conversation creation and actual local HTTP transport",
+    "scoped source approval surfaced in API-chat",
+    "explicit rejection continues to PARTIAL, never fake DONE",
+    "persisted assistant/user history and mobile layout",
+    "actual WebGL framebuffer contains rendered geometry"
+  ]
+}

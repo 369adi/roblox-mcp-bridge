@@ -1,0 +1,194 @@
+{
+  "stage": 5,
+  "name": "Cumulative App/Plugin Depth interface, animation editor, live graph watch, provider streaming",
+  "completePlatform": false,
+  "scope": [
+    "app/",
+    "bridge/",
+    "plugin/"
+  ],
+  "applicationVersion": "2.4.0",
+  "build": "node app/build.mjs passed; extension/shared not built",
+  "tests": {
+    "total": 251,
+    "passed": 233,
+    "failed": 0,
+    "skipped": 18,
+    "newStage5Tests": 15,
+    "skipReason": "Luau binary missing",
+    "originalTestsEdited": false,
+    "actualStudioTested": false,
+    "productionProviderTested": false,
+    "studioFixture": "Explicit test-only JavaScript contract fixture; not Luau execution",
+    "providerStreamingFixture": "Local SSE HTTP fixture; no real account"
+  },
+  "browser": {
+    "DEPTH": {
+      "passed": true,
+      "errors": [],
+      "checks": [
+        "new sculpted shell across all workspaces",
+        "real shaded WebGL solid/wireframe and camera controls",
+        "joint pose edit, persistent draft, real JSON export",
+        "undo/redo and adding timed keyframe",
+        "local motion playback",
+        "real graph watch observation and stop",
+        "desktop/mobile no page-wide horizontal overflow"
+      ]
+    },
+    "CHAT": {
+      "passed": true,
+      "errors": [],
+      "checks": [
+        "real provider configuration saved without keys",
+        "API conversation creation and actual local HTTP transport",
+        "scoped source approval surfaced in API-chat",
+        "explicit rejection continues to PARTIAL, never fake DONE",
+        "persisted assistant/user history and mobile layout",
+        "actual WebGL framebuffer contains rendered geometry"
+      ]
+    },
+    "EDITORS": {
+      "passed": true,
+      "errors": [],
+      "checks": [
+        "actual brush changes raster pixels",
+        "undo/redo restores matching pixels",
+        "real PNG download 1920x1080",
+        "embedded Paint uses actual outbox endpoint, not unanswered parent postMessage",
+        "queued is not delivery success",
+        "UI Builder creates a real editable UIDoc element",
+        "Paint/UI Builder desktop and mobile internal bounds, no horizontal overflow",
+        "VFX timeline controls visible"
+      ]
+    },
+    "I18N": {
+      "passed": true,
+      "errors": [],
+      "lang": "en",
+      "sectionsScanned": [
+        "home",
+        "chat",
+        "autopilot",
+        "paint",
+        "lab",
+        "vfx",
+        "designer",
+        "scripts",
+        "qa",
+        "project",
+        "history",
+        "library",
+        "skills",
+        "mcp",
+        "integrations",
+        "settings",
+        "updates",
+        "license"
+      ],
+      "extraPages": [
+        "/",
+        "/mcp"
+      ],
+      "dialogs": [
+        "new task",
+        "add MCP server",
+        "new API conversation",
+        "import Skill",
+        "mesh preview"
+      ],
+      "remainingCyrillicUiText": 0,
+      "checks": [
+        "every section rendered in English",
+        "embedded Paint/UI Builder iframes scanned",
+        "placeholders/titles/aria-labels translated",
+        "user chat content excluded from translation"
+      ]
+    }
+  },
+  "visualQA": {
+    "status": "individually inspected; obsolete gold selectors corrected and recaptured",
+    "desktop": [
+      1440,
+      1080
+    ],
+    "mobile": [
+      390,
+      844
+    ],
+    "states": [
+      "home with real WebGL crystals",
+      "lab solid/wireframe",
+      "animation editor",
+      "project graph watch",
+      "VFX",
+      "VFX timeline",
+      "designer",
+      "scripts",
+      "QA",
+      "settings",
+      "integrations",
+      "skills",
+      "MCP",
+      "autopilot",
+      "Paint",
+      "UI Builder",
+      "API chat streaming/approval/PARTIAL",
+      "mobile lab/project/VFX/settings/animation/chat/Paint/UI Builder"
+    ],
+    "emojiStickersInAppUI": false,
+    "actualGamePreview": false
+  },
+  "localization": {
+    "languages": [
+      "ru",
+      "en"
+    ],
+    "switch": "top bar RU/EN, stored in localStorage brickwire.lang",
+    "dictionaryEntries": 792,
+    "coverageTest": true,
+    "extensionChanged": false
+  },
+  "fixedThisStage": [
+    "PARTIAL/BLOCKED tasks no longer lock a Studio session; only RUNNING/PAUSED do",
+    "Autopilot theme selectors (#runtime-root) moved to depth palette"
+  ],
+  "skillInventory": {
+    "skills": 11,
+    "templates": 22,
+    "distinctOriginalResources": 52,
+    "defaultsEnabled": false,
+    "shaVerified": true
+  },
+  "plugin": {
+    "xmlParsed": true,
+    "sourceMatchesLua": true,
+    "StudioRuntimeTested": false
+  },
+  "protectedScope": {
+    "extensionFilesByteIdentical": 54,
+    "sharedFilesByteIdentical": 40,
+    "originalTestsEdited": false,
+    "removedOriginalFiles": 0
+  },
+  "notCompleted": [
+    "event-level continuous Live Game Graph (periodic watch only)",
+    "multi-agent swarm workflow",
+    "universal project rollback",
+    "bone gizmos, scanned-rig skinning, curve editor",
+    "complete Play/visual game acceptance",
+    "unified multimedia import/edit/publish",
+    "HTTP/SSE MCP transport",
+    "app-to-browser SSE/WebSocket (polling used)"
+  ],
+  "unverified": [
+    "actual Roblox Studio and Play",
+    "Luau compilation",
+    "VFX and animation runtime/visual acceptance (Elastic/Bounce, rigs)",
+    "Blender runtime/import",
+    "signed-in production AI/image/Open Cloud services",
+    "Electron/Windows/macOS binaries/installers",
+    "full TypeScript compiler check",
+    "rights to all third-party assets/icons"
+  ]
+}

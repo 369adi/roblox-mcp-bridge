@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "checks": [
+    "Real HTTP task create/start",
+    "Manual tool confirmation and mock Studio mutation",
+    "Fresh structural inspection and acceptance",
+    "Desktop/mobile horizontal overflow",
+    "MCP and task navigation",
+    "No browser page errors"
+  ],
+  "errors": []
+}

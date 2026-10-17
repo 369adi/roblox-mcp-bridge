@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "errors": [],
+  "activeNavVisible": true,
+  "allCardChildrenInside": true,
+  "checks": [
+    "Mobile card bounds and no overlapping labels",
+    "Inner list scroll rather than shrinking cards",
+    "Active nav visible",
+    "Selection scrolls to detail",
+    "No document horizontal overflow"
+  ]
+}

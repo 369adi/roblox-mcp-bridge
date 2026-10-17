@@ -1,0 +1,100 @@
+{
+  "stage": 3,
+  "completePlatform": false,
+  "scope": [
+    "app/",
+    "bridge/",
+    "plugin/"
+  ],
+  "applicationVersion": "2.4.0",
+  "build": "node app/build.mjs passed",
+  "skillInventory": {
+    "skills": 11,
+    "templates": 22,
+    "distinctOriginalResources": 52,
+    "defaultsEnabled": false,
+    "allOriginalArchiveFilesRetainedBySha256": true
+  },
+  "tests": {
+    "total": 222,
+    "passed": 204,
+    "failed": 0,
+    "skipped": 18,
+    "newSkillsTests": 9,
+    "skipReason": "Luau binary missing",
+    "originalTestsEdited": false,
+    "actualStudioTested": false,
+    "productionProviderTested": false
+  },
+  "browser": {
+    "passed": true,
+    "errors": [],
+    "checks": [
+      "11 disabled bundled Skills and 22 templates",
+      "Explicit activation and refusal without acknowledgment",
+      "Resource pagination",
+      "Composed Kit export and real browser download",
+      "JSON import defaults disabled",
+      "Duplicate import does not create extra record",
+      "Escaped imported text",
+      "Search empty state",
+      "Desktop/mobile horizontal overflow",
+      "Navigation to Autopilot/MCP"
+    ]
+  },
+  "mobile": {
+    "passed": true,
+    "errors": [],
+    "activeNavVisible": true,
+    "allCardChildrenInside": true,
+    "checks": [
+      "Mobile card bounds and no overlapping labels",
+      "Inner list scroll rather than shrinking cards",
+      "Active nav visible",
+      "Selection scrolls to detail",
+      "No document horizontal overflow"
+    ]
+  },
+  "visualQA": {
+    "status": "passed after fixes",
+    "desktop": [
+      1440,
+      1080
+    ],
+    "mobile": [
+      390,
+      844
+    ],
+    "states": [
+      "catalog",
+      "explicit activation rejection",
+      "active skill",
+      "resource pager",
+      "template source export",
+      "import dialog",
+      "imported disabled skill",
+      "empty search",
+      "mobile list",
+      "mobile import"
+    ],
+    "actualGamePreview": false
+  },
+  "plugin": {
+    "xmlParsed": true,
+    "sourceMatchesLua": true,
+    "StudioRuntimeTested": false
+  },
+  "protectedScope": {
+    "extensionFilesByteIdentical": 54,
+    "sharedFilesByteIdentical": 40
+  },
+  "unverified": [
+    "Roblox Studio and Play",
+    "Blender runtime/import",
+    "signed-in AI providers",
+    "Electron/Windows/macOS packaging",
+    "Luau compilation",
+    "full TypeScript type checking",
+    "rights to all third-party icons/assets"
+  ]
+}

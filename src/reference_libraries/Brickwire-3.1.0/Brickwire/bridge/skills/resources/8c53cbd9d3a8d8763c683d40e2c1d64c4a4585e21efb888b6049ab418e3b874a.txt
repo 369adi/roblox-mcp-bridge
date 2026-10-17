@@ -1,0 +1,7 @@
+Lurong UI training pack
+- gui-templates/GEMINI_GUI_AGENT.md : the main UI (GUI) training prompt
+- gui-templates/_kit.lua            : shared Kit (themes, styles, dock, Kit.check layout checker)
+- gui-templates/*.lua, README.md    : ready templates (shops, HUDs, codes, rebirth, spin wheel...) + catalogue
+- checkui/                          : Check-UI Luau modules, SKILL.md, DESIGN_SYSTEM.md, NOTICE.md (icons/components)
+- agent-instructions/               : related references (AGENT core, checkui, interface-logic, monetization, data, security)
+Load order: AGENT.md core -> GEMINI_GUI_AGENT.md + template catalogue (the "gui" reference) -> checkui.md when real icons/Check-UI style needed.

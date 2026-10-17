@@ -1,0 +1,135 @@
+{
+  "stage": 4,
+  "name": "Cumulative App/Plugin Workspaces",
+  "completePlatform": false,
+  "scope": [
+    "app/",
+    "bridge/",
+    "plugin/"
+  ],
+  "applicationVersion": "2.4.0",
+  "build": "node app/build.mjs passed; extension/shared not built",
+  "tests": {
+    "total": 236,
+    "passed": 218,
+    "failed": 0,
+    "skipped": 18,
+    "newWorkspaceTests": 14,
+    "skipReason": "Luau binary missing",
+    "originalTestsEdited": false,
+    "actualStudioTested": false,
+    "productionProviderTested": false,
+    "studioFixture": "Explicit test-only JavaScript contract fixture; not Luau execution"
+  },
+  "browser": {
+    "WORKSPACES": {
+      "passed": true,
+      "errors": [],
+      "checks": [
+        "full source load/diff/approval/restore against JS fixture",
+        "real procedural WebGL geometry and OBJ download",
+        "VFX layer edit/save/build/replay contracts; visualVerified false",
+        "actual MCP graph observation and static impact",
+        "persisted design linked to PLANNED task without execution",
+        "Paint/UI Builder existing iframe integration",
+        "real bundled asset search/favorite/code export",
+        "all new desktop/mobile workspaces, no document horizontal overflow"
+      ]
+    },
+    "CHAT": {
+      "passed": true,
+      "errors": [],
+      "checks": [
+        "real provider configuration saved without keys",
+        "API conversation creation and actual local HTTP transport",
+        "scoped source approval surfaced in API-chat",
+        "explicit rejection continues to PARTIAL, never fake DONE",
+        "persisted assistant/user history and mobile layout",
+        "actual WebGL framebuffer contains rendered geometry"
+      ]
+    },
+    "EDITORS": {
+      "passed": true,
+      "errors": [],
+      "checks": [
+        "actual brush changes raster pixels",
+        "undo/redo restores matching pixels",
+        "real PNG download 1920x1080",
+        "embedded Paint uses actual outbox endpoint, not unanswered parent postMessage",
+        "queued is not delivery success",
+        "UI Builder creates a real editable UIDoc element",
+        "Paint/UI Builder desktop and mobile internal bounds, no horizontal overflow",
+        "VFX timeline controls visible"
+      ]
+    }
+  },
+  "visualQA": {
+    "status": "individually inspected, corrected and recaptured where needed",
+    "desktop": [
+      1440,
+      1080
+    ],
+    "mobile": [
+      390,
+      844
+    ],
+    "states": [
+      "source editor/diff",
+      "source approval",
+      "procedural WebGL",
+      "VFX inspector",
+      "VFX timeline",
+      "static graph",
+      "linked designer revisions",
+      "QA schemas",
+      "provider settings",
+      "execution settings",
+      "asset index",
+      "embedded Paint",
+      "UI Builder editable button",
+      "API scoped approval",
+      "API PARTIAL report",
+      "mobile chat/lab/vfx/designer/source/QA/graph/settings/integrations/Paint/UIBuilder/VFX-confirmation"
+    ],
+    "actualGamePreview": false,
+    "canvasPixels": "Real browser brush/undo/redo and WebGL framebuffer; not Studio image"
+  },
+  "skillInventory": {
+    "skills": 11,
+    "templates": 22,
+    "distinctOriginalResources": 52,
+    "defaultsEnabled": false,
+    "shaVerified": true
+  },
+  "plugin": {
+    "xmlParsed": true,
+    "sourceMatchesLua": true,
+    "StudioRuntimeTested": false
+  },
+  "protectedScope": {
+    "extensionFilesByteIdentical": 54,
+    "sharedFilesByteIdentical": 40,
+    "originalTestsEdited": false,
+    "removedOriginalFiles": 0
+  },
+  "notCompleted": [
+    "continuous Live Game Graph",
+    "multi-agent swarm workflow",
+    "universal project rollback",
+    "full bone/animation timeline editor",
+    "complete Play/visual game acceptance",
+    "unified multimedia import/edit/publish",
+    "token streaming",
+    "HTTP/SSE MCP"
+  ],
+  "unverified": [
+    "actual Roblox Studio and Play",
+    "Luau compilation",
+    "VFX and animation runtime/visual acceptance",
+    "Blender runtime/import",
+    "signed-in production AI/image/Open Cloud services",
+    "Electron/Windows/macOS binaries/installers",
+    "full TypeScript compiler check",
+    "rights to all third-party assets/icons"
+  ]
+}

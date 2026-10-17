@@ -1,0 +1,11 @@
+✔ attachment storage persists bytes, classifies text and images, bounds input, sanitizes names (10.569142ms)
+✔ plugin hub carries actual binary files and frees payloads after delivery (0.637643ms)
+✔ authenticated upload, byte-exact download, persisted message and direct multimodal model payload (5172.00857ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5724.295816

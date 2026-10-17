@@ -1,0 +1,140 @@
+{
+  "base": "Brickwire 2.4.0 original user archive",
+  "stage": "MCP application/plugin stage 1",
+  "extensionFilesVerified": 54,
+  "sharedFilesVerified": 40,
+  "files": [
+    {
+      "path": "app/TEST-RESULTS-STAGE1.json",
+      "kind": "added",
+      "originalSha256": null,
+      "sha256": "3e28e83d7e1f47b5d87dbacebbd85727154811eddaada0427b49069a216cf996"
+    },
+    {
+      "path": "app/UPGRADE-STAGE1.md",
+      "kind": "added",
+      "originalSha256": null,
+      "sha256": "fc7a1bf8af094bdb1e074deb0fb6891518dfb6089482f2cadf44e04323d01da3"
+    },
+    {
+      "path": "app/build.mjs",
+      "kind": "added",
+      "originalSha256": null,
+      "sha256": "8456cf9eb885594c0dd6e0488bfec3a871b6d632921a64a57e3e7f99c11bded0"
+    },
+    {
+      "path": "app/main.js",
+      "kind": "modified",
+      "originalSha256": "f2306880aa7c794d97897ae0a6258dca15fccb42ba072c59ce7ce876628bd668",
+      "sha256": "843dbe7cf53ae49cd96c0e7f89474ab3c198049da94854e0dcab31106c7520ad"
+    },
+    {
+      "path": "app/tests/mcp-fixture.mjs",
+      "kind": "added",
+      "originalSha256": null,
+      "sha256": "fa82042c2bafa9f5b4fd354c721b3c5d589abd434a5dda6ec042c4800761fd96"
+    },
+    {
+      "path": "app/tests/mcp.test.ts",
+      "kind": "added",
+      "originalSha256": null,
+      "sha256": "03660d70d0529db329bfebd848a0df2a6a0d68bb52ac35e90d9e75c0a4c57411"
+    },
+    {
+      "path": "bridge/dist/app-mcp-ui.js",
+      "kind": "added",
+      "originalSha256": null,
+      "sha256": "675e7b5d67227b500ca08645d08b1327a200b15647132d4ec96fcff0fcf0cbf5"
+    },
+    {
+      "path": "bridge/dist/app-mcp.css",
+      "kind": "added",
+      "originalSha256": null,
+      "sha256": "6fd7aa2bf875418763ba35f8bae1bd2a8acc264b9f90c6bf58a6884a553487b7"
+    },
+    {
+      "path": "bridge/dist/app.html",
+      "kind": "modified",
+      "originalSha256": "d08f785081f1e3c90cdba8c938e83da2e222d7caaf51732604e053e28e24d9c6",
+      "sha256": "0ba773e32a1c03f4d65d5864339228448bcf6597b1838dec40d62a9dc33ca8ec"
+    },
+    {
+      "path": "bridge/dist/bridge.mjs",
+      "kind": "modified",
+      "originalSha256": "9a68febe2ed3137c194970038ff93592560c5ab7507377c6d013f90d48c05116",
+      "sha256": "e5feb6edfa339081f30154fb4cdc2db59fd6df8d9dbc5b4de45ebc668ede7378"
+    },
+    {
+      "path": "bridge/dist/mcp.html",
+      "kind": "added",
+      "originalSha256": null,
+      "sha256": "219f0c0fc4a1c845f005658a4f84720dc7844d34320392741f126db81a59b109"
+    },
+    {
+      "path": "bridge/src/app-mcp-routes.ts",
+      "kind": "added",
+      "originalSha256": null,
+      "sha256": "4ef7d11f46aeeb5bd21a6599a28d7539e46829a8cff16fedb94bdef1deabb26d"
+    },
+    {
+      "path": "bridge/src/app-mcp-ui.js",
+      "kind": "added",
+      "originalSha256": null,
+      "sha256": "675e7b5d67227b500ca08645d08b1327a200b15647132d4ec96fcff0fcf0cbf5"
+    },
+    {
+      "path": "bridge/src/app-mcp.css",
+      "kind": "added",
+      "originalSha256": null,
+      "sha256": "6fd7aa2bf875418763ba35f8bae1bd2a8acc264b9f90c6bf58a6884a553487b7"
+    },
+    {
+      "path": "bridge/src/app-mcp.ts",
+      "kind": "added",
+      "originalSha256": null,
+      "sha256": "5179ae1b1dc462f8f4417a813451ac2b9b72f780d81cd86818754e868e9bb1b5"
+    },
+    {
+      "path": "bridge/src/app.html",
+      "kind": "modified",
+      "originalSha256": "d08f785081f1e3c90cdba8c938e83da2e222d7caaf51732604e053e28e24d9c6",
+      "sha256": "0ba773e32a1c03f4d65d5864339228448bcf6597b1838dec40d62a9dc33ca8ec"
+    },
+    {
+      "path": "bridge/src/bridge.ts",
+      "kind": "modified",
+      "originalSha256": "61e62e72e0928883bc0dcb8d3338196184ec5cbde89144a7cf27957294ccf5a0",
+      "sha256": "56a6201e1317e7d7652fe69ace78fbf11ea9f8e46f01a906740a4d823b0a3039"
+    },
+    {
+      "path": "bridge/src/mcp-client.ts",
+      "kind": "modified",
+      "originalSha256": "0568b4387b97a9223d9cabec529bf285bae52807ab333d5d89de8f804964500d",
+      "sha256": "fab3c23b4ad56117a8ac9f80418bc71bbc5cb88167c831af073c1960d1eba7be"
+    },
+    {
+      "path": "bridge/src/mcp.html",
+      "kind": "added",
+      "originalSha256": null,
+      "sha256": "219f0c0fc4a1c845f005658a4f84720dc7844d34320392741f126db81a59b109"
+    },
+    {
+      "path": "bridge/src/server.ts",
+      "kind": "modified",
+      "originalSha256": "c73445937a8682e8db7d76ce33ec808201c33d0046e89ea5203b6ed6dbdaa3d3",
+      "sha256": "eb92a9807e9140f6855c1b4f7640bd1512f14ea0d4be6679f239fee8b3024138"
+    },
+    {
+      "path": "plugin/BrickwireChat.plugin.lua",
+      "kind": "modified",
+      "originalSha256": "6314b3b86acf564ad54b7b961f1d508f614ab148b869d512bd4023434e20aee1",
+      "sha256": "6cc4355906ae9aed76f9cb9198a03b3b6c6575ed30e79d4532a9a1ede5db7e21"
+    },
+    {
+      "path": "plugin/BrickwireChat.rbxmx",
+      "kind": "modified",
+      "originalSha256": "e1ae6a0f7c57b3a4281e08d6f42bc4d1916529b1e61e7c220c9fee74eb83704a",
+      "sha256": "a7b04c35afd5c8c3844f55a5749437ca8526095ab29ae11b9715c20d40e32039"
+    }
+  ]
+}

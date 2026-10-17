@@ -1,0 +1,13 @@
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { build } from "esbuild";
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),"..");
+const out=path.join(root,"bridge","dist");fs.mkdirSync(out,{recursive:true});
+await build({absWorkingDir:root,entryPoints:["bridge/src/index.ts"],outfile:path.join(out,"bridge.mjs"),bundle:true,platform:"node",target:"node20",format:"esm",legalComments:"none",banner:{js:"// Brickwire app-only upgrade: extension is unchanged."}});
+for(const file of ["i18n.js","app-depth.css","app-depth.js","scene3d.js","animation-editor.js","workspace-ui.js","workspace.css","dashboard.html","ui-builder.html","app.html","paint.html","app-skills-ui.js","app-skills.css","app-runtime-ui.js","mcp.html","app-mcp-ui.js","app-mcp.css","bw3-ui.js","bw3.css","attachments-ui.js","motion-ui.js","motion.css"])fs.copyFileSync(path.join(root,"bridge","src",file),path.join(out,file));
+fs.cpSync(path.join(root,"bridge","src","fonts"),path.join(out,"fonts"),{recursive:true});
+fs.cpSync(path.join(root,"bridge","skills"),path.join(out,"skills"),{recursive:true});
+const src=fs.readFileSync(path.join(root,"plugin","BrickwireChat.plugin.lua"),"utf8").split("]]>").join("]]]]><![CDATA[>");
+fs.writeFileSync(path.join(root,"plugin","BrickwireChat.rbxmx"),`<roblox version="4"><Item class="Script" referent="RBX0"><Properties><string name="Name">BrickwireChat</string><token name="RunContext">0</token><ProtectedString name="Source"><![CDATA[${src}]]></ProtectedString></Properties></Item></roblox>\n`);
+console.log("Built application bridge + plugin. extension/ and shared/ untouched.");

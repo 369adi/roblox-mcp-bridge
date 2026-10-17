@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "errors": [],
+  "checks": [
+    "actual brush changes raster pixels",
+    "undo/redo restores matching pixels",
+    "real PNG download 1920x1080",
+    "embedded Paint uses actual outbox endpoint, not unanswered parent postMessage",
+    "queued is not delivery success",
+    "UI Builder creates a real editable UIDoc element",
+    "Paint/UI Builder desktop and mobile internal bounds, no horizontal overflow",
+    "VFX timeline controls visible"
+  ]
+}

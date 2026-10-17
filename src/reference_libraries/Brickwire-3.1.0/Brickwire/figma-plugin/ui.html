@@ -1,0 +1,45 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><style>
+body{font:12px Inter,system-ui,sans-serif;margin:0;padding:14px;color:var(--figma-color-text,#222);background:var(--figma-color-bg,#fff)}
+h1{font-size:14px;margin:0 0 6px}.muted{opacity:.7}.row{display:flex;gap:8px;align-items:center;margin:10px 0}
+.pill{display:inline-block;padding:2px 8px;border-radius:10px;background:#eee;color:#333}.ok{background:#d9f7e3;color:#11643a}.bad{background:#fde2e2;color:#8a1c1c}
+button{font:inherit;padding:8px 12px;border-radius:6px;border:0;background:#0d99ff;color:#fff;cursor:pointer;width:100%}button:disabled{opacity:.5;cursor:default}
+#log{margin-top:10px;white-space:pre-wrap;word-break:break-word}
+</style></head><body>
+<h1>Brickwire</h1>
+<div class="muted">Send the selected frame to the Brickwire app chat, then build it in Roblox Studio.</div>
+<div class="row"><span id="conn" class="pill">checking…</span></div>
+<div class="row"><b id="sel">No selection</b></div>
+<button id="send" disabled>Send to Brickwire</button>
+<div id="log" class="muted"></div>
+<script>
+const PORT = 47821;
+const BASE = "http://localhost:" + PORT;
+const $ = (id) => document.getElementById(id);
+let selected = false, online = false;
+function sync() { $("send").disabled = !(selected && online); }
+async function ping() {
+  try { const r = await fetch(BASE + "/api/figma/ping"); const d = await r.json(); online = !!d.ok; $("conn").textContent = online ? "Brickwire " + (d.version || "") + " connected" : "Brickwire not found"; }
+  catch (e) { online = false; $("conn").textContent = "Brickwire app is not running (port " + PORT + ")"; }
+  $("conn").className = "pill " + (online ? "ok" : "bad"); sync();
+}
+onmessage = async (ev) => {
+  const m = ev.data.pluginMessage; if (!m) return;
+  if (m.type === "selection") { selected = !!m.name; $("sel").textContent = m.name ? m.name + " · " + m.kind + " · " + m.size : "Select a frame"; sync(); }
+  if (m.type === "status") $("log").textContent = m.text;
+  if (m.type === "error") { $("log").textContent = "⚠ " + m.text; $("send").disabled = false; }
+  if (m.type === "payload") {
+    $("log").textContent = "Sending…";
+    try {
+      const r = await fetch(BASE + "/api/figma/push", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(m.payload) });
+      const d = await r.json();
+      $("log").textContent = r.ok ? "✓ " + (d.message || "Sent") + " — " + d.nodes + " layers, " + d.images + " images. Open the Brickwire chat." : "⚠ " + (d.error || r.status);
+    } catch (e) { $("log").textContent = "⚠ " + e.message; }
+    sync();
+  }
+};
+$("send").onclick = () => { $("send").disabled = true; parent.postMessage({ pluginMessage: { type: "collect" } }, "*"); };
+parent.postMessage({ pluginMessage: { type: "ready" } }, "*");
+ping(); setInterval(ping, 5000);
+</script>
+</body></html>

@@ -1,0 +1,76 @@
+{
+  "stage": 2,
+  "scope": [
+    "app/",
+    "bridge/",
+    "plugin/"
+  ],
+  "completePlatform": false,
+  "applicationVersionUnchanged": "2.4.0",
+  "build": {
+    "command": "node app/build.mjs",
+    "status": "passed",
+    "typecheckCertification": false
+  },
+  "tests": {
+    "command": "node --experimental-transform-types --disable-warning=ExperimentalWarning --import ./tests/unit/_register.mjs --test --test-concurrency=1 'tests/unit/*.test.ts' 'tests/integration/*.test.ts' 'app/tests/*.test.ts'",
+    "total": 213,
+    "passed": 195,
+    "failed": 0,
+    "skipped": 18,
+    "skipReason": "Luau binary unavailable",
+    "newRuntimeTests": 12,
+    "stage1McpTests": 8,
+    "localFixturesOnly": true
+  },
+  "browser": {
+    "passed": true,
+    "checks": [
+      "Real HTTP task create/start",
+      "Manual tool confirmation and mock Studio mutation",
+      "Fresh structural inspection and acceptance",
+      "Desktop/mobile horizontal overflow",
+      "MCP and task navigation",
+      "No browser page errors"
+    ],
+    "errors": []
+  },
+  "visualQA": {
+    "status": "passed after spacing/title fixes",
+    "desktop": [
+      1440,
+      1080
+    ],
+    "mobile": [
+      390,
+      844
+    ],
+    "states": [
+      "empty",
+      "new task dialog",
+      "pending approval",
+      "verified structural criteria",
+      "mobile task",
+      "mobile dialog",
+      "evidence/journal scrolled"
+    ],
+    "genuineGamePreview": false
+  },
+  "pluginPackaging": {
+    "xmlParsed": true,
+    "sourceMatchesLua": true,
+    "studioRuntimeTested": false
+  },
+  "unverified": [
+    "real Roblox Studio and Play tests",
+    "actual VFX/animation/asset output",
+    "production AI-provider account",
+    "Electron/Windows/macOS runtime and installer",
+    "Luau compilation",
+    "full TypeScript type checking"
+  ],
+  "scopeVerification": {
+    "originalExtensionFilesUnchanged": 54,
+    "originalSharedFilesUnchanged": 40
+  }
+}

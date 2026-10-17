@@ -1,0 +1,30 @@
+PC MCP Bridge 5.0.0 bundles:
+
+Brickwire 3.1.0 reference distribution
+Imported from the user-provided Brickwire-3.1.0 (1).zip, without running its code.
+The original LICENSE, source, skills, documentation, and asset-pack credits are
+retained in reference_libraries/Brickwire-3.1.0/Brickwire.
+Brickwire code is MIT licensed. Asset-pack entries contain third-party credits;
+their inclusion is not an independent verification of asset rights or availability.
+The app does not install Brickwire plugins or inject its runtime into a game.
+
+REA / rea-agents 6.5.0
+Source: https://github.com/morluto/rea
+License: MIT, plus dependency licenses in the original distribution.
+The package LICENSE, THIRD_PARTY_NOTICES.md, licenses directory and dependency
+licenses are retained within the packaged rea-runtime/node_modules.
+
+Node.js 24.21.0
+Source: https://github.com/nodejs/node
+License: MIT and third-party licenses in the bundled node-LICENSE.
+
+Tailscale is an external dependency installed separately on Windows.
+Source: https://github.com/tailscale/tailscale
+The installed client's license and terms apply; no Tailscale binary is bundled.
+Cloudflared is not bundled or used by this build.
+
+Python, Tcl/Tk, Pillow, websocket-client and dependencies are packaged using
+PyInstaller. Their original copyrights and licenses continue to apply.
+PyInstaller permits application distribution under its bootloader exception.
+
+No license for external commercial analysis providers is included.

@@ -1,0 +1,62 @@
+[
+  {
+    "id": "cottage",
+    "name": "Cottage",
+    "category": "building",
+    "icon": "🏠",
+    "description": "Retro Roblox cottage with a 45° red gable roof, hollow interior, open door, cross-barred windows, chimney, and a fenced garden with a cobbled path.",
+    "prompt": "Cottage — retro Roblox, studs on every surface, 22 x 18 stud footprint, 22 tall to the ridge, hollow interior with an open door and cross-barred windows, stone chimney, flower box, picket fence and a cobbled garden path.",
+    "tier": "standard",
+    "treatment": "retro"
+  },
+  {
+    "id": "farm-warehouse",
+    "name": "Farm Warehouse",
+    "category": "building",
+    "icon": "🚜",
+    "description": "Grey ribbed machine shed with a low black roof, two gridded bay doors, a hooped white silo with ladder, a hay bale pyramid, and a green cab tractor.",
+    "prompt": "Farm Warehouse: broad grey metal-clad machine shed with a low black roof and vents, two massive gridded bay doors and a staff door, white silo with hoops and a ladder, pyramid of hay bales, and a green tractor with a cab on the dirt yard.",
+    "tier": "detailed",
+    "treatment": "retro"
+  },
+  {
+    "id": "tabby-kitten",
+    "name": "Tabby Kitten",
+    "category": "creature",
+    "icon": "🐱",
+    "description": "Sitting black & grey tabby kitten with pointed ears, yellow slit eyes, whiskers, white bib, red collar with a bell, and a ringed tail curled round its paws.",
+    "prompt": "Sitting Tabby Kitten — block-built compact pet, big square head, pointed triangular ears with pink inners, yellow slit eyes, fanned whiskers, grey tabby stripes, white bib and paws, red collar with a bell, and a ringed tail curled round the paws.",
+    "tier": "standard",
+    "treatment": "creature"
+  },
+  {
+    "id": "wither-boss",
+    "name": "Wither Boss",
+    "category": "creature",
+    "icon": "💀",
+    "description": "Floating charcoal-black skeletal boss with three glowing-eyed skulls, shoulder crossbar, knuckled spine, hooked ribs, and an angled tail.",
+    "prompt": "Minecraft Wither Boss: floating skeletal boss of charcoal-black bone, three square skulls on a crossbar with glowing pale eyes and toothed jaws, knuckled spine with three hooked ribs, and an angled tail.",
+    "tier": "standard",
+    "treatment": "creature"
+  },
+  {
+    "id": "minecraft-zombie",
+    "name": "Minecraft Zombie",
+    "category": "character",
+    "icon": "🧟",
+    "description": "Upright voxel zombie with a green head, torn cyan shirt, belted indigo trousers and outstretched arms, on a cobbled path with oaks and a torch.",
+    "prompt": "Minecraft Zombie on a cobblestone forest path: upright blocky voxel character, 16 studs tall, square green head, torn cyan shirt, belted indigo trousers, outstretched stiff arms, with oak trees, grass tufts, a torch and cobblestone.",
+    "tier": "detailed",
+    "treatment": "retro"
+  },
+  {
+    "id": "skyscraper",
+    "name": "Skyscraper",
+    "category": "building",
+    "icon": "🏙️",
+    "description": "Hong Kong style 122-stud glass tower with a walk-in lobby, floor lines, stepped setbacks, white mullion fins, navy crown, and an illuminated spire.",
+    "prompt": "Skyscraper: Hong Kong style glass tower, 30 x 122 x 30 studs with its plaza, tall slim blue glass shaft with floor lines, stepped setbacks, vertical white mullion fins, hollow walk-in lobby with open glass doors and a canopy, and a glowing spire at the summit.",
+    "tier": "detailed",
+    "treatment": "retro"
+  }
+]

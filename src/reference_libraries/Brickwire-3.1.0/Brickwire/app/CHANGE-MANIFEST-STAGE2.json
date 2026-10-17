@@ -1,0 +1,222 @@
+{
+  "scope": "Application/bridge and plugin only; cumulative Stage 1 + Stage 2",
+  "originalArchive": "Brickwire-2.4.zip",
+  "removedFiles": [],
+  "unchangedProtectedFolders": {
+    "extension": 54,
+    "shared": 40
+  },
+  "entries": [
+    {
+      "path": "app/CHANGE-MANIFEST-STAGE1.json",
+      "change": "added",
+      "sha256": "6b6ed7dc8fc472c16b39288e779b608db8c76eec9d3ec5c4e03f53c98f55751f",
+      "bytes": 4918
+    },
+    {
+      "path": "app/TEST-RESULTS-STAGE1.json",
+      "change": "added",
+      "sha256": "3e28e83d7e1f47b5d87dbacebbd85727154811eddaada0427b49069a216cf996",
+      "bytes": 1012
+    },
+    {
+      "path": "app/TEST-RESULTS-STAGE2.json",
+      "change": "added",
+      "sha256": "c298f1f42b48fb86b0af0c39e427a6c1e9e8ea30fa263d0e8bc32be83a1c3034",
+      "bytes": 1927
+    },
+    {
+      "path": "app/UPGRADE-STAGE1.md",
+      "change": "added",
+      "sha256": "fc7a1bf8af094bdb1e074deb0fb6891518dfb6089482f2cadf44e04323d01da3",
+      "bytes": 7172
+    },
+    {
+      "path": "app/UPGRADE-STAGE2.md",
+      "change": "added",
+      "sha256": "f5ea3fa5c4be2aef8c81e4a8b8f4fd5b9bc51271ee524969f38c6e94b4bd1e63",
+      "bytes": 10077
+    },
+    {
+      "path": "app/build.mjs",
+      "change": "added",
+      "sha256": "905738812c8115d5db368f4fc3f6c016fb68f7b2fe5cc634e6eff00e2a5ad402",
+      "bytes": 1274
+    },
+    {
+      "path": "app/main.js",
+      "change": "modified",
+      "sha256": "843dbe7cf53ae49cd96c0e7f89474ab3c198049da94854e0dcab31106c7520ad",
+      "bytes": 4326
+    },
+    {
+      "path": "app/tests/BROWSER-QA-STAGE2.json",
+      "change": "added",
+      "sha256": "1b583519ef59d750d8b95534a55e6d79996c41fc32e951ae669ba8aa6fd99fb4",
+      "bytes": 300
+    },
+    {
+      "path": "app/tests/TEST-LOG-STAGE2.txt",
+      "change": "added",
+      "sha256": "8abb9a478e5e1b56f1fb7d48b6cdf3a28504b745757e11cc5074618132b0aafe",
+      "bytes": 19418
+    },
+    {
+      "path": "app/tests/mcp-fixture.mjs",
+      "change": "added",
+      "sha256": "fa82042c2bafa9f5b4fd354c721b3c5d589abd434a5dda6ec042c4800761fd96",
+      "bytes": 2210
+    },
+    {
+      "path": "app/tests/mcp.test.ts",
+      "change": "added",
+      "sha256": "03660d70d0529db329bfebd848a0df2a6a0d68bb52ac35e90d9e75c0a4c57411",
+      "bytes": 8229
+    },
+    {
+      "path": "app/tests/runtime.test.ts",
+      "change": "added",
+      "sha256": "aa532c4a29a163b4863858e9454dfc3d9ad16b437f9f6410ad4164dda8e4c5cc",
+      "bytes": 14950
+    },
+    {
+      "path": "bridge/dist/app-mcp-ui.js",
+      "change": "added",
+      "sha256": "675e7b5d67227b500ca08645d08b1327a200b15647132d4ec96fcff0fcf0cbf5",
+      "bytes": 21649
+    },
+    {
+      "path": "bridge/dist/app-mcp.css",
+      "change": "added",
+      "sha256": "6fd7aa2bf875418763ba35f8bae1bd2a8acc264b9f90c6bf58a6884a553487b7",
+      "bytes": 5787
+    },
+    {
+      "path": "bridge/dist/app-runtime-ui.js",
+      "change": "added",
+      "sha256": "9b6ff548333a88f4cf0d57ce907c75945f102bada24a43934e27b897b4d49f08",
+      "bytes": 13755
+    },
+    {
+      "path": "bridge/dist/app.html",
+      "change": "modified",
+      "sha256": "016bc629a30e4bff93241febb59fc42837e33740450502502f0d4d05caa18ef1",
+      "bytes": 40700
+    },
+    {
+      "path": "bridge/dist/bridge.mjs",
+      "change": "modified",
+      "sha256": "b95074cf9c65ba08774265ec08a7b000450b79b308d49fc8de2a0483982e4d70",
+      "bytes": 1108368
+    },
+    {
+      "path": "bridge/dist/mcp.html",
+      "change": "added",
+      "sha256": "219f0c0fc4a1c845f005658a4f84720dc7844d34320392741f126db81a59b109",
+      "bytes": 312
+    },
+    {
+      "path": "bridge/src/app-mcp-routes.ts",
+      "change": "added",
+      "sha256": "4ef7d11f46aeeb5bd21a6599a28d7539e46829a8cff16fedb94bdef1deabb26d",
+      "bytes": 4124
+    },
+    {
+      "path": "bridge/src/app-mcp-ui.js",
+      "change": "added",
+      "sha256": "675e7b5d67227b500ca08645d08b1327a200b15647132d4ec96fcff0fcf0cbf5",
+      "bytes": 21649
+    },
+    {
+      "path": "bridge/src/app-mcp.css",
+      "change": "added",
+      "sha256": "6fd7aa2bf875418763ba35f8bae1bd2a8acc264b9f90c6bf58a6884a553487b7",
+      "bytes": 5787
+    },
+    {
+      "path": "bridge/src/app-mcp.ts",
+      "change": "added",
+      "sha256": "5179ae1b1dc462f8f4417a813451ac2b9b72f780d81cd86818754e868e9bb1b5",
+      "bytes": 17295
+    },
+    {
+      "path": "bridge/src/app-runtime-routes.ts",
+      "change": "added",
+      "sha256": "481ce55bb32d23e9efd4e3dcc1478a7d52c2ee29e66f508f34eff8d2647ead3e",
+      "bytes": 6250
+    },
+    {
+      "path": "bridge/src/app-runtime-ui.js",
+      "change": "added",
+      "sha256": "9b6ff548333a88f4cf0d57ce907c75945f102bada24a43934e27b897b4d49f08",
+      "bytes": 13755
+    },
+    {
+      "path": "bridge/src/app.html",
+      "change": "modified",
+      "sha256": "016bc629a30e4bff93241febb59fc42837e33740450502502f0d4d05caa18ef1",
+      "bytes": 40700
+    },
+    {
+      "path": "bridge/src/bridge.ts",
+      "change": "modified",
+      "sha256": "97c03b5e029170a3ac479bdbe0a6cfd53614d5e5cd242057149b5c30ac0f7a90",
+      "bytes": 57165
+    },
+    {
+      "path": "bridge/src/execution-policy.ts",
+      "change": "added",
+      "sha256": "a81e2a5e037a2e0d5c8d898e1a6bfe2b928b46e9e6c460295d7642dcab75b4f5",
+      "bytes": 2562
+    },
+    {
+      "path": "bridge/src/headless.ts",
+      "change": "modified",
+      "sha256": "41d7e8b4c32a7a7df46ec78f19b99bf4a06ad340b36e0a0d6de9e2613144530b",
+      "bytes": 12158
+    },
+    {
+      "path": "bridge/src/mcp-client.ts",
+      "change": "modified",
+      "sha256": "fab3c23b4ad56117a8ac9f80418bc71bbc5cb88167c831af073c1960d1eba7be",
+      "bytes": 19479
+    },
+    {
+      "path": "bridge/src/mcp.html",
+      "change": "added",
+      "sha256": "219f0c0fc4a1c845f005658a4f84720dc7844d34320392741f126db81a59b109",
+      "bytes": 312
+    },
+    {
+      "path": "bridge/src/operation-store.ts",
+      "change": "added",
+      "sha256": "38a7a31f3f630bfb1ad2b861234e22bf9bd123f8f40d1527913b79feed676480",
+      "bytes": 6569
+    },
+    {
+      "path": "bridge/src/server.ts",
+      "change": "modified",
+      "sha256": "dd0bbf0d45249faa78a390c1e9dd9d68101f70dbac79516191153a80bc426155",
+      "bytes": 22565
+    },
+    {
+      "path": "bridge/src/task-runtime.ts",
+      "change": "added",
+      "sha256": "703c1a51c2ff311057b172226b4d89954513aa2b0dc209c879f5df694e14cd21",
+      "bytes": 9858
+    },
+    {
+      "path": "plugin/BrickwireChat.plugin.lua",
+      "change": "modified",
+      "sha256": "d7e741fa261a25d7937ffb750bf63986f550b657c0fc2c9cf78b1a42a6656793",
+      "bytes": 32502
+    },
+    {
+      "path": "plugin/BrickwireChat.rbxmx",
+      "change": "modified",
+      "sha256": "54f47c8e72363ea5e6995058e51f5c6e6c37fc09649dc2255187a2c04cc87401",
+      "bytes": 32738
+    }
+  ],
+  "selfHashExcluded": true
+}

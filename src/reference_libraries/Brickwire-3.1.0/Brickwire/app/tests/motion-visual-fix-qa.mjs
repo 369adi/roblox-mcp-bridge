@@ -1,0 +1,4 @@
+import {chromium} from 'playwright';
+const b=await chromium.launch({executablePath:'/usr/local/bin/chromium',headless:true,args:['--no-sandbox']});const p=await b.newPage({viewport:{width:1440,height:960}});await p.goto('http://127.0.0.1:4317/app#history');await p.waitForTimeout(700);await p.setViewportSize({width:390,height:844});
+for(const tab of ['skills','lab','paint','home','chats','mcp']){await p.evaluate(t=>location.hash=t,tab);await p.waitForTimeout(600);await p.screenshot({path:`/data/brickwire-fixed-mobile-${tab}.png`});}
+await p.setViewportSize({width:1440,height:960});await p.evaluate(()=>location.hash='chat');await p.waitForTimeout(500);await p.screenshot({path:'/data/brickwire-fixed-plugin-chat.png'});console.log(JSON.stringify({navigationHeight:await p.locator('nav').evaluate(el=>el.clientHeight),legacyAttachmentWidget:await p.locator('#browser-chat .bw-attachments').count()}));await b.close();

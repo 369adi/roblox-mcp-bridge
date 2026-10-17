@@ -1,0 +1,37 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+body{margin:0;font:14px sans-serif;height:100vh;display:flex}
+.notion-frame{flex:1}.chat{width:420px;display:flex;flex-direction:column;border-left:1px solid #ccc}
+.msgs{flex:1;overflow:auto;padding:8px}.box{border:1px solid #aaa;margin:8px;padding:6px}
+[contenteditable]{min-height:20px;outline:none}
+.row{display:flex;justify-content:space-between}.row div[role=button]{width:24px;height:24px;display:inline-block}
+.menu{position:fixed;bottom:120px;right:40px;width:120px;height:80px;background:#eee}
+</style></head><body>
+<!-- page editor decoy: lower on screen than the composer would be, editable -->
+<div class="notion-frame"><div class="notion-page-content"><div data-block-id="b1"><div contenteditable="true" placeholder="Press space for AI">Spec page</div></div></div>
+  <div class="comment" style="position:fixed;bottom:0;left:0;width:300px"><div contenteditable="true" role="textbox"></div></div></div>
+<div class="chat"><div class="msgs" id="msgs"></div>
+ <div class="box"><div><div><div><div><div><div><div>
+   <div contenteditable="true" id="composer" placeholder="Ask, search, or make anything…"></div>
+ </div></div></div></div></div></div></div>
+ <div class="row"><div><div role="button" aria-label="Add attachment" id="attach"><svg class="paperclip" viewBox="0 0 20 20"><path d="M4 4h8v8H4z"/></svg></div><div role="button" id="mention"><svg class="at"><path d="M1 1c2 2 3 3 4 4"/></svg></div></div>
+  <div><div role="button" id="send" aria-disabled="true"><svg class="arrowUpThick" viewBox="0 0 20 20"><path d="M10 3l6 6M10 3v14"/></svg></div><div role="button" id="upload" style="width:2px;height:2px"><svg class="upload"><path d="M1 1l3 3"/></svg></div></div></div>
+ </div></div>
+<script>
+const c=document.getElementById('composer'), send=document.getElementById('send'), msgs=document.getElementById('msgs');
+window.__sent=[]; window.__gen=false;
+// placeholder vanishes while the box holds text (what breaks re-scoring)
+const sync=()=>{ if(c.innerText.trim()){c.removeAttribute('placeholder');send.removeAttribute('aria-disabled');} else {c.setAttribute('placeholder','Ask, search, or make anything…');send.setAttribute('aria-disabled','true');}
+  // ":abc" at the end opens an emoji picker, like Notion's inline menu
+  document.querySelectorAll('.menu').forEach(m=>m.remove());
+  if(/:[a-z]{2,}\]?$/.test(c.innerText.trim())){const m=document.createElement('div');m.className='menu';m.setAttribute('role','listbox');document.body.appendChild(m);} };
+c.addEventListener('input',sync);
+const submit=()=>{ if(window.__gen||!c.innerText.trim())return; if(document.querySelector('.menu')){window.__pickedEmoji=(window.__pickedEmoji||0)+1;return;}
+  const t=c.innerText; window.__sent.push(t); const d=document.createElement('div'); d.textContent=t; msgs.appendChild(d); c.innerHTML=''; sync(); generate(); };
+send.addEventListener('click',()=>{ if(send.getAttribute('aria-disabled')==='true')return; submit(); });
+c.addEventListener('keydown',e=>{ if(e.key==='Escape'){document.querySelectorAll('.menu').forEach(m=>m.remove());} if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();submit();} });
+// generation: send turns into an icon-only Stop (square rect, no label), silent "thinking" phase without text
+function generate(){ window.__gen=true; send.innerHTML='<svg viewBox="0 0 20 20"><rect x="5" y="5" width="10" height="10"/></svg>';
+  const r=document.createElement('div'); msgs.appendChild(r);
+  setTimeout(()=>{ r.textContent='Here is the plan for your castle with four towers and a gate.'; },window.__think||200);
+  setTimeout(()=>{ window.__gen=false; send.innerHTML='<svg class="arrowUpThick" viewBox="0 0 20 20"><path d="M10 3l6 6M10 3v14"/></svg>'; },(window.__think||200)+300); }
+</script></body></html>

@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+.venv/
+node_modules/
+build/
+dist/
+*.exe
+*.zip
+*.sqlite3*
+*.dpapi
+.env
+updates/
+captures/

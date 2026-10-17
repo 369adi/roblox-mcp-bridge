@@ -1,0 +1,12 @@
+BW.script("Script", "Coins", nil, [==[
+local Players = game:GetService("Players")
+print("coins ready")
+]==])
+BW.source("ServerScriptService.Coins")
+BW.patch("ServerScriptService.Coins", 'print("coins ready")', 'print("coins v2")')
+BW.check(string.find(BW.get("ServerScriptService.Coins").Source, "coins v2", 1, true) ~= nil, "patched")
+BW.script("LocalScript", "Hud", nil, "print('hud')")
+BW.check(BW.find("StarterPlayer.StarterPlayerScripts.Hud") ~= nil, "localscript default parent")
+BW.remote("BuyItem")
+BW.check(BW.find("ReplicatedStorage.Remotes.BuyItem").ClassName == "RemoteEvent", "remote")
+BW.scan("coins")

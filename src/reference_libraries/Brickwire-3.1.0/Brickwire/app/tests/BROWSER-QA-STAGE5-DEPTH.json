@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "errors": [],
+  "checks": [
+    "new sculpted shell across all workspaces",
+    "real shaded WebGL solid/wireframe and camera controls",
+    "joint pose edit, persistent draft, real JSON export",
+    "undo/redo and adding timed keyframe",
+    "local motion playback",
+    "real graph watch observation and stop",
+    "desktop/mobile no page-wide horizontal overflow"
+  ]
+}

@@ -1,0 +1,81 @@
+{
+  "edition": "Motion + Attachments",
+  "changed": [
+    "README.md",
+    "VERSION.txt",
+    "app/build.mjs",
+    "bridge/dist/app.html",
+    "bridge/dist/bridge.mjs",
+    "bridge/dist/bw3-ui.js",
+    "bridge/dist/i18n.js",
+    "bridge/dist/paint.html",
+    "bridge/dist/ui-builder.html",
+    "bridge/src/app-mcp.ts",
+    "bridge/src/app.html",
+    "bridge/src/bw3-routes.ts",
+    "bridge/src/bw3-ui.js",
+    "bridge/src/bw3/llm.ts",
+    "bridge/src/bw3/orchestrator.ts",
+    "bridge/src/bw3/run-store.ts",
+    "bridge/src/i18n.js",
+    "bridge/src/paint.html",
+    "bridge/src/server.ts",
+    "bridge/src/ui-builder.html",
+    "extension/dist/content.js",
+    "extension/dist/paint.html",
+    "extension/dist/paint.js",
+    "extension/src/adapters/base.ts",
+    "extension/src/core/plugin-link.ts",
+    "plugin/BrickwireChat.rbxmx",
+    "scripts/build.mjs",
+    "shared/src/plugin-hub.ts"
+  ],
+  "added": [
+    "MOTION-UPDATE-RU.md",
+    "app/tests/debug-send.mjs",
+    "app/tests/motion-attachments.test.ts",
+    "app/tests/motion-final-qa.mjs",
+    "app/tests/motion-qa.mjs",
+    "app/tests/motion-visual-fix-qa.mjs",
+    "bridge/dist/attachments-ui.js",
+    "bridge/dist/fonts/OFL-Oswald.txt",
+    "bridge/dist/fonts/Oswald.ttf",
+    "bridge/dist/motion-ui.js",
+    "bridge/dist/motion.css",
+    "bridge/src/attachments-ui.js",
+    "bridge/src/bw3/attachments.ts",
+    "bridge/src/fonts/OFL-Oswald.txt",
+    "bridge/src/fonts/Oswald.ttf",
+    "bridge/src/motion-ui.js",
+    "bridge/src/motion.css",
+    "docs/motion-update/attachment-tests.txt",
+    "docs/motion-update/browser-functional-qa.json",
+    "docs/motion-update/build.txt",
+    "docs/motion-update/core-tests.txt",
+    "docs/motion-update/mobile-skills-preview.png",
+    "docs/motion-update/routes-and-reduced-motion.json",
+    "docs/motion-update/typecheck.txt",
+    "docs/motion-update/workspace-preview.png",
+    "docs/motion-update/workspace-tests.txt",
+    "package-lock.json"
+  ],
+  "checks": {
+    "core": {
+      "passed": 175,
+      "skipped": 18,
+      "failed": 0
+    },
+    "workspace_with_attachment_tests": {
+      "passed": 75,
+      "failed": 0
+    },
+    "typecheck": "passed",
+    "build": "passed"
+  },
+  "not_tested_live": [
+    "Roblox Studio",
+    "Blender MCP",
+    "external AI website file acceptance",
+    "user device GPU performance"
+  ]
+}

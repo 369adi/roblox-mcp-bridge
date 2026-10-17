@@ -1,0 +1,43 @@
+{
+  "passed": true,
+  "errors": [],
+  "lang": "en",
+  "sectionsScanned": [
+    "home",
+    "chat",
+    "autopilot",
+    "paint",
+    "lab",
+    "vfx",
+    "designer",
+    "scripts",
+    "qa",
+    "project",
+    "history",
+    "library",
+    "skills",
+    "mcp",
+    "integrations",
+    "settings",
+    "updates",
+    "license"
+  ],
+  "extraPages": [
+    "/",
+    "/mcp"
+  ],
+  "dialogs": [
+    "new task",
+    "add MCP server",
+    "new API conversation",
+    "import Skill",
+    "mesh preview"
+  ],
+  "remainingCyrillicUiText": 0,
+  "checks": [
+    "every section rendered in English",
+    "embedded Paint/UI Builder iframes scanned",
+    "placeholders/titles/aria-labels translated",
+    "user chat content excluded from translation"
+  ]
+}

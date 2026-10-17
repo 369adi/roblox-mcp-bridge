@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "errors": [],
+  "checks": [
+    "11 disabled bundled Skills and 22 templates",
+    "Explicit activation and refusal without acknowledgment",
+    "Resource pagination",
+    "Composed Kit export and real browser download",
+    "JSON import defaults disabled",
+    "Duplicate import does not create extra record",
+    "Escaped imported text",
+    "Search empty state",
+    "Desktop/mobile horizontal overflow",
+    "Navigation to Autopilot/MCP"
+  ]
+}

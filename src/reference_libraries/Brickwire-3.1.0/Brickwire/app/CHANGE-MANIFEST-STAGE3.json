@@ -1,0 +1,936 @@
+{
+  "scope": "Cumulative application/bridge/plugin only, Stages 1–3",
+  "originalArchive": "Brickwire-2.4.zip",
+  "removedFiles": [],
+  "protectedFoldersByteIdentical": {
+    "extension": 54,
+    "shared": 40
+  },
+  "selfHashExcluded": true,
+  "entries": [
+    {
+      "path": "app/CHANGE-MANIFEST-STAGE1.json",
+      "change": "added",
+      "sha256": "6b6ed7dc8fc472c16b39288e779b608db8c76eec9d3ec5c4e03f53c98f55751f",
+      "bytes": 4918
+    },
+    {
+      "path": "app/CHANGE-MANIFEST-STAGE2.json",
+      "change": "added",
+      "sha256": "7308c0b68ddf91f21b800a0169a5a6c1c16df82c6375b926316f41e19763797c",
+      "bytes": 6760
+    },
+    {
+      "path": "app/TEST-RESULTS-STAGE1.json",
+      "change": "added",
+      "sha256": "3e28e83d7e1f47b5d87dbacebbd85727154811eddaada0427b49069a216cf996",
+      "bytes": 1012
+    },
+    {
+      "path": "app/TEST-RESULTS-STAGE2.json",
+      "change": "added",
+      "sha256": "c298f1f42b48fb86b0af0c39e427a6c1e9e8ea30fa263d0e8bc32be83a1c3034",
+      "bytes": 1927
+    },
+    {
+      "path": "app/TEST-RESULTS-STAGE3.json",
+      "change": "added",
+      "sha256": "479ecf178e9d78de1e3b5270e156c93c945fe76b7b1ff1c8637a2c0b51530f18",
+      "bytes": 2419
+    },
+    {
+      "path": "app/UPGRADE-STAGE1.md",
+      "change": "added",
+      "sha256": "fc7a1bf8af094bdb1e074deb0fb6891518dfb6089482f2cadf44e04323d01da3",
+      "bytes": 7172
+    },
+    {
+      "path": "app/UPGRADE-STAGE2.md",
+      "change": "added",
+      "sha256": "f5ea3fa5c4be2aef8c81e4a8b8f4fd5b9bc51271ee524969f38c6e94b4bd1e63",
+      "bytes": 10077
+    },
+    {
+      "path": "app/UPGRADE-STAGE3.md",
+      "change": "added",
+      "sha256": "ebc9f1cdf9bc1b7c84b92f6b955739c8f71cbe2d5b5914bf89568e3e19aff21c",
+      "bytes": 8501
+    },
+    {
+      "path": "app/build.mjs",
+      "change": "added",
+      "sha256": "8d1966efcdd3eca6dad495d49acf51a4acacb6f4980070f8de35a2aaeea3856e",
+      "bytes": 1397
+    },
+    {
+      "path": "app/main.js",
+      "change": "modified",
+      "sha256": "843dbe7cf53ae49cd96c0e7f89474ab3c198049da94854e0dcab31106c7520ad",
+      "bytes": 4326
+    },
+    {
+      "path": "app/tests/BROWSER-QA-STAGE2.json",
+      "change": "added",
+      "sha256": "1b583519ef59d750d8b95534a55e6d79996c41fc32e951ae669ba8aa6fd99fb4",
+      "bytes": 300
+    },
+    {
+      "path": "app/tests/BROWSER-QA-STAGE3.json",
+      "change": "added",
+      "sha256": "1fd7261b692248878860621f108d37f8ae42fd9b4078a8154b63fe118a876b90",
+      "bytes": 470
+    },
+    {
+      "path": "app/tests/MOBILE-QA-STAGE3.json",
+      "change": "added",
+      "sha256": "053427ac968d22fce9e193ad782f9a71d0516ddbad6a57415b430dbc03da897f",
+      "bytes": 321
+    },
+    {
+      "path": "app/tests/TEST-LOG-STAGE2.txt",
+      "change": "added",
+      "sha256": "8abb9a478e5e1b56f1fb7d48b6cdf3a28504b745757e11cc5074618132b0aafe",
+      "bytes": 19418
+    },
+    {
+      "path": "app/tests/TEST-LOG-STAGE3.txt",
+      "change": "added",
+      "sha256": "6abe249587b7dba11ed5922753906d80d77ef9b739b588dd1819aac60c57a468",
+      "bytes": 20866
+    },
+    {
+      "path": "app/tests/mcp-fixture.mjs",
+      "change": "added",
+      "sha256": "fa82042c2bafa9f5b4fd354c721b3c5d589abd434a5dda6ec042c4800761fd96",
+      "bytes": 2210
+    },
+    {
+      "path": "app/tests/mcp.test.ts",
+      "change": "added",
+      "sha256": "03660d70d0529db329bfebd848a0df2a6a0d68bb52ac35e90d9e75c0a4c57411",
+      "bytes": 8229
+    },
+    {
+      "path": "app/tests/runtime.test.ts",
+      "change": "added",
+      "sha256": "aa532c4a29a163b4863858e9454dfc3d9ad16b437f9f6410ad4164dda8e4c5cc",
+      "bytes": 14950
+    },
+    {
+      "path": "app/tests/skills.test.ts",
+      "change": "added",
+      "sha256": "2cc56b162a72390eea15f40da02396a592aabf4bafd9278a5228ac87c7649ae0",
+      "bytes": 9803
+    },
+    {
+      "path": "bridge/dist/app-mcp-ui.js",
+      "change": "added",
+      "sha256": "675e7b5d67227b500ca08645d08b1327a200b15647132d4ec96fcff0fcf0cbf5",
+      "bytes": 21649
+    },
+    {
+      "path": "bridge/dist/app-mcp.css",
+      "change": "added",
+      "sha256": "6fd7aa2bf875418763ba35f8bae1bd2a8acc264b9f90c6bf58a6884a553487b7",
+      "bytes": 5787
+    },
+    {
+      "path": "bridge/dist/app-runtime-ui.js",
+      "change": "added",
+      "sha256": "9b6ff548333a88f4cf0d57ce907c75945f102bada24a43934e27b897b4d49f08",
+      "bytes": 13755
+    },
+    {
+      "path": "bridge/dist/app-skills-ui.js",
+      "change": "added",
+      "sha256": "22e169e3d876936d1bad1650b9fde031c39e1631861498badb01ccc62aa8cb28",
+      "bytes": 15183
+    },
+    {
+      "path": "bridge/dist/app-skills.css",
+      "change": "added",
+      "sha256": "58f15e0241bd65742d8ef64f5aa142de53c7011f3a018bed37cf031eae579443",
+      "bytes": 4909
+    },
+    {
+      "path": "bridge/dist/app.html",
+      "change": "modified",
+      "sha256": "c245e2f2f61e2770b4b7faa5c76712101723740f9152fe32a02d310e9e6ec094",
+      "bytes": 41366
+    },
+    {
+      "path": "bridge/dist/bridge.mjs",
+      "change": "modified",
+      "sha256": "614e447f0501d956c901395d0459a020936e2941d81ab4da5eb7855c078f7fb6",
+      "bytes": 1126031
+    },
+    {
+      "path": "bridge/dist/mcp.html",
+      "change": "added",
+      "sha256": "219f0c0fc4a1c845f005658a4f84720dc7844d34320392741f126db81a59b109",
+      "bytes": 312
+    },
+    {
+      "path": "bridge/dist/skills/catalog.json",
+      "change": "added",
+      "sha256": "eb31bb23a0940470134effa57da7c136765cbd415b01752f6e155fc0ec9d7d60",
+      "bytes": 54098
+    },
+    {
+      "path": "bridge/dist/skills/resources/022ce137c6b445df739ad98b87ecb4056482071a2809f0109531d49585c4bd5b.lua",
+      "change": "added",
+      "sha256": "022ce137c6b445df739ad98b87ecb4056482071a2809f0109531d49585c4bd5b",
+      "bytes": 49436
+    },
+    {
+      "path": "bridge/dist/skills/resources/056461a8ee1ea4a5ed7f3f2feedc535e54cf735c70bfd836d2d2b0954dedd9ff.lua",
+      "change": "added",
+      "sha256": "056461a8ee1ea4a5ed7f3f2feedc535e54cf735c70bfd836d2d2b0954dedd9ff",
+      "bytes": 3366
+    },
+    {
+      "path": "bridge/dist/skills/resources/071764a47518cd1fa992806b0ed17c419f6e76e660b76b2ee842a73d70e658fc.md",
+      "change": "added",
+      "sha256": "071764a47518cd1fa992806b0ed17c419f6e76e660b76b2ee842a73d70e658fc",
+      "bytes": 5303
+    },
+    {
+      "path": "bridge/dist/skills/resources/14b919b4f4d1b287dfd61cb072fe04f026e418573645246f9c6b2625ee2ebb89.lua",
+      "change": "added",
+      "sha256": "14b919b4f4d1b287dfd61cb072fe04f026e418573645246f9c6b2625ee2ebb89",
+      "bytes": 3092
+    },
+    {
+      "path": "bridge/dist/skills/resources/15ca9d4249ae321d953f5b60a76074106f2c40c6a53324a33167bbef06f6ec66.lua",
+      "change": "added",
+      "sha256": "15ca9d4249ae321d953f5b60a76074106f2c40c6a53324a33167bbef06f6ec66",
+      "bytes": 2123
+    },
+    {
+      "path": "bridge/dist/skills/resources/184f92b346c7efe140dafd83769f7045b80af9781a581aad16ae294ad21940d7.lua",
+      "change": "added",
+      "sha256": "184f92b346c7efe140dafd83769f7045b80af9781a581aad16ae294ad21940d7",
+      "bytes": 3073
+    },
+    {
+      "path": "bridge/dist/skills/resources/1a6e5e77f40071773ce952ac7a182ca13cab47c43e9b73555f31ac11b0649b32.md",
+      "change": "added",
+      "sha256": "1a6e5e77f40071773ce952ac7a182ca13cab47c43e9b73555f31ac11b0649b32",
+      "bytes": 5716
+    },
+    {
+      "path": "bridge/dist/skills/resources/1da4b64ec822be198be04999a7439ddbf8a38d3669881fd3eb3b7a708a0d21b1.lua",
+      "change": "added",
+      "sha256": "1da4b64ec822be198be04999a7439ddbf8a38d3669881fd3eb3b7a708a0d21b1",
+      "bytes": 1564
+    },
+    {
+      "path": "bridge/dist/skills/resources/21e6079309cad32a5b5d0dd9e610c15a792bcf69eab20bca1bc69cf848dc31cc.lua",
+      "change": "added",
+      "sha256": "21e6079309cad32a5b5d0dd9e610c15a792bcf69eab20bca1bc69cf848dc31cc",
+      "bytes": 13526
+    },
+    {
+      "path": "bridge/dist/skills/resources/3bd57ce42dfd136bb4652681afa41046a5d6c238ea7c8f5a9e04d11a0a514487.lua",
+      "change": "added",
+      "sha256": "3bd57ce42dfd136bb4652681afa41046a5d6c238ea7c8f5a9e04d11a0a514487",
+      "bytes": 3691
+    },
+    {
+      "path": "bridge/dist/skills/resources/433e581e221f231acbf528baa7d85f88ba7da54a05cc75e0a87028a37a64f985.txt",
+      "change": "added",
+      "sha256": "433e581e221f231acbf528baa7d85f88ba7da54a05cc75e0a87028a37a64f985",
+      "bytes": 368
+    },
+    {
+      "path": "bridge/dist/skills/resources/4b04b328932ca8280f91ffd7a1dc5f030a21ad0db892a7f1ea6e9edcd3a30802.lua",
+      "change": "added",
+      "sha256": "4b04b328932ca8280f91ffd7a1dc5f030a21ad0db892a7f1ea6e9edcd3a30802",
+      "bytes": 14191
+    },
+    {
+      "path": "bridge/dist/skills/resources/4c9a778ca1460b3f944335692cc1efbaceca396708c05f7aa59fdca31ac85da1.lua",
+      "change": "added",
+      "sha256": "4c9a778ca1460b3f944335692cc1efbaceca396708c05f7aa59fdca31ac85da1",
+      "bytes": 1847
+    },
+    {
+      "path": "bridge/dist/skills/resources/5c44925ca8af6c819a266dcdba4ec3a19ac07fe947fdfd05279b4694d275cc87.md",
+      "change": "added",
+      "sha256": "5c44925ca8af6c819a266dcdba4ec3a19ac07fe947fdfd05279b4694d275cc87",
+      "bytes": 6938
+    },
+    {
+      "path": "bridge/dist/skills/resources/66cbb55c57d0ff50228a0e673f6f0475f46ecbdba4eecf1c7aecbc3eae07e963.lua",
+      "change": "added",
+      "sha256": "66cbb55c57d0ff50228a0e673f6f0475f46ecbdba4eecf1c7aecbc3eae07e963",
+      "bytes": 12616
+    },
+    {
+      "path": "bridge/dist/skills/resources/6c858c9946147318e63574a1599b595a08ec18d477087847dae6af8c44376414.txt",
+      "change": "added",
+      "sha256": "6c858c9946147318e63574a1599b595a08ec18d477087847dae6af8c44376414",
+      "bytes": 29816
+    },
+    {
+      "path": "bridge/dist/skills/resources/721c4c563605048d2a1e4e0fc51baecdf4a387434e7e79a2de8ac04023ae8218.lua",
+      "change": "added",
+      "sha256": "721c4c563605048d2a1e4e0fc51baecdf4a387434e7e79a2de8ac04023ae8218",
+      "bytes": 4755
+    },
+    {
+      "path": "bridge/dist/skills/resources/7c352aa9a8473c7394bbf86ed6d66b5ed9ed1c1f9b31682b483bee8978d9c87f.lua",
+      "change": "added",
+      "sha256": "7c352aa9a8473c7394bbf86ed6d66b5ed9ed1c1f9b31682b483bee8978d9c87f",
+      "bytes": 2159
+    },
+    {
+      "path": "bridge/dist/skills/resources/7d0725ca1bfe63bfaa67542e2e901c98f90c613d4aaa13077f6c8df14583c9f9.md",
+      "change": "added",
+      "sha256": "7d0725ca1bfe63bfaa67542e2e901c98f90c613d4aaa13077f6c8df14583c9f9",
+      "bytes": 30431
+    },
+    {
+      "path": "bridge/dist/skills/resources/7d201e5012b01000722e672d2a04bf0e6c87e3512c6511b292efeb2c4840e81a.lua",
+      "change": "added",
+      "sha256": "7d201e5012b01000722e672d2a04bf0e6c87e3512c6511b292efeb2c4840e81a",
+      "bytes": 2669
+    },
+    {
+      "path": "bridge/dist/skills/resources/7eb65d9b2516669cda0988b30a948e1d1f2754e603f05a0bc8e25d78b9e9ad9e.lua",
+      "change": "added",
+      "sha256": "7eb65d9b2516669cda0988b30a948e1d1f2754e603f05a0bc8e25d78b9e9ad9e",
+      "bytes": 604
+    },
+    {
+      "path": "bridge/dist/skills/resources/80261fa8889284c4c78185dbbd941169c4a6f6d74cc01067d6d7e9a90c1e4c65.md",
+      "change": "added",
+      "sha256": "80261fa8889284c4c78185dbbd941169c4a6f6d74cc01067d6d7e9a90c1e4c65",
+      "bytes": 9472
+    },
+    {
+      "path": "bridge/dist/skills/resources/81b63662842958e3f337ac7976a56acf2d957ab3c4d1cc815fd64155dedf2ba7.lua",
+      "change": "added",
+      "sha256": "81b63662842958e3f337ac7976a56acf2d957ab3c4d1cc815fd64155dedf2ba7",
+      "bytes": 2581
+    },
+    {
+      "path": "bridge/dist/skills/resources/83471d762848e1bd3373d05b1a4e76c8f6b01bebf4eff165c4993686bf240254.luau",
+      "change": "added",
+      "sha256": "83471d762848e1bd3373d05b1a4e76c8f6b01bebf4eff165c4993686bf240254",
+      "bytes": 40832
+    },
+    {
+      "path": "bridge/dist/skills/resources/8b5a55fac5ac41dff84a93a21195b2de6123dac8bed60a0ad8ee8c0b0003bd90.luau",
+      "change": "added",
+      "sha256": "8b5a55fac5ac41dff84a93a21195b2de6123dac8bed60a0ad8ee8c0b0003bd90",
+      "bytes": 10925
+    },
+    {
+      "path": "bridge/dist/skills/resources/8c53cbd9d3a8d8763c683d40e2c1d64c4a4585e21efb888b6049ab418e3b874a.txt",
+      "change": "added",
+      "sha256": "8c53cbd9d3a8d8763c683d40e2c1d64c4a4585e21efb888b6049ab418e3b874a",
+      "bytes": 694
+    },
+    {
+      "path": "bridge/dist/skills/resources/8ed1e06ebf5e91d5e3ed04b990f762ee03195e68ff3c287e0a1b737fec5fadba.lua",
+      "change": "added",
+      "sha256": "8ed1e06ebf5e91d5e3ed04b990f762ee03195e68ff3c287e0a1b737fec5fadba",
+      "bytes": 17280
+    },
+    {
+      "path": "bridge/dist/skills/resources/a38fe5084d5c215f50122c0fbe28083d7103c279838a4d3af01afd4f35e90fd0.lua",
+      "change": "added",
+      "sha256": "a38fe5084d5c215f50122c0fbe28083d7103c279838a4d3af01afd4f35e90fd0",
+      "bytes": 14203
+    },
+    {
+      "path": "bridge/dist/skills/resources/a481c1b85b727bec8dc46333161320411613155ebdef9d7f4b3dbb129cfbbbd0.lua",
+      "change": "added",
+      "sha256": "a481c1b85b727bec8dc46333161320411613155ebdef9d7f4b3dbb129cfbbbd0",
+      "bytes": 3104
+    },
+    {
+      "path": "bridge/dist/skills/resources/a780418c76c72931e7860115c30a5fca692c9ace490ff62ba58cf872f5fa06b1.lua",
+      "change": "added",
+      "sha256": "a780418c76c72931e7860115c30a5fca692c9ace490ff62ba58cf872f5fa06b1",
+      "bytes": 2358
+    },
+    {
+      "path": "bridge/dist/skills/resources/aa505ddbc3937c23c77ec7b7ea5042d1f28d8624765c0dd7086ee068c3b1caba.md",
+      "change": "added",
+      "sha256": "aa505ddbc3937c23c77ec7b7ea5042d1f28d8624765c0dd7086ee068c3b1caba",
+      "bytes": 5351
+    },
+    {
+      "path": "bridge/dist/skills/resources/afd26de8e5c737329232f9e4c49f328861711e95bae2801859d7a7b88edffac7.txt",
+      "change": "added",
+      "sha256": "afd26de8e5c737329232f9e4c49f328861711e95bae2801859d7a7b88edffac7",
+      "bytes": 24082
+    },
+    {
+      "path": "bridge/dist/skills/resources/b1d24254a79824361e70e68af2cec36c2e1d1b6b41712e91048627396daeeb0c.md",
+      "change": "added",
+      "sha256": "b1d24254a79824361e70e68af2cec36c2e1d1b6b41712e91048627396daeeb0c",
+      "bytes": 28056
+    },
+    {
+      "path": "bridge/dist/skills/resources/b74063863139facb5a2ce759e5e6105063c3245d37329cc324a3a0a851ad0c11.luau",
+      "change": "added",
+      "sha256": "b74063863139facb5a2ce759e5e6105063c3245d37329cc324a3a0a851ad0c11",
+      "bytes": 6015
+    },
+    {
+      "path": "bridge/dist/skills/resources/b8a8caf1e0e4c8a14883f876cb4f8a1019a351581bc240ed73f0270743535f9c.lua",
+      "change": "added",
+      "sha256": "b8a8caf1e0e4c8a14883f876cb4f8a1019a351581bc240ed73f0270743535f9c",
+      "bytes": 2370
+    },
+    {
+      "path": "bridge/dist/skills/resources/b91c4cddd2d36d0e72a141299a6ddda41b8c2ace6cb961284ad5b410eff534ff.txt",
+      "change": "added",
+      "sha256": "b91c4cddd2d36d0e72a141299a6ddda41b8c2ace6cb961284ad5b410eff534ff",
+      "bytes": 11847
+    },
+    {
+      "path": "bridge/dist/skills/resources/bb476692bcc7760b502692f40b590320da2c53132de7e964b67dcc3e48d63768.md",
+      "change": "added",
+      "sha256": "bb476692bcc7760b502692f40b590320da2c53132de7e964b67dcc3e48d63768",
+      "bytes": 8274
+    },
+    {
+      "path": "bridge/dist/skills/resources/c0dbb329f6f2d3b0277e3f7102d456507d00eef5eca3c79e72368a6174565ba2.lua",
+      "change": "added",
+      "sha256": "c0dbb329f6f2d3b0277e3f7102d456507d00eef5eca3c79e72368a6174565ba2",
+      "bytes": 1826
+    },
+    {
+      "path": "bridge/dist/skills/resources/c49fc3019f947dd731bfc2b97552d7b6cc54b8701add3dfaf0a3240a15981ad8.txt",
+      "change": "added",
+      "sha256": "c49fc3019f947dd731bfc2b97552d7b6cc54b8701add3dfaf0a3240a15981ad8",
+      "bytes": 2908
+    },
+    {
+      "path": "bridge/dist/skills/resources/c840b6fd850e89f57d5b4bfa0cc193c629025b95613f295a9c1ca0738de73a51.luau",
+      "change": "added",
+      "sha256": "c840b6fd850e89f57d5b4bfa0cc193c629025b95613f295a9c1ca0738de73a51",
+      "bytes": 128454
+    },
+    {
+      "path": "bridge/dist/skills/resources/cd82aef6b5979f7b4a09e86278c2f501a03dc5eba22d825d9285c3b980f47161.lua",
+      "change": "added",
+      "sha256": "cd82aef6b5979f7b4a09e86278c2f501a03dc5eba22d825d9285c3b980f47161",
+      "bytes": 2710
+    },
+    {
+      "path": "bridge/dist/skills/resources/cfa366f177e27ed203459db08c6dc952df494b3816c8de2b3c3da2cd734f0122.md",
+      "change": "added",
+      "sha256": "cfa366f177e27ed203459db08c6dc952df494b3816c8de2b3c3da2cd734f0122",
+      "bytes": 20784
+    },
+    {
+      "path": "bridge/dist/skills/resources/d3cb54a437ee7b03c878a461274b5f6194e55538a2ba5e82d0158121319d093e.md",
+      "change": "added",
+      "sha256": "d3cb54a437ee7b03c878a461274b5f6194e55538a2ba5e82d0158121319d093e",
+      "bytes": 5747
+    },
+    {
+      "path": "bridge/dist/skills/resources/d4eda769bfa91ac800997696266c3880747a9ee886be22f59730c4f35092af61.json",
+      "change": "added",
+      "sha256": "d4eda769bfa91ac800997696266c3880747a9ee886be22f59730c4f35092af61",
+      "bytes": 3497
+    },
+    {
+      "path": "bridge/dist/skills/resources/d59ee0bfd8de0cb5800c8b2822810fd7c810558d22e0653f4d07ec2ab291502b.lua",
+      "change": "added",
+      "sha256": "d59ee0bfd8de0cb5800c8b2822810fd7c810558d22e0653f4d07ec2ab291502b",
+      "bytes": 5999
+    },
+    {
+      "path": "bridge/dist/skills/resources/df019f4f298a11002575c43243413ad6939c737313dccb842369965aefb98451.lua",
+      "change": "added",
+      "sha256": "df019f4f298a11002575c43243413ad6939c737313dccb842369965aefb98451",
+      "bytes": 14637
+    },
+    {
+      "path": "bridge/dist/skills/resources/e230af841d1ca4cfd9e47c7f09f922f75927976ab81c4a3c94b90099be158c48.lua",
+      "change": "added",
+      "sha256": "e230af841d1ca4cfd9e47c7f09f922f75927976ab81c4a3c94b90099be158c48",
+      "bytes": 2830
+    },
+    {
+      "path": "bridge/dist/skills/resources/e89116520e5c132d6eab4897acf28246c9fce90c05602dd94e98a94c0fa494b3.md",
+      "change": "added",
+      "sha256": "e89116520e5c132d6eab4897acf28246c9fce90c05602dd94e98a94c0fa494b3",
+      "bytes": 20149
+    },
+    {
+      "path": "bridge/dist/skills/resources/f2dd141f41df5edc7e8e39ca5a8b27c7800a014717410c0b915eab39d9324c07.md",
+      "change": "added",
+      "sha256": "f2dd141f41df5edc7e8e39ca5a8b27c7800a014717410c0b915eab39d9324c07",
+      "bytes": 717
+    },
+    {
+      "path": "bridge/dist/skills/resources/f3596180e87eabb574c4d47462a5233a8a6875c5db40210b8438c5be1c308f27.md",
+      "change": "added",
+      "sha256": "f3596180e87eabb574c4d47462a5233a8a6875c5db40210b8438c5be1c308f27",
+      "bytes": 1781
+    },
+    {
+      "path": "bridge/dist/skills/resources/f3f22c44a435d5a0a8eef1f78beaf36fd0741536c7af3e8fc42d7a3b9a161c21.md",
+      "change": "added",
+      "sha256": "f3f22c44a435d5a0a8eef1f78beaf36fd0741536c7af3e8fc42d7a3b9a161c21",
+      "bytes": 5732
+    },
+    {
+      "path": "bridge/dist/skills/resources/fc3a92013bb4ae114028db4699a0d59c974bae93b622545c43fe6d3ac7ffafd5.md",
+      "change": "added",
+      "sha256": "fc3a92013bb4ae114028db4699a0d59c974bae93b622545c43fe6d3ac7ffafd5",
+      "bytes": 4502
+    },
+    {
+      "path": "bridge/skills/catalog.json",
+      "change": "added",
+      "sha256": "eb31bb23a0940470134effa57da7c136765cbd415b01752f6e155fc0ec9d7d60",
+      "bytes": 54098
+    },
+    {
+      "path": "bridge/skills/resources/022ce137c6b445df739ad98b87ecb4056482071a2809f0109531d49585c4bd5b.lua",
+      "change": "added",
+      "sha256": "022ce137c6b445df739ad98b87ecb4056482071a2809f0109531d49585c4bd5b",
+      "bytes": 49436
+    },
+    {
+      "path": "bridge/skills/resources/056461a8ee1ea4a5ed7f3f2feedc535e54cf735c70bfd836d2d2b0954dedd9ff.lua",
+      "change": "added",
+      "sha256": "056461a8ee1ea4a5ed7f3f2feedc535e54cf735c70bfd836d2d2b0954dedd9ff",
+      "bytes": 3366
+    },
+    {
+      "path": "bridge/skills/resources/071764a47518cd1fa992806b0ed17c419f6e76e660b76b2ee842a73d70e658fc.md",
+      "change": "added",
+      "sha256": "071764a47518cd1fa992806b0ed17c419f6e76e660b76b2ee842a73d70e658fc",
+      "bytes": 5303
+    },
+    {
+      "path": "bridge/skills/resources/14b919b4f4d1b287dfd61cb072fe04f026e418573645246f9c6b2625ee2ebb89.lua",
+      "change": "added",
+      "sha256": "14b919b4f4d1b287dfd61cb072fe04f026e418573645246f9c6b2625ee2ebb89",
+      "bytes": 3092
+    },
+    {
+      "path": "bridge/skills/resources/15ca9d4249ae321d953f5b60a76074106f2c40c6a53324a33167bbef06f6ec66.lua",
+      "change": "added",
+      "sha256": "15ca9d4249ae321d953f5b60a76074106f2c40c6a53324a33167bbef06f6ec66",
+      "bytes": 2123
+    },
+    {
+      "path": "bridge/skills/resources/184f92b346c7efe140dafd83769f7045b80af9781a581aad16ae294ad21940d7.lua",
+      "change": "added",
+      "sha256": "184f92b346c7efe140dafd83769f7045b80af9781a581aad16ae294ad21940d7",
+      "bytes": 3073
+    },
+    {
+      "path": "bridge/skills/resources/1a6e5e77f40071773ce952ac7a182ca13cab47c43e9b73555f31ac11b0649b32.md",
+      "change": "added",
+      "sha256": "1a6e5e77f40071773ce952ac7a182ca13cab47c43e9b73555f31ac11b0649b32",
+      "bytes": 5716
+    },
+    {
+      "path": "bridge/skills/resources/1da4b64ec822be198be04999a7439ddbf8a38d3669881fd3eb3b7a708a0d21b1.lua",
+      "change": "added",
+      "sha256": "1da4b64ec822be198be04999a7439ddbf8a38d3669881fd3eb3b7a708a0d21b1",
+      "bytes": 1564
+    },
+    {
+      "path": "bridge/skills/resources/21e6079309cad32a5b5d0dd9e610c15a792bcf69eab20bca1bc69cf848dc31cc.lua",
+      "change": "added",
+      "sha256": "21e6079309cad32a5b5d0dd9e610c15a792bcf69eab20bca1bc69cf848dc31cc",
+      "bytes": 13526
+    },
+    {
+      "path": "bridge/skills/resources/3bd57ce42dfd136bb4652681afa41046a5d6c238ea7c8f5a9e04d11a0a514487.lua",
+      "change": "added",
+      "sha256": "3bd57ce42dfd136bb4652681afa41046a5d6c238ea7c8f5a9e04d11a0a514487",
+      "bytes": 3691
+    },
+    {
+      "path": "bridge/skills/resources/433e581e221f231acbf528baa7d85f88ba7da54a05cc75e0a87028a37a64f985.txt",
+      "change": "added",
+      "sha256": "433e581e221f231acbf528baa7d85f88ba7da54a05cc75e0a87028a37a64f985",
+      "bytes": 368
+    },
+    {
+      "path": "bridge/skills/resources/4b04b328932ca8280f91ffd7a1dc5f030a21ad0db892a7f1ea6e9edcd3a30802.lua",
+      "change": "added",
+      "sha256": "4b04b328932ca8280f91ffd7a1dc5f030a21ad0db892a7f1ea6e9edcd3a30802",
+      "bytes": 14191
+    },
+    {
+      "path": "bridge/skills/resources/4c9a778ca1460b3f944335692cc1efbaceca396708c05f7aa59fdca31ac85da1.lua",
+      "change": "added",
+      "sha256": "4c9a778ca1460b3f944335692cc1efbaceca396708c05f7aa59fdca31ac85da1",
+      "bytes": 1847
+    },
+    {
+      "path": "bridge/skills/resources/5c44925ca8af6c819a266dcdba4ec3a19ac07fe947fdfd05279b4694d275cc87.md",
+      "change": "added",
+      "sha256": "5c44925ca8af6c819a266dcdba4ec3a19ac07fe947fdfd05279b4694d275cc87",
+      "bytes": 6938
+    },
+    {
+      "path": "bridge/skills/resources/66cbb55c57d0ff50228a0e673f6f0475f46ecbdba4eecf1c7aecbc3eae07e963.lua",
+      "change": "added",
+      "sha256": "66cbb55c57d0ff50228a0e673f6f0475f46ecbdba4eecf1c7aecbc3eae07e963",
+      "bytes": 12616
+    },
+    {
+      "path": "bridge/skills/resources/6c858c9946147318e63574a1599b595a08ec18d477087847dae6af8c44376414.txt",
+      "change": "added",
+      "sha256": "6c858c9946147318e63574a1599b595a08ec18d477087847dae6af8c44376414",
+      "bytes": 29816
+    },
+    {
+      "path": "bridge/skills/resources/721c4c563605048d2a1e4e0fc51baecdf4a387434e7e79a2de8ac04023ae8218.lua",
+      "change": "added",
+      "sha256": "721c4c563605048d2a1e4e0fc51baecdf4a387434e7e79a2de8ac04023ae8218",
+      "bytes": 4755
+    },
+    {
+      "path": "bridge/skills/resources/7c352aa9a8473c7394bbf86ed6d66b5ed9ed1c1f9b31682b483bee8978d9c87f.lua",
+      "change": "added",
+      "sha256": "7c352aa9a8473c7394bbf86ed6d66b5ed9ed1c1f9b31682b483bee8978d9c87f",
+      "bytes": 2159
+    },
+    {
+      "path": "bridge/skills/resources/7d0725ca1bfe63bfaa67542e2e901c98f90c613d4aaa13077f6c8df14583c9f9.md",
+      "change": "added",
+      "sha256": "7d0725ca1bfe63bfaa67542e2e901c98f90c613d4aaa13077f6c8df14583c9f9",
+      "bytes": 30431
+    },
+    {
+      "path": "bridge/skills/resources/7d201e5012b01000722e672d2a04bf0e6c87e3512c6511b292efeb2c4840e81a.lua",
+      "change": "added",
+      "sha256": "7d201e5012b01000722e672d2a04bf0e6c87e3512c6511b292efeb2c4840e81a",
+      "bytes": 2669
+    },
+    {
+      "path": "bridge/skills/resources/7eb65d9b2516669cda0988b30a948e1d1f2754e603f05a0bc8e25d78b9e9ad9e.lua",
+      "change": "added",
+      "sha256": "7eb65d9b2516669cda0988b30a948e1d1f2754e603f05a0bc8e25d78b9e9ad9e",
+      "bytes": 604
+    },
+    {
+      "path": "bridge/skills/resources/80261fa8889284c4c78185dbbd941169c4a6f6d74cc01067d6d7e9a90c1e4c65.md",
+      "change": "added",
+      "sha256": "80261fa8889284c4c78185dbbd941169c4a6f6d74cc01067d6d7e9a90c1e4c65",
+      "bytes": 9472
+    },
+    {
+      "path": "bridge/skills/resources/81b63662842958e3f337ac7976a56acf2d957ab3c4d1cc815fd64155dedf2ba7.lua",
+      "change": "added",
+      "sha256": "81b63662842958e3f337ac7976a56acf2d957ab3c4d1cc815fd64155dedf2ba7",
+      "bytes": 2581
+    },
+    {
+      "path": "bridge/skills/resources/83471d762848e1bd3373d05b1a4e76c8f6b01bebf4eff165c4993686bf240254.luau",
+      "change": "added",
+      "sha256": "83471d762848e1bd3373d05b1a4e76c8f6b01bebf4eff165c4993686bf240254",
+      "bytes": 40832
+    },
+    {
+      "path": "bridge/skills/resources/8b5a55fac5ac41dff84a93a21195b2de6123dac8bed60a0ad8ee8c0b0003bd90.luau",
+      "change": "added",
+      "sha256": "8b5a55fac5ac41dff84a93a21195b2de6123dac8bed60a0ad8ee8c0b0003bd90",
+      "bytes": 10925
+    },
+    {
+      "path": "bridge/skills/resources/8c53cbd9d3a8d8763c683d40e2c1d64c4a4585e21efb888b6049ab418e3b874a.txt",
+      "change": "added",
+      "sha256": "8c53cbd9d3a8d8763c683d40e2c1d64c4a4585e21efb888b6049ab418e3b874a",
+      "bytes": 694
+    },
+    {
+      "path": "bridge/skills/resources/8ed1e06ebf5e91d5e3ed04b990f762ee03195e68ff3c287e0a1b737fec5fadba.lua",
+      "change": "added",
+      "sha256": "8ed1e06ebf5e91d5e3ed04b990f762ee03195e68ff3c287e0a1b737fec5fadba",
+      "bytes": 17280
+    },
+    {
+      "path": "bridge/skills/resources/a38fe5084d5c215f50122c0fbe28083d7103c279838a4d3af01afd4f35e90fd0.lua",
+      "change": "added",
+      "sha256": "a38fe5084d5c215f50122c0fbe28083d7103c279838a4d3af01afd4f35e90fd0",
+      "bytes": 14203
+    },
+    {
+      "path": "bridge/skills/resources/a481c1b85b727bec8dc46333161320411613155ebdef9d7f4b3dbb129cfbbbd0.lua",
+      "change": "added",
+      "sha256": "a481c1b85b727bec8dc46333161320411613155ebdef9d7f4b3dbb129cfbbbd0",
+      "bytes": 3104
+    },
+    {
+      "path": "bridge/skills/resources/a780418c76c72931e7860115c30a5fca692c9ace490ff62ba58cf872f5fa06b1.lua",
+      "change": "added",
+      "sha256": "a780418c76c72931e7860115c30a5fca692c9ace490ff62ba58cf872f5fa06b1",
+      "bytes": 2358
+    },
+    {
+      "path": "bridge/skills/resources/aa505ddbc3937c23c77ec7b7ea5042d1f28d8624765c0dd7086ee068c3b1caba.md",
+      "change": "added",
+      "sha256": "aa505ddbc3937c23c77ec7b7ea5042d1f28d8624765c0dd7086ee068c3b1caba",
+      "bytes": 5351
+    },
+    {
+      "path": "bridge/skills/resources/afd26de8e5c737329232f9e4c49f328861711e95bae2801859d7a7b88edffac7.txt",
+      "change": "added",
+      "sha256": "afd26de8e5c737329232f9e4c49f328861711e95bae2801859d7a7b88edffac7",
+      "bytes": 24082
+    },
+    {
+      "path": "bridge/skills/resources/b1d24254a79824361e70e68af2cec36c2e1d1b6b41712e91048627396daeeb0c.md",
+      "change": "added",
+      "sha256": "b1d24254a79824361e70e68af2cec36c2e1d1b6b41712e91048627396daeeb0c",
+      "bytes": 28056
+    },
+    {
+      "path": "bridge/skills/resources/b74063863139facb5a2ce759e5e6105063c3245d37329cc324a3a0a851ad0c11.luau",
+      "change": "added",
+      "sha256": "b74063863139facb5a2ce759e5e6105063c3245d37329cc324a3a0a851ad0c11",
+      "bytes": 6015
+    },
+    {
+      "path": "bridge/skills/resources/b8a8caf1e0e4c8a14883f876cb4f8a1019a351581bc240ed73f0270743535f9c.lua",
+      "change": "added",
+      "sha256": "b8a8caf1e0e4c8a14883f876cb4f8a1019a351581bc240ed73f0270743535f9c",
+      "bytes": 2370
+    },
+    {
+      "path": "bridge/skills/resources/b91c4cddd2d36d0e72a141299a6ddda41b8c2ace6cb961284ad5b410eff534ff.txt",
+      "change": "added",
+      "sha256": "b91c4cddd2d36d0e72a141299a6ddda41b8c2ace6cb961284ad5b410eff534ff",
+      "bytes": 11847
+    },
+    {
+      "path": "bridge/skills/resources/bb476692bcc7760b502692f40b590320da2c53132de7e964b67dcc3e48d63768.md",
+      "change": "added",
+      "sha256": "bb476692bcc7760b502692f40b590320da2c53132de7e964b67dcc3e48d63768",
+      "bytes": 8274
+    },
+    {
+      "path": "bridge/skills/resources/c0dbb329f6f2d3b0277e3f7102d456507d00eef5eca3c79e72368a6174565ba2.lua",
+      "change": "added",
+      "sha256": "c0dbb329f6f2d3b0277e3f7102d456507d00eef5eca3c79e72368a6174565ba2",
+      "bytes": 1826
+    },
+    {
+      "path": "bridge/skills/resources/c49fc3019f947dd731bfc2b97552d7b6cc54b8701add3dfaf0a3240a15981ad8.txt",
+      "change": "added",
+      "sha256": "c49fc3019f947dd731bfc2b97552d7b6cc54b8701add3dfaf0a3240a15981ad8",
+      "bytes": 2908
+    },
+    {
+      "path": "bridge/skills/resources/c840b6fd850e89f57d5b4bfa0cc193c629025b95613f295a9c1ca0738de73a51.luau",
+      "change": "added",
+      "sha256": "c840b6fd850e89f57d5b4bfa0cc193c629025b95613f295a9c1ca0738de73a51",
+      "bytes": 128454
+    },
+    {
+      "path": "bridge/skills/resources/cd82aef6b5979f7b4a09e86278c2f501a03dc5eba22d825d9285c3b980f47161.lua",
+      "change": "added",
+      "sha256": "cd82aef6b5979f7b4a09e86278c2f501a03dc5eba22d825d9285c3b980f47161",
+      "bytes": 2710
+    },
+    {
+      "path": "bridge/skills/resources/cfa366f177e27ed203459db08c6dc952df494b3816c8de2b3c3da2cd734f0122.md",
+      "change": "added",
+      "sha256": "cfa366f177e27ed203459db08c6dc952df494b3816c8de2b3c3da2cd734f0122",
+      "bytes": 20784
+    },
+    {
+      "path": "bridge/skills/resources/d3cb54a437ee7b03c878a461274b5f6194e55538a2ba5e82d0158121319d093e.md",
+      "change": "added",
+      "sha256": "d3cb54a437ee7b03c878a461274b5f6194e55538a2ba5e82d0158121319d093e",
+      "bytes": 5747
+    },
+    {
+      "path": "bridge/skills/resources/d4eda769bfa91ac800997696266c3880747a9ee886be22f59730c4f35092af61.json",
+      "change": "added",
+      "sha256": "d4eda769bfa91ac800997696266c3880747a9ee886be22f59730c4f35092af61",
+      "bytes": 3497
+    },
+    {
+      "path": "bridge/skills/resources/d59ee0bfd8de0cb5800c8b2822810fd7c810558d22e0653f4d07ec2ab291502b.lua",
+      "change": "added",
+      "sha256": "d59ee0bfd8de0cb5800c8b2822810fd7c810558d22e0653f4d07ec2ab291502b",
+      "bytes": 5999
+    },
+    {
+      "path": "bridge/skills/resources/df019f4f298a11002575c43243413ad6939c737313dccb842369965aefb98451.lua",
+      "change": "added",
+      "sha256": "df019f4f298a11002575c43243413ad6939c737313dccb842369965aefb98451",
+      "bytes": 14637
+    },
+    {
+      "path": "bridge/skills/resources/e230af841d1ca4cfd9e47c7f09f922f75927976ab81c4a3c94b90099be158c48.lua",
+      "change": "added",
+      "sha256": "e230af841d1ca4cfd9e47c7f09f922f75927976ab81c4a3c94b90099be158c48",
+      "bytes": 2830
+    },
+    {
+      "path": "bridge/skills/resources/e89116520e5c132d6eab4897acf28246c9fce90c05602dd94e98a94c0fa494b3.md",
+      "change": "added",
+      "sha256": "e89116520e5c132d6eab4897acf28246c9fce90c05602dd94e98a94c0fa494b3",
+      "bytes": 20149
+    },
+    {
+      "path": "bridge/skills/resources/f2dd141f41df5edc7e8e39ca5a8b27c7800a014717410c0b915eab39d9324c07.md",
+      "change": "added",
+      "sha256": "f2dd141f41df5edc7e8e39ca5a8b27c7800a014717410c0b915eab39d9324c07",
+      "bytes": 717
+    },
+    {
+      "path": "bridge/skills/resources/f3596180e87eabb574c4d47462a5233a8a6875c5db40210b8438c5be1c308f27.md",
+      "change": "added",
+      "sha256": "f3596180e87eabb574c4d47462a5233a8a6875c5db40210b8438c5be1c308f27",
+      "bytes": 1781
+    },
+    {
+      "path": "bridge/skills/resources/f3f22c44a435d5a0a8eef1f78beaf36fd0741536c7af3e8fc42d7a3b9a161c21.md",
+      "change": "added",
+      "sha256": "f3f22c44a435d5a0a8eef1f78beaf36fd0741536c7af3e8fc42d7a3b9a161c21",
+      "bytes": 5732
+    },
+    {
+      "path": "bridge/skills/resources/fc3a92013bb4ae114028db4699a0d59c974bae93b622545c43fe6d3ac7ffafd5.md",
+      "change": "added",
+      "sha256": "fc3a92013bb4ae114028db4699a0d59c974bae93b622545c43fe6d3ac7ffafd5",
+      "bytes": 4502
+    },
+    {
+      "path": "bridge/src/app-mcp-routes.ts",
+      "change": "added",
+      "sha256": "4ef7d11f46aeeb5bd21a6599a28d7539e46829a8cff16fedb94bdef1deabb26d",
+      "bytes": 4124
+    },
+    {
+      "path": "bridge/src/app-mcp-ui.js",
+      "change": "added",
+      "sha256": "675e7b5d67227b500ca08645d08b1327a200b15647132d4ec96fcff0fcf0cbf5",
+      "bytes": 21649
+    },
+    {
+      "path": "bridge/src/app-mcp.css",
+      "change": "added",
+      "sha256": "6fd7aa2bf875418763ba35f8bae1bd2a8acc264b9f90c6bf58a6884a553487b7",
+      "bytes": 5787
+    },
+    {
+      "path": "bridge/src/app-mcp.ts",
+      "change": "added",
+      "sha256": "5179ae1b1dc462f8f4417a813451ac2b9b72f780d81cd86818754e868e9bb1b5",
+      "bytes": 17295
+    },
+    {
+      "path": "bridge/src/app-runtime-routes.ts",
+      "change": "added",
+      "sha256": "481ce55bb32d23e9efd4e3dcc1478a7d52c2ee29e66f508f34eff8d2647ead3e",
+      "bytes": 6250
+    },
+    {
+      "path": "bridge/src/app-runtime-ui.js",
+      "change": "added",
+      "sha256": "9b6ff548333a88f4cf0d57ce907c75945f102bada24a43934e27b897b4d49f08",
+      "bytes": 13755
+    },
+    {
+      "path": "bridge/src/app-skills-routes.ts",
+      "change": "added",
+      "sha256": "cabe2afc0531d6c49af948ed16c5ab08d4fa6c0bfbc1de23c52a914c3d4e4961",
+      "bytes": 2681
+    },
+    {
+      "path": "bridge/src/app-skills-ui.js",
+      "change": "added",
+      "sha256": "22e169e3d876936d1bad1650b9fde031c39e1631861498badb01ccc62aa8cb28",
+      "bytes": 15183
+    },
+    {
+      "path": "bridge/src/app-skills.css",
+      "change": "added",
+      "sha256": "58f15e0241bd65742d8ef64f5aa142de53c7011f3a018bed37cf031eae579443",
+      "bytes": 4909
+    },
+    {
+      "path": "bridge/src/app.html",
+      "change": "modified",
+      "sha256": "c245e2f2f61e2770b4b7faa5c76712101723740f9152fe32a02d310e9e6ec094",
+      "bytes": 41366
+    },
+    {
+      "path": "bridge/src/bridge.ts",
+      "change": "modified",
+      "sha256": "06ce1a9d6208e19ca9ee26b0a6af6e27e98716b1180486e264a0e658dc68278e",
+      "bytes": 59152
+    },
+    {
+      "path": "bridge/src/execution-policy.ts",
+      "change": "added",
+      "sha256": "a81e2a5e037a2e0d5c8d898e1a6bfe2b928b46e9e6c460295d7642dcab75b4f5",
+      "bytes": 2562
+    },
+    {
+      "path": "bridge/src/headless.ts",
+      "change": "modified",
+      "sha256": "2949f0526d62ca3eb726118c818faf16d96c1e10678797f81fbfc3ec0399a8d9",
+      "bytes": 12278
+    },
+    {
+      "path": "bridge/src/mcp-client.ts",
+      "change": "modified",
+      "sha256": "fab3c23b4ad56117a8ac9f80418bc71bbc5cb88167c831af073c1960d1eba7be",
+      "bytes": 19479
+    },
+    {
+      "path": "bridge/src/mcp.html",
+      "change": "added",
+      "sha256": "219f0c0fc4a1c845f005658a4f84720dc7844d34320392741f126db81a59b109",
+      "bytes": 312
+    },
+    {
+      "path": "bridge/src/operation-store.ts",
+      "change": "added",
+      "sha256": "38a7a31f3f630bfb1ad2b861234e22bf9bd123f8f40d1527913b79feed676480",
+      "bytes": 6569
+    },
+    {
+      "path": "bridge/src/server.ts",
+      "change": "modified",
+      "sha256": "fea8f7d94d65935004e6c7b89c8cd449985c98bbf1743cc87e51f0ef031cb38e",
+      "bytes": 23130
+    },
+    {
+      "path": "bridge/src/skill-registry.ts",
+      "change": "added",
+      "sha256": "238448c04331daf0f68996afd4896e9817c882bd0fa38acf9147204bb84e896e",
+      "bytes": 13449
+    },
+    {
+      "path": "bridge/src/task-runtime.ts",
+      "change": "added",
+      "sha256": "703c1a51c2ff311057b172226b4d89954513aa2b0dc209c879f5df694e14cd21",
+      "bytes": 9858
+    },
+    {
+      "path": "plugin/BrickwireChat.plugin.lua",
+      "change": "modified",
+      "sha256": "de7d2ccb7cd52cc1ee4daf23b8d692218ac6df1c990f6c8ccc3399b033c9b51b",
+      "bytes": 33391
+    },
+    {
+      "path": "plugin/BrickwireChat.rbxmx",
+      "change": "modified",
+      "sha256": "1568f0cffa594d509a8b102fe22b2c288be547984094474d15d9f1343233aea4",
+      "bytes": 33627
+    }
+  ]
+}

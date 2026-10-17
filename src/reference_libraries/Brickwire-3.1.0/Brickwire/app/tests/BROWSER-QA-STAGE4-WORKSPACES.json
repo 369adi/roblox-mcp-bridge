@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "errors": [],
+  "checks": [
+    "full source load/diff/approval/restore against JS fixture",
+    "real procedural WebGL geometry and OBJ download",
+    "VFX layer edit/save/build/replay contracts; visualVerified false",
+    "actual MCP graph observation and static impact",
+    "persisted design linked to PLANNED task without execution",
+    "Paint/UI Builder existing iframe integration",
+    "real bundled asset search/favorite/code export",
+    "all new desktop/mobile workspaces, no document horizontal overflow"
+  ]
+}

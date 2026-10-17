@@ -1,0 +1,6 @@
+local g = BW.screen("ShopUI")
+local f = BW.ui("Frame", {Name="Panel", Parent=g, Size={0.3,0,0.5,0}, Position={0.35,0,0.25,0}, BackgroundColor3="#1E1E2E", Corner=12, Stroke={"#4F8CFF",2}, Padding=10, List={Padding=8}})
+BW.ui("TextLabel", {Name="Title", Parent=f, Size={1,0,0,40}, Text="Shop", TextScaled=true})
+BW.ui("TextButton", {Name="Buy", Parent=f, Size={1,0,0,44}, Text="Buy", BackgroundColor3="#2FD67B", Corner=8})
+BW.tree(g, 3)
+BW.check(f:FindFirstChild("UICorner") ~= nil and f:FindFirstChild("UIListLayout") ~= nil, "decorations")

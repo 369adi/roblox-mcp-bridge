@@ -1,0 +1,5 @@
+BW.logs(10)
+BW.scan("Health")
+BW.exists("Workspace.Nope")
+local ok, err = pcall(function() BW.part{Name="X", Size="big"} end)
+BW.check(not ok, "typo reported: " .. tostring(err))

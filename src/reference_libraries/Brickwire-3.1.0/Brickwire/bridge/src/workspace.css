@@ -1,0 +1,399 @@
+/* App-only workspaces. Brickwire gold identity, no placeholder previews. */
+@media (min-width: 901px) {
+  nav {
+    overflow-y: auto;
+    min-height: 0;
+  }
+  .brand {
+    padding-bottom: 18px;
+  }
+  nav a[data-tab] {
+    flex-shrink: 0;
+  }
+  nav .grow {
+    min-height: 16px;
+  }
+}
+.ws-root {
+  font-size: 14px;
+  line-height: 1.6;
+  min-width: 0;
+}
+.ws-root h1 {
+  font-size: 32px;
+  line-height: 1.2;
+  margin: 6px 0 12px;
+}
+.ws-root h2 {
+  font-size: 22px;
+  line-height: 1.35;
+  margin: 0 0 16px;
+}
+.ws-root h3 {
+  font-size: 17px;
+  margin: 24px 0 12px;
+}
+.ws-root p {
+  color: var(--dim);
+  margin: 12px 0;
+}
+.ws-head {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+.ws-kicker {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: var(--gold);
+}
+.ws-root button,
+.ws-dialog button {
+  border-radius: 8px;
+  min-height: 44px;
+  font-size: 14px;
+}
+.ws-root .gold,
+.ws-dialog .gold {
+  background: #d9b975;
+  color: #17140f;
+  border-color: #d9b975;
+  font-weight: 600;
+}
+.ws-toolbar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: end;
+}
+.ws-grid {
+  display: grid;
+  grid-template-columns: minmax(240px, 300px) minmax(0, 1fr);
+  gap: 24px;
+}
+.ws-card {
+  border: 1px solid var(--line2);
+  border-radius: 12px;
+  background: var(--s1);
+  padding: 24px;
+  min-width: 0;
+  margin-bottom: 24px;
+}
+.ws-root label,
+.ws-dialog label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+  color: var(--dim);
+  min-width: 0;
+}
+.ws-root input,
+.ws-root select,
+.ws-root textarea,
+.ws-dialog input,
+.ws-dialog select,
+.ws-dialog textarea {
+  width: 100%;
+  border-radius: 8px;
+  font-size: 14px;
+  min-height: 44px;
+  box-sizing: border-box;
+}
+.ws-root textarea,
+.ws-dialog textarea {
+  font-family: Consolas, monospace;
+  line-height: 1.6;
+  resize: vertical;
+}
+.ws-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 16px;
+}
+.ws-fields .wide {
+  grid-column: 1/-1;
+}
+.ws-list {
+  display: grid;
+  gap: 8px;
+  max-height: 600px;
+  overflow: auto;
+  grid-auto-rows: max-content;
+}
+.ws-list > button {
+  text-align: left;
+  white-space: normal;
+  display: block;
+  padding: 16px;
+  min-height: 80px;
+  line-height: 1.45;
+}
+.ws-list small {
+  display: block;
+  color: var(--dim);
+  margin-top: 8px;
+}
+.ws-list .selected {
+  border-color: var(--gold);
+  background: rgba(217, 185, 117, 0.08);
+}
+.ws-note {
+  border-left: 2px solid var(--gold);
+  background: rgba(217, 185, 117, 0.05);
+  padding: 16px;
+  margin: 16px 0;
+  color: var(--dim);
+}
+.ws-status {
+  font-size: 13px;
+  color: var(--gold);
+  overflow-wrap: anywhere;
+}
+.ws-error {
+  color: #f0aaa3 !important;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.ws-root pre,
+.ws-dialog pre {
+  font:
+    12px/1.65 Consolas,
+    monospace;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  padding: 16px;
+  border-radius: 8px;
+  max-height: 400px;
+  overflow: auto;
+}
+.ws-root code {
+  overflow-wrap: anywhere;
+}
+.ws-frame {
+  width: 100%;
+  height: 72vh;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg);
+}
+.ws-preview {
+  width: 100%;
+  height: 340px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #09090c;
+  touch-action: none;
+}
+.ws-studio-image {
+  display: block;
+  max-width: 100%;
+  max-height: 480px;
+  object-fit: contain;
+}
+.ws-timeline {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 16px;
+  background: var(--bg);
+  margin: 16px 0;
+}
+.ws-track {
+  display: grid;
+  grid-template-columns: 100px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  margin: 12px 0;
+}
+.ws-track span {
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ws-bar {
+  height: 24px;
+  position: relative;
+  background: var(--s2);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.ws-bar i {
+  position: absolute;
+  top: 4px;
+  height: 16px;
+  border-radius: 3px;
+  opacity: 0.8;
+}
+.ws-dialog {
+  width: min(740px, calc(100vw - 32px));
+  max-height: 90vh;
+  overflow: auto;
+  box-sizing: border-box;
+  color: var(--text);
+  background: var(--s1);
+  border: 1px solid var(--line2);
+  border-radius: 12px;
+  padding: 24px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.ws-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.76);
+}
+.ws-dialog h2 {
+  font-size: 22px;
+  margin: 0 0 16px;
+}
+.ws-dialog input[type="checkbox"] {
+  width: 18px;
+  min-height: 18px;
+  accent-color: var(--gold);
+}
+.ws-ack {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: start;
+  gap: 12px !important;
+}
+.ws-root .ws-danger,
+.ws-dialog .ws-danger {
+  color: #f0aaa3;
+}
+.ws-chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 16px 0;
+}
+.ws-chip {
+  padding: 4px 8px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  font-size: 12px;
+  color: var(--dim);
+}
+.ws-assets {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+}
+.ws-assets .ws-card {
+  margin: 0;
+}
+.ws-diff .removed {
+  background: #472524;
+  color: #ffd3ce;
+}
+.ws-diff .added {
+  background: #163b2b;
+  color: #b8f0d0;
+}
+.ws-footer {
+  color: var(--dim);
+  font-size: 13px;
+  border-top: 1px solid var(--line);
+  padding-top: 16px;
+  margin-top: 24px;
+}
+.ws-root input:focus-visible,
+.ws-root textarea:focus-visible,
+.ws-root select:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+@media (max-width: 900px) {
+  .ws-head {
+    flex-wrap: wrap;
+  }
+  .ws-grid {
+    grid-template-columns: 1fr;
+  }
+  .ws-card {
+    padding: 20px;
+  }
+  .ws-fields {
+    grid-template-columns: 1fr;
+  }
+  .ws-list {
+    max-height: 300px;
+  }
+  .ws-preview {
+    height: 280px;
+  }
+  .ws-track {
+    grid-template-columns: 70px minmax(0, 1fr);
+  }
+  .ws-toolbar button {
+    white-space: normal;
+    line-height: 1.3;
+  }
+  nav {
+    max-width: 100vw;
+  }
+  .ws-root h1 {
+    font-size: 30px;
+  }
+  .ws-dialog {
+    padding: 24px;
+  }
+  .ws-assets {
+    grid-template-columns: 1fr;
+  }
+  .ws-frame {
+    height: 75vh;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ws-root * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+.ws-messages {
+  max-height: 480px;
+  overflow: auto;
+  margin-bottom: 24px;
+}
+.ws-message {
+  border-top: 1px solid var(--line);
+  padding: 16px 0;
+}
+.ws-message p {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  color: var(--text);
+}
+/* Separate code output from action rows even under the app's margin reset. */
+.ws-root pre,
+.ws-dialog pre {
+  margin: 16px 0;
+}
+.ws-root input[type="checkbox"] {
+  width: 18px;
+  min-width: 18px;
+  min-height: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  margin-top: 4px;
+  accent-color: var(--gold);
+}
+
+.ws-toolbar > input {
+  flex: 1;
+  width: auto;
+  min-width: 160px;
+  max-width: 100%;
+}
+.ws-toolbar > select:not(#vfx-load) {
+  width: auto;
+  min-width: 140px;
+  max-width: 100%;
+}

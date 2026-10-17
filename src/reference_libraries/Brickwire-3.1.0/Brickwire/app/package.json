@@ -1,0 +1,31 @@
+{
+  "name": "brickwire-pro",
+  "productName": "Brickwire Pro",
+  "version": "3.1.0",
+  "private": true,
+  "description": "Brickwire Pro desktop app: bridge in the tray + history, personal library, updates, chat with Studio.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win --x64"
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.0.0"
+  },
+  "build": {
+    "appId": "com.brickwire.pro",
+    "productName": "Brickwire Pro",
+    "directories": { "output": "release" },
+    "files": ["main.js", "icon.png"],
+    "extraResources": [
+      { "from": "../bridge/dist", "to": "bridge/dist" },
+      { "from": "../packs/built", "to": "packs/built" },
+      { "from": "../plugin", "to": "plugin" },
+      { "from": "../extension/dist", "to": "extension" },
+      { "from": "../.env.example", "to": ".env.example" }
+    ],
+    "win": { "target": "nsis" },
+    "nsis": { "oneClick": false, "allowToChangeInstallationDirectory": true, "createDesktopShortcut": true }
+  }
+}

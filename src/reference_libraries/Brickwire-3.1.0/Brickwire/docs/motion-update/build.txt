@@ -1,0 +1,7 @@
+
+> brickwire@2.4.0 build
+> node --import tsx scripts/build.mjs
+
+plugin/BrickwireChat.rbxmx written
+extension/dist: content.js 292.8 KB, background.js 13.9 KB; 23 host patterns
+bridge/dist/bridge.mjs 1369.7 KB

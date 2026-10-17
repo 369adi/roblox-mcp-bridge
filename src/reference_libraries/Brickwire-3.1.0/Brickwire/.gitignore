@@ -1,0 +1,11 @@
+node_modules/
+data/
+dist/
+release/
+*.zip
+.env
+test-results/
+logs/
+license-private.pem
+app/node_modules
+app/release

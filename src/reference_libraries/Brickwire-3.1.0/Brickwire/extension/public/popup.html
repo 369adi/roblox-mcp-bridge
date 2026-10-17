@@ -1,0 +1,32 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Brickwire</title>
+<style>
+body{margin:0;width:300px;background:#0B0B0E;color:#F3F1EC;font:13px/1.45 Inter,"Segoe UI Variable Text","Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.h{display:flex;align-items:center;gap:11px;padding:16px 18px;border-bottom:1px solid rgba(255,255,255,.07);background:#111116}
+.logo{width:24px;height:24px;border-radius:7px;background:linear-gradient(180deg,#E3C68C,#C9A462);display:grid;place-items:center;font-size:0;box-shadow:0 4px 12px -5px rgba(216,184,120,.7)}
+.logo::after{content:"";width:8px;height:8px;border:1.6px solid #17130A;border-radius:1.5px;transform:rotate(45deg)}
+.t{font-weight:600;font-size:13.5px;letter-spacing:.01em}
+.rows{padding:6px 18px}.r{padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06)}.r:last-child{border:0}
+.l{font-size:9.5px;letter-spacing:.18em;color:#D8B878;text-transform:uppercase;font-weight:600}.v{display:flex;align-items:center;gap:8px;margin-top:4px;font-weight:500}
+.dot{width:7px;height:7px;border-radius:50%;background:#5E5C66;flex:none}.g{background:#7BC99A;box-shadow:0 0 0 3px rgba(123,201,154,.15)}.y{background:#E2B866}.r.dot,.dot.r{background:#E8806F}
+.b{padding:8px 18px 18px;display:grid;gap:8px}
+button{all:unset;text-align:center;cursor:pointer;padding:10px;border-radius:99px;border:1px solid rgba(255,255,255,.14);font-weight:500;transition:border-color .18s,filter .18s}
+button:hover{border-color:rgba(216,184,120,.5)}button.no{color:#E8806F;border-color:rgba(232,128,111,.4)}button:disabled{opacity:.4;cursor:default}
+.pri{background:linear-gradient(180deg,#E3C68C,#C9A462);border-color:transparent;color:#17130A;font-weight:600}.pri:hover{filter:brightness(1.07)}
+</style></head>
+<body>
+<div class="h"><div class="logo"></div><div class="t">Brickwire</div></div>
+<div class="rows">
+  <div class="r"><div class="l">Bridge</div><div class="v"><span class="dot" id="bdot"></span><span id="bridge">…</span></div></div>
+  <div class="r"><div class="l">Studio</div><div class="v"><span class="dot" id="sdot"></span><span id="studio">…</span></div></div>
+  <div class="r"><div class="l">Provider</div><div class="v" id="provider">…</div></div>
+  <div class="r"><div class="l">Project</div><div class="v" id="project">…</div></div>
+  <div class="r"><div class="l">Session</div><div class="v" id="session">…</div></div>
+</div>
+<div class="b">
+  <button class="no" id="stop">Stop Session</button>
+  <button class="pri" id="dash">Open Dashboard</button>
+  <button id="settings">Settings</button>
+</div>
+<script src="popup.js"></script>
+</body></html>

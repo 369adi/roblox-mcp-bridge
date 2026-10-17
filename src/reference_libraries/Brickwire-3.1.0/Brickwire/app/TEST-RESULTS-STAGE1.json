@@ -1,0 +1,51 @@
+{
+  "stage": "application-plugin-MCP-1",
+  "newMcpTests": {
+    "tests": 8,
+    "passed": 8,
+    "failed": 0
+  },
+  "originalRegression": {
+    "tests": 193,
+    "passed": 175,
+    "skipped": 18,
+    "failed": 0,
+    "skipReason": "Luau VM binary unavailable"
+  },
+  "browser": {
+    "engine": "Chromium",
+    "realLocalApp": true,
+    "server": "explicit local test MCP fixture, not Studio",
+    "checks": [
+      "add/configure",
+      "stdio connect/discover",
+      "permission save",
+      "manual tool result",
+      "resource read",
+      "search"
+    ],
+    "pageErrors": [],
+    "horizontalDocumentOverflow": false,
+    "viewports": [
+      [
+        1440,
+        1080
+      ],
+      [
+        390,
+        844
+      ]
+    ]
+  },
+  "notPerformed": [
+    "Roblox Studio runtime",
+    "Studio plugin render/runtime",
+    "live signed-in AI provider",
+    "Windows Electron installer build",
+    "full TypeScript typecheck"
+  ],
+  "scope": {
+    "extensionChanged": false,
+    "sharedChanged": false
+  }
+}

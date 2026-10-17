@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><script src="/i18n.js"></script><title>Brickwire UI Builder</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font:12px/1.3 system-ui,Segoe UI,sans-serif;background:#0e0f12;color:#d7d9de;display:grid;grid-template:40px 1fr/190px 1fr 240px;height:100vh}
+header{grid-column:1/4;display:flex;gap:6px;align-items:center;padding:0 10px;background:#15171c;border-bottom:1px solid #23262d}
+header b{margin-right:10px;color:#fff}button,select,input,textarea{background:#1d2027;color:#d7d9de;border:1px solid #2c3039;border-radius:5px;padding:4px 7px;font:inherit}
+button:hover{background:#262a33;cursor:pointer}button.pri{background:#3b5bdb;border-color:#3b5bdb;color:#fff}
+#layers,#props{background:#13151a;overflow:auto;padding:8px}#layers{border-right:1px solid #23262d}#props{border-left:1px solid #23262d}
+.layer{padding:3px 6px;border-radius:4px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.layer.sel{background:#2b3a6b;color:#fff}
+#stageWrap{display:flex;align-items:center;justify-content:center;overflow:hidden;background:repeating-conic-gradient(#121318 0 25%,#0f1014 0 50%) 0 0/20px 20px}
+#stage{position:relative;width:960px;height:540px;background:#1b1e24;outline:1px solid #343844;overflow:hidden}
+.el{position:absolute;display:flex;align-items:center;justify-content:center;overflow:hidden;user-select:none;outline:1px dashed transparent}
+.el.sel{outline:1px solid #6d8cff;z-index:999}.el:hover{outline-color:#4a5578}.h{position:absolute;right:-1px;bottom:-1px;width:9px;height:9px;background:#6d8cff;cursor:nwse-resize}
+label{display:block;margin:6px 0 2px;color:#8a8f9a}.row{display:flex;gap:4px}.row input{width:100%}h4{margin:4px 0 6px;color:#fff}
+#log{position:fixed;left:200px;bottom:8px;max-width:60vw;background:#15171c;border:1px solid #2c3039;padding:6px 9px;border-radius:6px;display:none;white-space:pre-wrap}
+/* Responsive app workspace; coordinates remain in the original preview space. */
+body{grid-template:auto minmax(0,1fr)/190px minmax(0,1fr) 240px;overflow:hidden;font-size:14px}header{flex-wrap:wrap;padding:8px;gap:8px}header b{white-space:nowrap}button,select,input{min-height:44px;max-width:100%}#stage{flex-shrink:0;transform-origin:center}#props input,#props select{max-width:100%}#props .row input{min-width:0}#side{right:16px!important;max-width:calc(100vw - 32px)}#log{left:16px;max-width:calc(100vw - 32px);z-index:2100}
+@media(max-width:600px){body{grid-template:auto auto minmax(260px,1fr) auto/1fr;height:100vh;overflow:auto}header{grid-column:1}header span{display:none}#layers{grid-row:2;max-height:180px;border-bottom:1px solid #23262d}#stageWrap{grid-row:3;min-height:260px}#props{grid-row:4;border-top:1px solid #23262d}.row input{min-width:0}}
+</style><style>
+:root{color-scheme:dark}body{background:#0d141c;color:#e1edf6;font:14px/1.45 system-ui,sans-serif}header{background:linear-gradient(120deg,#263847,#172633);border-bottom:1px solid #4b6579;box-shadow:0 2px 0 #080f17;padding:10px;gap:8px}button,input,select,textarea{border-radius:6px;background:#152431;color:#dcecf7;border:1px solid #486278;min-height:38px;font:13px/1.4 system-ui,sans-serif;box-shadow:inset 0 1px 0 #fff08,0 2px 0 #090f16}button.on,button.pri{background:linear-gradient(#a9dcfc,#78bce8);color:#102c40;border-color:#c3e6fe;box-shadow:inset 0 1px 0 #fff8,0 3px 0 #35526b}button:hover{background:#355269;color:#fff}#tools,#left,#layers,#props,#side,aside{background:#15212c;color:#c0d0dd;border-color:#42596c}#wrap{background-color:#0b151e}#stage{background:#192835;box-shadow:0 2px 0 #080e15,0 12px 28px #0004;border:1px solid #344e62}.layer.sel{background:#29485f}.layer{padding:7px}.layer input{accent-color:#82c8f4}input[type=checkbox]{width:18px!important;height:18px!important;min-height:18px!important}input[type=range]{box-shadow:none;accent-color:#86cbf5}label{color:#b4c8d8}dialog{background:#1a2b3a;border:1px solid #6f8ba2;color:#e5f1fa;border-radius:10px}dialog::backdrop{background:#020810b8}:focus-visible{outline:2px solid #9ad9ff;outline-offset:3px}
+</style><style>
+:root{--editor-bg:#10130d;--editor-surface:#1a1e14;--editor-line:#414832;--editor-accent:#e5f65a;color-scheme:dark}
+body{background:var(--editor-bg);color:#eeeeda}header{background:#181c12;border-color:var(--editor-line);box-shadow:none}
+header b,h4{color:#f3efda}button,input,select,textarea{background:#24291b;border-color:var(--editor-line);color:#e4e8d4;box-shadow:none}
+button.on,button.pri{background:var(--editor-accent);color:#171e09;border-color:var(--editor-accent);box-shadow:none}button:hover{background:#343d23;color:#f3efda}
+#tools,#layers,#props,#side,aside{background:var(--editor-surface);color:#c2c7b4;border-color:var(--editor-line)}#wrap,#stageWrap{background:repeating-conic-gradient(#151a11 0 25%,#10150d 0 50%) 0 0/20px 20px}
+#stage{background:#1c2216;box-shadow:none;border-color:#464e38}.layer.sel{background:#e5f65a22}.el.sel{outline-color:var(--editor-accent)}.h{background:var(--editor-accent)}label{color:#b6beaa}input[type=range],input[type=checkbox]{accent-color:var(--editor-accent)}dialog{background:#202719;border-color:var(--editor-line);color:#eeeeda}:focus-visible{outline:2px solid var(--editor-accent);outline-offset:3px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style></head><body>
+<header><b> UI Builder</b>
+<select id="addType"><option>Frame</option><option>Text</option><option>Button</option><option>Image</option><option>Input</option><option>Scroll</option></select>
+<button onclick="addEl()">+ Добавить</button><button onclick="addEl(true)">+ Внутрь выбранного</button>
+<button onclick="dup()">Дублировать</button><button onclick="del()">Удалить</button><span style="flex:1"></span>
+ScreenGui: <input id="guiName" value="MainMenu" style="width:110px">
+Кадр: <select id="framePreset" onchange="setFrame(this.value)"><option value="1920x1080">Desktop 1920×1080</option><option value="1280x720">Laptop 1280×720</option><option value="1024x768">Tablet 1024×768</option><option value="844x390">Phone 844×390</option><option value="thumb">Thumbnail 1920×1080</option></select>
+<button onclick="exportPng()" title="PNG 1920×1080">PNG</button>
+<select id="compSel" title="Компоненты" onchange="compAction(this)"></select><button onclick="makeComponent()" title="Сделать компонент из выбранного">◆ Компонент</button>
+<button onclick="assetsPanel()">Ассеты</button><button onclick="aiPanel()"> AI</button>
+<button onclick="exportJson()">JSON</button><button onclick="importJson()">Импорт JSON</button>
+<button onclick="fromStudio()">Из Studio</button><button class="pri" onclick="toStudio()">Собрать в Studio</button></header>
+<div id="layers"></div><div id="stageWrap"><div id="stage"></div></div><div id="props"></div><div id="log"></div><div id="side" style="position:fixed;right:250px;top:48px;width:330px;max-height:80vh;overflow:auto;background:#15171c;border:1px solid #2c3039;border-radius:8px;padding:8px;display:none;z-index:2000"></div>
+<script src="/ui-builder/ui-merge.js"></script>
+<script>
+let doc={name:"MainMenu",children:[]},sel=null,uid=0;
+const $=s=>document.querySelector(s),stage=$("#stage");
+const defs={Frame:{bg:"#2a2f3a",corner:8},Text:{text:"Text",textColor:"#ffffff",textSize:24,bgTransparency:1},Button:{text:"Play",bg:"#3b5bdb",textColor:"#ffffff",textSize:22,corner:10,states:{hover:{scale:1.05},pressed:{scale:0.95}}},Image:{image:"rbxassetid://0",bgTransparency:1},Input:{placeholder:"Type...",bg:"#1f232b",textColor:"#ffffff",textSize:18,corner:6},Scroll:{bg:"#20242c",list:{direction:"Vertical",padding:6}}};
+function walk(list,f,parent=null){for(const e of list){f(e,parent);if(e.children)walk(e.children,f,e)}}
+function parentOf(t){let p=null;walk(doc.children,(e,par)=>{if(e===t)p=par});return p}
+function listOf(t){const p=parentOf(t);return p?p.children:doc.children}
+function addEl(inside){const t=$("#addType").value;const e={type:t,name:t+(++uid),position:[0.35,0,0.4,0],size:[0.3,0,0.15,0],...JSON.parse(JSON.stringify(defs[t]))};
+ if(inside&&sel){(sel.children=sel.children||[]).push(e);e.position=[0.1,0,0.1,0];e.size=[0.8,0,0.3,0]}else doc.children.push(e);sel=e;render()}
+function dup(){if(!sel)return;const c=JSON.parse(JSON.stringify(sel));c.name+="_copy";c.position=[sel.position[0]+0.02,0,sel.position[2]+0.02,0];listOf(sel).push(c);sel=c;render()}
+function del(){if(!sel)return;const l=listOf(sel);l.splice(l.indexOf(sel),1);sel=null;render()}
+function draw(list,host){for(const e of list){const d=document.createElement("div");d.className="el"+(e===sel?" sel":"");const p=e.position||[0,0,0,0],s=e.size||[0,100,0,100];
+ d.style.left=`calc(${p[0]*100}% + ${p[1]}px)`;d.style.top=`calc(${p[2]*100}% + ${p[3]}px)`;d.style.width=`calc(${s[0]*100}% + ${s[1]}px)`;d.style.height=`calc(${s[2]*100}% + ${s[3]}px)`;
+ const tr=e.bgTransparency??0;d.style.background=tr>=1?"transparent":(e.bg||"#ffffff");d.style.opacity=1;if(tr>0&&tr<1)d.style.background=hexA(e.bg||"#fff",1-tr);
+ d.style.borderRadius=(typeof e.corner==="number"?e.corner/2:0)+"px";if(e.stroke)d.style.border=`${(e.stroke.thickness||1)/2}px solid ${e.stroke.color||"#fff"}`;
+ d.style.color=e.textColor||"#fff";d.style.fontSize=((e.textSize||18)/2)+"px";d.style.fontWeight=600;
+ if(e.type==="Image"){d.textContent=" "+(e.image||"");d.style.outline="1px dashed #555"}else d.textContent=e.text??(e.placeholder?e.placeholder:"");
+ if(e.type==="Input")d.style.color="#888";
+ d.onmousedown=ev=>{ev.stopPropagation();sel=e;render();startDrag(ev,e,host,false)};
+ if(e===sel){const h=document.createElement("div");h.className="h";h.onmousedown=ev=>{ev.stopPropagation();startDrag(ev,e,host,true)};d.appendChild(h)}
+ host.appendChild(d);if(e.children)draw(e.children,d)}}
+function hexA(h,a){h=h.replace("#","");const n=parseInt(h.length===3?h.split("").map(c=>c+c).join(""):h,16);return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`}
+function startDrag(ev,e,host,resize){const r=host.getBoundingClientRect(),x0=ev.clientX,y0=ev.clientY,p0=[...e.position],s0=[...e.size];
+ const mv=m=>{const dx=(m.clientX-x0)/r.width,dy=(m.clientY-y0)/r.height,snap=v=>Math.round(v*200)/200;
+  if(resize){e.size=[Math.max(0.01,snap(s0[0]+dx)),s0[1],Math.max(0.01,snap(s0[2]+dy)),s0[3]]}else{e.position=[snap(p0[0]+dx),p0[1],snap(p0[2]+dy),p0[3]]}render(true)};
+ const up=()=>{removeEventListener("mousemove",mv);removeEventListener("mouseup",up);render()};addEventListener("mousemove",mv);addEventListener("mouseup",up)}
+function render(fast){stage.innerHTML="";draw(doc.children,stage);if(fast)return;
+ const L=$("#layers");L.innerHTML="<h4>Слои</h4>";const add=(list,dep)=>{for(const e of list){const d=document.createElement("div");d.className="layer"+(e===sel?" sel":"");d.style.paddingLeft=6+dep*12+"px";d.textContent=`${e.type||e.component} · ${e.name}`;d.onclick=()=>{sel=e;render()};L.appendChild(d);if(e.children)add(e.children,dep+1)}};add(doc.children,0);
+ const P=$("#props");if(!sel){P.innerHTML="<h4>Свойства</h4><div style='color:#777'>Выбери элемент</div>";return}
+ const f=(k,label,type="text")=>`<label>${label}</label><input data-k="${k}" type="${type}" value="${String(sel[k]??"").replace(/"/g,"&quot;")}">`;
+ const u=(k,label)=>`<label>${label} (scale x, px x, scale y, px y)</label><div class="row">${[0,1,2,3].map(i=>`<input data-u="${k}" data-i="${i}" type="number" step="0.01" value="${(sel[k]||[0,0,0,0])[i]}">`).join("")}</div>`;
+ P.innerHTML="<h4>Свойства</h4>"+f("name","Name")+`<label>Type</label><select data-k="type">${Object.keys(defs).map(t=>`<option ${t===sel.type?"selected":""}>${t}</option>`).join("")}</select>`+
+  u("position","Position")+u("size","Size")+f("bg","Background","color")+f("bgTransparency","BG transparency 0..1","number")+f("corner","Corner px","number")+
+  (sel.type==="Image"?f("image","Image id"):f("text","Text")+f("textColor","Text color","color")+f("textSize","Text size","number"))+(sel.type==="Input"?f("placeholder","Placeholder"):"")+
+  `<label>Появление</label><select data-k="appear"><option value="">нет</option>${["fade","pop","slide"].map(a=>`<option ${a===sel.appear?"selected":""}>${a}</option>`).join("")}</select>`+
+  `<label>Hover/press анимация</label><select data-k="_states"><option value="0">нет</option><option value="1" ${sel.states?"selected":""}>scale 1.05 / 0.95</option></select>`+
+  `<label>Раскладка детей</label><select data-k="_list"><option value="">свободная</option><option ${sel.list?.direction==="Vertical"?"selected":""}>Vertical</option><option ${sel.list?.direction==="Horizontal"?"selected":""}>Horizontal</option></select>`;
+ P.querySelectorAll("[data-k]").forEach(i=>i.onchange=()=>{const k=i.dataset.k,v=i.value;
+  if(k==="_states")sel.states=v==="1"?{hover:{scale:1.05},pressed:{scale:0.95}}:undefined;else if(k==="_list")sel.list=v?{direction:v,padding:6}:undefined;
+  else if(k==="appear")sel.appear=v||undefined;else sel[k]=i.type==="number"?(v===""?undefined:Number(v)):v;render()});
+ P.querySelectorAll("[data-u]").forEach(i=>i.onchange=()=>{const a=[...(sel[i.dataset.u]||[0,0,0,0])];a[+i.dataset.i]=Number(i.value);sel[i.dataset.u]=a;render()})}
+function clean(o){return JSON.parse(JSON.stringify(o,(k,v)=>v===undefined?undefined:v))}
+function currentDoc(){doc.name=$("#guiName").value||"MainMenu";return clean(doc)}
+function log(t){const l=$("#log");l.style.display="block";l.textContent=t;clearTimeout(log.t);log.t=setTimeout(()=>l.style.display="none",9000)}
+function exportJson(){const s=JSON.stringify(currentDoc(),null,2);navigator.clipboard?.writeText(s);log("JSON скопирован в буфер:\n"+s.slice(0,600))}
+function importJson(){const s=prompt("Вставь UIDoc JSON");if(!s)return;try{load(JSON.parse(s))}catch(e){log("Ошибка JSON: "+e.message)}}
+function load(d){if(!d||!Array.isArray(d.children))throw new Error("нет children");doc=d;$("#guiName").value=d.name||"MainMenu";sel=null;render()}
+async function call(tool,args){const id="ui_"+Date.now().toString(36);
+ let r=await (await fetch("/api/calls",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({call:{id,tool,args},provider:"app-workspace",waitMs:20000})})).json();
+ for(let i=0;i<20&&r&&!r.result&&r.state!=="failed";i++){if(r.state==="pending_approval"){log("Ожидает вашего подтверждения: "+tool);const approve=confirm("Brickwire / "+tool+"\n"+(r.approvalReason||"")+"\n"+JSON.stringify(args).slice(0,1500)+"\nРазрешить именно эту операцию?");await fetch("/api/approvals/"+encodeURIComponent(r.approvalId),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({approve})});}r=await (await fetch(`/api/calls/${encodeURIComponent(r.callId||id)}?wait=15000`)).json()}
+ const res=r?.result;if(!res)throw new Error(r?.error||"нет ответа от bridge (Studio подключена?)");if(res.status!=="success")throw new Error(res.error||res.status);return res.result}
+async function toStudio(){try{log("Собираю в Studio…");const r=await call("ui_build",{doc:currentDoc(),replaceExisting:true});log("Результат инструмента (визуальная проверка отдельно): "+JSON.stringify(r).slice(0,500))}catch(e){log("Ошибка: "+e.message)}}
+async function fromStudio(){const p=prompt("Путь к ScreenGui","game.StarterGui."+($("#guiName").value||"MainMenu"));if(!p)return;try{const r=await call("ui_import",{path:p});load(r.doc||r);log("Импортировано из Studio")}catch(e){log("Ошибка: "+e.message)}}
+addEventListener("keydown",e=>{if(e.target.tagName==="INPUT")return;if(e.key==="Delete")del();if(e.ctrlKey&&e.key==="d"){e.preventDefault();dup()}});
+// M6: frame presets (stage keeps 16:9-ish preview, aspect follows the preset) + thumbnail PNG export at exactly 1920x1080.
+let frame={w:1920,h:1080,thumb:false};
+function setFrame(v){if(v==="thumb"){frame={w:1920,h:1080,thumb:true}}else{const[a,b]=v.split("x").map(Number);frame={w:a,h:b,thumb:false}}
+ const k=Math.min(960/frame.w,540/frame.h);stage.style.width=Math.round(frame.w*k)+"px";stage.style.height=Math.round(frame.h*k)+"px";render();fitStage()}
+function fitStage(){const wrap=$("#stageWrap");const k=Math.max(.01,Math.min((wrap.clientWidth-24)/(stage.clientWidth||960),(wrap.clientHeight-24)/(stage.clientHeight||540),1));stage.style.transform="scale("+k+")";}
+new ResizeObserver(fitStage).observe($("#stageWrap"));addEventListener("resize",fitStage);
+function rectOf(e,px,py,pw,ph){const p=e.position||[0,0,0,0],s=e.size||[0,100,0,100],k=pw/ (stage.clientWidth||960);
+ return{x:px+p[0]*pw+p[1]*k*2,y:py+p[2]*ph+p[3]*k*2,w:s[0]*pw+s[1]*k*2,h:s[2]*ph+s[3]*k*2}}
+function rr(c,x,y,w,h,r){r=Math.min(r,w/2,h/2);c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath()}
+function paintList(c,list,px,py,pw,ph,W){for(const e of list){const R=rectOf(e,px,py,pw,ph),tr=e.bgTransparency??0,sc=W/1920;
+  if(tr<1){c.globalAlpha=1-tr;c.fillStyle=e.bg||"#ffffff";rr(c,R.x,R.y,R.w,R.h,(e.corner||0)*sc);c.fill();c.globalAlpha=1}
+  if(e.stroke){c.lineWidth=(e.stroke.thickness||1)*sc;c.strokeStyle=e.stroke.color||"#fff";rr(c,R.x,R.y,R.w,R.h,(e.corner||0)*sc);c.stroke()}
+  const t=e.type==="Image"?"":(e.text??"");if(t){const fs=(e.textSize||18)*sc;c.font=`800 ${fs}px "Fredoka One","Arial Black",system-ui`;c.textAlign="center";c.textBaseline="middle";
+   if(frame.thumb){c.lineJoin="round";c.lineWidth=Math.max(4,fs*0.18);c.strokeStyle="#000";c.strokeText(t,R.x+R.w/2,R.y+R.h/2)}
+   c.fillStyle=e.textColor||"#fff";c.fillText(t,R.x+R.w/2,R.y+R.h/2)}
+  if(e.children)paintList(c,e.children,R.x,R.y,R.w,R.h,W)}}
+function exportPng(){const W=1920,H=1080,cv=document.createElement("canvas");cv.width=W;cv.height=H;const c=cv.getContext("2d");
+ c.fillStyle="#1b1e24";c.fillRect(0,0,W,H);paintList(c,currentDoc().children,0,0,W,H,W);
+ cv.toBlob(b=>{const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=(($("#guiName").value)||"ui")+"-1920x1080.png";a.click();log(`PNG ${cv.width}×${cv.height} сохранён`)},"image/png")}
+stage.onmousedown=()=>{sel=null;render()};
+// ===== M6 (2.2): components, auto-layout, constraints, asset library, in-canvas AI, two-way sync =====
+let editMaster=null,base=null,builtins={};
+fetch("/ui-builder/components.json").then(r=>r.json()).then(j=>{builtins=j||{};fillComps();render()}).catch(()=>{});
+function comps(){return doc.components||(doc.components={})}
+function allComps(){return{...builtins,...comps()}}
+function rootList(){return editMaster?[comps()[editMaster]]:doc.children}
+function walk2(list,f,parent=null){for(const e of list){if(!e)continue;f(e,parent);if(e.children)walk2(e.children,f,e)}}
+parentOf=function(t){let p=null;walk2(rootList(),(e,par)=>{if(e===t)p=par});return p};
+listOf=function(t){const p=parentOf(t);return p?p.children:rootList()};
+/** instance -> resolved element (master + variant + overrides). Editing the master updates every instance. */
+function resolve(e){if(!e.component)return e;const def=allComps()[e.component];if(!def)return{...e,type:"Frame",bg:"#5a1d1d",text:"? "+e.component};
+ const b=JSON.parse(JSON.stringify(def));const vars=b.variants;delete b.variants;delete b.description;if(e.variant&&vars&&vars[e.variant])Object.assign(b,vars[e.variant]);
+ const{component,variant,children,...ov}=e;const r={...b,...ov};r.children=[...(b.children||[]),...(children||[])];return r}
+const JX={Left:"flex-start",Center:"center",Right:"flex-end",Top:"flex-start",Bottom:"flex-end"};
+function px(u,i){return u&&u.length===4?`calc(${u[i]*100}% + ${u[i+1]/2}px)`:"0px"}
+draw=function(list,host,parentR,inInst){for(const raw of list){if(!raw)continue;const e=resolve(raw),inst=!!raw.component||inInst;const d=document.createElement("div");d.className="el"+(raw===sel?" sel":"");
+ const s=e.size||[0,100,0,100],flow=parentR&&(parentR.list||parentR.grid);
+ if(flow){d.style.position="relative";d.style.flex="0 0 auto";if(!parentR.grid){d.style.width=px(s,0);d.style.height=px(s,2)}}
+ else{d.style.left=px(e.position||[0,0,0,0],0);d.style.top=px(e.position||[0,0,0,0],2);d.style.width=px(s,0);d.style.height=px(s,2);
+  const a=e.anchor||[0,0];if(a[0]||a[1])d.style.transform=`translate(${-a[0]*100}%,${-a[1]*100}%)`}
+ if(e.aspect){d.style.aspectRatio=String(e.aspect);if(!flow||!parentR.grid)d.style.height="auto"}
+ const tr=e.bgTransparency??0;d.style.background=tr>=1?"transparent":tr>0?hexA(e.bg||"#fff",1-tr):(e.bg||"#ffffff");
+ d.style.borderRadius=(typeof e.corner==="number"?e.corner/2:0)+"px";if(e.stroke)d.style.border=`${Math.max(1,(e.stroke.thickness||1)/2)}px solid ${e.stroke.color||"#fff"}`;
+ d.style.color=e.textColor||"#fff";d.style.fontSize=((e.textSize||18)/2)+"px";d.style.fontWeight=600;if(typeof e.padding==="number")d.style.padding=e.padding/2+"px";
+ if(raw.component)d.style.outline=raw===sel?"1px solid #b06dff":"1px dashed #7b4fb8";
+ const kids=e.children||[];
+ if(e.list){d.style.display="flex";const h=e.list.direction==="Horizontal";d.style.flexDirection=h?"row":"column";d.style.gap=(e.list.padding||0)/2+"px";d.style.flexWrap=e.list.wraps?"wrap":"nowrap";
+  d.style.justifyContent=JX[h?(e.list.align||"Left"):(e.list.valign||"Top")];d.style.alignItems=JX[h?(e.list.valign||"Top"):(e.list.align||"Left")]}
+ else if(e.grid){const c=e.grid.cell||[0,100,0,100],cw=c.length===4?c[1]/2+"px":"50px",ch=c.length===4?c[3]/2+"px":"50px";d.style.display="grid";d.style.gridTemplateColumns=`repeat(auto-fill,${cw})`;d.style.gridAutoRows=ch;
+  const g=e.grid.padding||[0,8,0,8];d.style.gap=`${(g[3]||0)/2}px ${(g[1]||0)/2}px`;d.style.justifyContent=JX[e.grid.align||"Left"];d.style.alignContent="start"}
+ if(e.type==="Image"){d.textContent=" "+(e.image||"")}else if(!kids.length||!(e.list||e.grid))d.append(document.createTextNode(e.text??(e.placeholder||"")));
+ if(e.type==="Input")d.style.color="#888";
+ d.onmousedown=ev=>{ev.stopPropagation();if(inInst&&!raw.component)return;sel=raw;render();if(!flow)startDrag(ev,raw,host,false)};
+ if(raw===sel&&!flow){const hd=document.createElement("div");hd.className="h";hd.onmousedown=ev=>{ev.stopPropagation();startDrag(ev,raw,host,true)};d.appendChild(hd)}
+ host.appendChild(d);if(kids.length)draw(raw.component?kids:raw.children||[],d,e,inst)}};
+const _baseRender=render;
+render=function(fast){stage.innerHTML="";if(editMaster){const b=document.createElement("div");b.style.cssText="position:absolute;left:8px;top:6px;color:#b06dff;z-index:3000";b.textContent="Редактируешь мастер: "+editMaster+" (все экземпляры обновятся)";stage.appendChild(b)}
+ draw(rootList(),stage,null,false);if(fast)return;
+ const L=$("#layers");L.innerHTML="<h4>"+(editMaster?"Мастер "+editMaster:"Слои")+"</h4>";const add=(list,dep)=>{for(const e of list){if(!e)continue;const d=document.createElement("div");d.className="layer"+(e===sel?" sel":"");d.style.paddingLeft=6+dep*12+"px";d.textContent=(e.component?"◆ "+e.component:e.type)+" · "+(e.name||"");d.onclick=()=>{sel=e;render()};L.appendChild(d);if(e.children)add(e.children,dep+1)}};add(rootList(),0);
+ propsPanel()};
+function propsPanel(){const P=$("#props");const keep=stage.innerHTML;const realDraw=draw;draw=()=>{};const savedStage=stage.innerHTML;
+ // reuse the original props panel (it re-draws the stage; we restore ours right after)
+ _baseRender.call(null,false);draw=realDraw;stage.innerHTML="";draw(rootList(),stage,null,false);
+ const L=$("#layers");L.innerHTML="";const add=(list,dep)=>{for(const e of list){if(!e)continue;const d=document.createElement("div");d.className="layer"+(e===sel?" sel":"");d.style.paddingLeft=6+dep*12+"px";d.textContent=(e.component?"◆ "+e.component:e.type)+" · "+(e.name||"");d.onclick=()=>{sel=e;render()};L.appendChild(d);if(e.children)add(e.children,dep+1)}};L.innerHTML="<h4>"+(editMaster?"Мастер "+editMaster:"Слои")+"</h4>";add(rootList(),0);
+ if(!sel)return;const anchors=[[0,0],[0.5,0],[1,0],[0,0.5],[0.5,0.5],[1,0.5],[0,1],[0.5,1],[1,1]],ak=JSON.stringify(sel.anchor||[0,0]);
+ let h=`<h4 style="margin-top:12px">Ограничения</h4><label>Anchor</label><select data-m="anchor">${anchors.map(a=>`<option value='${JSON.stringify(a)}' ${JSON.stringify(a)===ak?"selected":""}>${a.join(", ")}</option>`).join("")}</select>
+ <label>Aspect ratio (пусто = нет)</label><input data-m="aspect" type="number" step="0.01" value="${sel.aspect??""}">
+ <h4 style="margin-top:12px">Авто-раскладка</h4><label>Режим</label><select data-m="layout"><option value="">свободная</option><option value="Vertical" ${sel.list?.direction==="Vertical"?"selected":""}>List ↕</option><option value="Horizontal" ${sel.list?.direction==="Horizontal"?"selected":""}>List ↔</option><option value="grid" ${sel.grid?"selected":""}>Grid</option></select>`;
+ if(sel.list)h+=`<label>Gap px</label><input data-m="lpad" type="number" value="${sel.list.padding??0}"><label>Align</label><select data-m="lalign">${["Left","Center","Right"].map(v=>`<option ${sel.list.align===v?"selected":""}>${v}</option>`).join("")}</select><label>VAlign</label><select data-m="lvalign">${["Top","Center","Bottom"].map(v=>`<option ${sel.list.valign===v?"selected":""}>${v}</option>`).join("")}</select><label><input data-m="lwrap" type="checkbox" ${sel.list.wraps?"checked":""}> Wrap</label>`;
+ if(sel.grid)h+=`<label>Cell px (w, h)</label><div class="row"><input data-m="gw" type="number" value="${sel.grid.cell?.[1]??100}"><input data-m="gh" type="number" value="${sel.grid.cell?.[3]??100}"></div>`;
+ h+=`<label>Padding px</label><input data-m="padding" type="number" value="${sel.padding??""}">`;
+ if(sel.component){const def=allComps()[sel.component]||{};h+=`<h4 style="margin-top:12px">◆ Экземпляр ${sel.component}</h4><label>Variant</label><select data-m="variant"><option value="">default</option>${Object.keys(def.variants||{}).map(v=>`<option ${sel.variant===v?"selected":""}>${v}</option>`).join("")}</select><label>Text override</label><input data-m="text" value="${String(sel.text??"").replace(/"/g,"&quot;")}"><div class="row" style="margin-top:6px">${comps()[sel.component]?`<button onclick="editMasterOf('${sel.component}')">Редактировать мастер</button>`:""}<button onclick="detach()">Отвязать</button></div>`}
+ if(editMaster)h+=`<div style="margin-top:10px"><button class="pri" onclick="editMasterOf(null)">← Готово (к макету)</button></div>`;
+ P.insertAdjacentHTML("beforeend",h);
+ P.querySelectorAll("[data-m]").forEach(i=>i.onchange=()=>{const k=i.dataset.m,v=i.type==="checkbox"?i.checked:i.value,num=Number(v);
+  if(k==="anchor"){const a=JSON.parse(v);sel.anchor=a[0]||a[1]?a:undefined}else if(k==="aspect")sel.aspect=v===""?undefined:num;else if(k==="padding")sel.padding=v===""?undefined:num;
+  else if(k==="layout"){sel.list=undefined;sel.grid=undefined;if(v==="grid")sel.grid={cell:[0,100,0,100],padding:[0,8,0,8]};else if(v)sel.list={direction:v,padding:8}}
+  else if(k==="lpad")sel.list.padding=num;else if(k==="lalign")sel.list.align=v;else if(k==="lvalign")sel.list.valign=v;else if(k==="lwrap")sel.list.wraps=v||undefined;
+  else if(k==="gw")sel.grid.cell=[0,num,0,sel.grid.cell?.[3]??100];else if(k==="gh")sel.grid.cell=[0,sel.grid.cell?.[1]??100,0,num];
+  else if(k==="variant")sel.variant=v||undefined;else if(k==="text")sel.text=v===""?undefined:v;render()})}
+function fillComps(){const s=$("#compSel");if(!s)return;const all=allComps();s.innerHTML=`<option value="">◆ Вставить…</option>`+Object.keys(all).map(n=>`<option value="ins:${n}">+ ${n}${comps()[n]?"":" (built-in)"}</option>`).join("")+Object.keys(comps()).map(n=>`<option value="edit:${n}"> мастер ${n}</option>`).join("")}
+function compAction(s){const v=s.value;s.value="";if(!v)return;const[a,n]=[v.slice(0,v.indexOf(":")),v.slice(v.indexOf(":")+1)];
+ if(a==="edit")return editMasterOf(n);editMasterOf(null);const def=allComps()[n]||{};const e={component:n,name:n+(++uid),position:[0.3,0,0.3,0],size:def.size||[0.3,0,0.15,0]};
+ if(sel&&!sel.component&&(sel.list||sel.grid))(sel.children=sel.children||[]).push(e);else doc.children.push(e);sel=e;render()}
+function makeComponent(){if(!sel||sel.component||editMaster)return log("Выбери обычный элемент");const n=(prompt("Имя компонента",sel.name)||"").replace(/[^A-Za-z0-9_]/g,"");if(!n)return;if(allComps()[n])return log("Компонент "+n+" уже есть");
+ const def=JSON.parse(JSON.stringify(sel));delete def.position;delete def.name;comps()[n]=def;const inst={component:n,name:sel.name,position:sel.position,size:sel.size};const l=listOf(sel);l[l.indexOf(sel)]=inst;sel=inst;fillComps();render();log("Компонент "+n+" создан. Правки мастера обновляют все экземпляры.")}
+function editMasterOf(n){editMaster=n&&comps()[n]?n:null;sel=editMaster?comps()[editMaster]:null;render()}
+function detach(){if(!sel?.component)return;const r=resolve(sel);delete r.component;delete r.variant;const l=listOf(sel);l[l.indexOf(sel)]=r;sel=r;render()}
+// ---- asset library (real packs from the bridge)
+async function assetsPanel(q){const S=$("#side");S.style.display="block";S.innerHTML=`<div class="row"><input id="aq" placeholder="поиск: button, coin, sword…" value="${q||""}"><select id="ap"><option value="">все паки</option></select><button onclick="$('#side').style.display='none'"></button></div><div id="al" style="margin-top:6px;color:#888">Загрузка…</div>`;
+ const go=async()=>{try{const j=await (await fetch(`/api/assets?q=${encodeURIComponent($("#aq").value)}&pack=${encodeURIComponent($("#ap").value)}&limit=40`)).json();
+  const ap=$("#ap");if(ap.options.length<2)for(const p of (j.packs?.packs||j.packs||[]))if(p&&p.id)ap.insertAdjacentHTML("beforeend",`<option value="${p.id}">${p.id}</option>`);
+  $("#al").innerHTML=`<div>${j.total} найдено</div>`+(j.items||[]).map(it=>`<div class="layer" data-id="${it.id}" data-o="${it.original||""}" data-k="${it.kind}">${it.name} <span style="color:#777">· ${it.kind} · ${it.id}</span></div>`).join("");
+  $("#al").querySelectorAll("[data-id]").forEach(d=>d.onclick=()=>useAsset(d.dataset))}catch(e){$("#al").textContent="Ошибка: "+e.message}};
+ $("#aq").onchange=go;$("#ap").onchange=go;go()}
+function useAsset(a){const img=/rbxassetid:\/\/\d+|^\d+$/.test(a.o||"")?(/^\d+$/.test(a.o)?"rbxassetid://"+a.o:a.o):null;
+ if(sel&&sel.type==="Image"&&img){sel.image=img;render();return log("Image = "+img)}
+ navigator.clipboard?.writeText(a.id);const e={type:"Frame",name:a.id.split("/").pop(),position:[0.4,0,0.4,0],size:[0,120,0,120],bg:"#2a2f3a",corner:8,text:" "+a.id,textSize:16};
+ doc.children.push(e);sel=e;render();log("Ассет "+a.id+" ("+a.k+"): добавлен плейсхолдер-слот, id скопирован. 3D-ассет вставляется в Studio инструментом brickwire_assets.")}
+// ---- in-canvas AI: prompt + current UIDoc -> AI chat (via outbox) -> model calls ui_build -> "Из Studio"
+function aiPanel(){const S=$("#side");S.style.display="block";S.innerHTML=`<h4> AI дизайн</h4><textarea id="aip" rows="4" style="width:100%" placeholder="напр. сделай меню магазина с сеткой 6 товаров"></textarea><div class="row" style="margin-top:6px"><button class="pri" onclick="aiSend()">Отправить в чат</button><button onclick="$('#side').style.display='none'"></button></div><div id="ais" style="margin-top:6px;color:#888">Нужна открытая вкладка AI-чата с запущенным агентом Brickwire.</div>`}
+async function aiSend(){const p=$("#aip").value.trim();if(!p)return;const d=currentDoc();
+ const text=`[Brickwire UI Builder] ${p}\n\nCurrent UIDoc (ScreenGui "${d.name}"):\n\`\`\`json\n${JSON.stringify(d)}\n\`\`\`\nUpdate this UIDoc and call the ui_build tool with { doc, replaceExisting: true }. Keep existing element names unless asked otherwise.`;
+ try{const j=await (await fetch("/api/outbox",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({kind:"text",source:"ui-builder",text})})).json();if(!j.ok)throw new Error(j.error||"outbox");
+  $("#ais").textContent="В очереди…";for(let i=0;i<90;i++){await new Promise(z=>setTimeout(z,1000));const it=(await (await fetch("/api/outbox/"+encodeURIComponent(j.item.id))).json());const x=it.item||it;
+   if(x.state==="done"){$("#ais").innerHTML=` Отправлено в ${x.result?.provider||"чат"}. Когда агент выполнит ui_build — <button onclick="fromStudio()">Из Studio</button>`;return}
+   if(x.state==="failed"){$("#ais").textContent=" "+(x.result?.error||"не отправлено");return}}
+  $("#ais").textContent="Нет вкладки чата — сообщение ждёт в очереди"}catch(e){$("#ais").textContent="Ошибка: "+e.message}}
+// ---- two-way sync with conflicts (3-way merge by name path)
+function guiPath(){return"game.StarterGui."+($("#guiName").value||"MainMenu")}
+const snap=d=>JSON.parse(JSON.stringify(d));
+load=function(d){if(!d||!Array.isArray(d.children))throw new Error("нет children");doc=d;$("#guiName").value=d.name||"MainMenu";sel=null;editMaster=null;fillComps();render()};
+toStudio=async function(){try{if(base&&window.UIMerge){let remote=null;try{const r=await call("ui_import",{path:guiPath()});remote=r.doc||r}catch{}
+  if(remote){const dd=UIMerge.diff(base,remote);const n=dd.added.length+dd.removed.length+dd.changed.length;if(n&&!confirm(`В Studio есть ${n} изменений после последней синхронизации. ОК = перезаписать, Отмена = сначала "Из Studio" (merge)`))return log("Отменено: сначала забери изменения «Из Studio»")}}
+ log("Собираю в Studio…");const d=currentDoc();const r=await call("ui_build",{doc:d,replaceExisting:true});base=snap(d);log("Результат инструмента (визуальная проверка отдельно): "+JSON.stringify(r).slice(0,500))}catch(e){log("Ошибка: "+e.message)}};
+fromStudio=async function(){const p=prompt("Путь к ScreenGui",guiPath());if(!p)return;try{const r=await call("ui_import",{path:p});const remote=r.doc||r;
+  if(!base||!window.UIMerge){load(remote);base=snap(remote);return log("Импортировано из Studio")}
+  const local=currentDoc(),m=UIMerge.merge3(base,local,remote);if(!m.conflicts.length){const keep=local.components;load({...m.doc,components:keep});base=snap(remote);return log(`Слияние: из Studio ${m.stats.fromRemote}, локальных ${m.stats.fromLocal}, +${m.stats.added} / -${m.stats.removed}`)}
+  conflictPanel(base,local,remote,m.conflicts)}catch(e){log("Ошибка: "+e.message)}};
+function conflictPanel(b,l,r,cs){const S=$("#side");S.style.display="block";const v=x=>x===undefined?"—":String(JSON.stringify(x)).slice(0,40);
+ S.innerHTML=`<h4>Конфликты: ${cs.length}</h4>`+cs.map((c,i)=>`<div style="border-top:1px solid #2c3039;padding:4px 0"><b>${c.path}</b> · ${c.key==="*"?"удалён с одной стороны":c.key}<label><input type="radio" name="c${i}" value="local" checked> У меня: ${v(c.local)}</label><label><input type="radio" name="c${i}" value="remote"> В Studio: ${v(c.remote)}</label></div>`).join("")+`<button class="pri" id="capply">Применить</button> <button onclick="$('#side').style.display='none'">Отмена</button>`;
+ $("#capply").onclick=()=>{const pref={};cs.forEach((c,i)=>pref[c.path+"|"+c.key]=S.querySelector(`input[name=c${i}]:checked`).value);const m=UIMerge.merge3(b,l,r,pref);load({...m.doc,components:l.components});base=snap(r);S.style.display="none";log("Конфликты разрешены. Теперь «Собрать в Studio».")}}
+// PNG export of component instances: paint resolved docs
+const _cur=currentDoc;exportPngDoc=null;
+paintList=(function(orig){return function(c,list,px0,py0,pw,ph,W){return orig(c,list.map(e=>e?resolve(e):e).filter(Boolean),px0,py0,pw,ph,W)}})(paintList);
+fillComps();
+
+setFrame("1920x1080");
+</script></body></html>

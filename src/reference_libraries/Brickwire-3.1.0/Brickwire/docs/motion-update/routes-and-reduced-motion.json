@@ -1,0 +1,110 @@
+{
+  "errors": [],
+  "results": [
+    {
+      "route": "chats",
+      "visible": true,
+      "horizontalOverflow": false,
+      "errors": [
+        "No language model is configured (Headless mode is not configured: set BRICKWIRE_LLM_PROVIDER (openai | deepseek | openrouter | ollama | lmstudio | custom) in .env) and no AI chat tab is connected. Open your AI chat tab (Notion, ChatGPT, Claude…) with the Brickwire extension connected — Brickwire will forward the request there — or configure BRICKWIRE_LLM_* settings."
+      ]
+    },
+    {
+      "route": "autopilot",
+      "visible": true,
+      "horizontalOverflow": false,
+      "errors": []
+    },
+    {
+      "route": "devtree",
+      "visible": true,
+      "horizontalOverflow": false,
+      "errors": []
+    },
+    {
+      "route": "skills",
+      "visible": true,
+      "horizontalOverflow": false,
+      "errors": []
+    },
+    {
+      "route": "library",
+      "visible": true,
+      "horizontalOverflow": false,
+      "errors": []
+    },
+    {
+      "route": "lab",
+      "visible": true,
+      "horizontalOverflow": false,
+      "errors": []
+    },
+    {
+      "route": "paint",
+      "visible": true,
+      "horizontalOverflow": false,
+      "errors": []
+    },
+    {
+      "route": "mcp",
+      "visible": true,
+      "horizontalOverflow": false,
+      "errors": []
+    },
+    {
+      "route": "history",
+      "visible": true,
+      "horizontalOverflow": false,
+      "errors": []
+    },
+    {
+      "route": "settings",
+      "visible": true,
+      "horizontalOverflow": false,
+      "errors": []
+    },
+    {
+      "attachmentChip": 1
+    },
+    {
+      "attachmentMessage": 2,
+      "messageText": [
+        "Проверь приложенный скриптreference.luau0 КБ ↓",
+        "Проверь приложенный скриптreference.luau0 КБ ↓"
+      ]
+    },
+    {
+      "attachmentAfterReload": 2
+    },
+    {
+      "mobile": "home",
+      "horizontalOverflow": false
+    },
+    {
+      "mobile": "chats",
+      "horizontalOverflow": false
+    },
+    {
+      "mobile": "lab",
+      "horizontalOverflow": false
+    },
+    {
+      "mobile": "paint",
+      "horizontalOverflow": false
+    },
+    {
+      "mobile": "skills",
+      "horizontalOverflow": false
+    },
+    {
+      "mobile": "mcp",
+      "horizontalOverflow": false
+    },
+    {
+      "reducedMotion": true
+    },
+    {
+      "noWebglFallback": true
+    }
+  ]
+}

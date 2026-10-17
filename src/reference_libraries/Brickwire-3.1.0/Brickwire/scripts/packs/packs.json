@@ -1,0 +1,7 @@
+[
+  { "id": "ndc", "file": "build_and_other.rbxm", "title": "Official NDC Build Kit", "description": "Classic Roblox-style props: cryptids, food, staffs, accessories, weapons, tools, animals, holidays, letters, numbers, symbols, parts.", "skip": ["Platform", "Primary Part"] },
+  { "id": "retro", "file": "assets.rbxm", "title": "Retro Roblox Pack", "description": "Retro Roblox look: VFX emitters (stars, smoke, bubbles), classic studded part textures, sounds, 27 skyboxes, faces, letters, characters, GUI.", "skip": ["Misc", "Remove Pack", "ThumbnailCamera"] },
+  { "id": "ultimate", "file": "buildassets.rbxm", "title": "The Ultimate Building Asset Pack", "description": "Building materials: graffiti & debris decals, low-poly and PBR textures, meshes, particles, beams, forcefields, DevShurikeno textures.", "skip": ["Base", "Delete", "ThumbnailCamera", "Plugins"] },
+  { "id": "textures", "file": "textures.rbxm", "title": "Texture swatches", "description": "Parts carrying tiling Texture sets — apply them to any part (BW.asset(id, {ApplyTo = part})).", "skip": [] },
+  { "id": "vfx", "file": "vfx.rbxm", "title": "VFX meshes & skills", "description": "Ready VFX meshes: shockwaves, waves, slashes, explosions, spheres, swirls, spikes, skill models — tween them for abilities.", "skip": [] }
+]
