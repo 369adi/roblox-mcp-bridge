@@ -1,0 +1,728 @@
+VARIABLE NAMING AND ABBREVIATIONS (MANDATORY)
+
+For variable identifiers you create or rename, use approximately 80% fully lowercase names and 20% names with only the first letter uppercase and all remaining letters lowercase. This applies to locals, parameters, loop variables, service/module bindings, function bindings, and constants.
+
+Choose which variables receive the uppercase first letter randomly. Do not alternate predictably, group the uppercase names together, or assign casing according to a variable's type, purpose, importance, or position. Use the closest practical 80/20 split across the code you produce, accounting for small numbers of variables.
+
+Choose the casing once per variable declaration, then use that exact spelling consistently at every reference. Never randomly change casing between uses of the same variable, and never add runtime randomness just to implement this naming style. When renaming existing variables, update their bound references safely without changing behavior or performing unrelated rewrites.
+
+Preserve all abbreviation rules and short-name choices. Change only letter casing; do not expand abbreviated names, remove their meaning, or replace them with longer alternatives. For example:
+- RunService binding: rs or Rs, preserving the RS abbreviation.
+- ReplicatedStorage binding: repstorage or Repstorage, preserving RepStorage.
+- Walking animation: walkanim or Walkanim.
+- Walking animation ID: walkanimid or Walkanimid.
+- M1 cooldown: m1cd or M1cd, never m1cooldown or M1cooldown.
+
+Names must not be ALLCAPS or mixed-case beyond the optional uppercase first letter. Preserve the existing no-underscore rule for local variable names. Numeric characters in abbreviations, such as the 1 in m1cd, remain unchanged.
+
+This rule changes variable identifier casing only. Preserve the exact required spelling of Roblox services, API methods, properties, class names, enum members, Instance names, file paths, filenames, strings, and external interfaces. For example, game:GetService("RunService") stays exactly as written even when its variable is named rs or Rs. Explicit case-sensitive contracts must remain compatible.
+
+This naming rule overrides earlier instructions that require every variable to start with an uppercase letter or every variable to be fully lowercase. All unrelated coding, architecture, security, and abbreviation requirements remain in force.
+
+Legacy Global API
+connect() / disconnect() — Use :Connect() / :Disconnect()
+spawn() / delay() / wait() — Use task.spawn(), task.delay(), task.wait()
+ypcall() — Use pcall()
+LoadLibrary() — Removed from the engine
+RunService.RenderStepped — Discouraged for custom gameplay stepping; prefer PreSimulation, PostSimulation, or BindToRenderStep
+
+UNIVERSAL ROBLOX GAME STRUCTURE RULE
+
+Game logic is organized into services. Each service owns one slice of the game (its data, systems, and lifecycle) and is a singleton — there is never more than one instance, so the module itself IS the instance; no constructor. Most services expose an init() for non-yielding startup (create owned objects, wire dependencies). Keep service names explicit (e.g. BuildService, InventoryService).
+
+Where code lives:
+
+Put shared + client code under ReplicatedStorage — a shared folder holding a services folder (one subfolder per service) plus utility modules.
+
+Put server service code under ServerScriptService — never in a replicated container — so exploiters can't read sensitive server logic.
+
+A service may be client-only, server-only, or split into client + server versions that share a common utility module. Not every service needs both halves.
+
+Custom models, VFX, and reusable instances go in an assets folder under ReplicatedStorage.
+
+Bootstrap: one client startup script (in StarterPlayerScripts, e.g. Client) and one server startup script (in ServerScriptService) initialize services. If order matters or init takes parameters, initialize each manually; otherwise loop over recognized services.
+
+Networking: do NOT hand-create RemoteEvents/Functions — generate them through code via a small remote wrapper (keeps the hierarchy clean, avoids name coupling, and makes version diffs manageable). Put reusable, game-agnostic packages (networking wrapper, Signal, cleanup, table utils, data) in a packages folder. The client asks ("can I do X?"), the server validates and responds — never trust the client for authoritative actions; validate, rate-limit, and cooldown server-side.
+
+Classes (OOP): moduleize reusable game logic as classes in dedicated classes folders under shared and ServerScriptService (e.g. a Spike class). Services instantiate/use these classes instead of duplicating logic.
+
+Modules: shared functionality, data, and utilities live in modules, split by the same shared/server rule. Group modules into clear categories (e.g. core, game, math, platform) so it's obvious where a script belongs. Keep modules small and focused.
+
+UI: keep interface code modular. Put interface code under a top-level UI module in ReplicatedStorage that acts as the initializer; inside, folders per interface type (menus, hud), each feature its own ModuleScript exposing functionality plus an init if needed. The UI initializer is called from the client startup script. (Declarative frameworks like React/Fusion/Vide are optional; this module approach is the native middle ground.)
+
+Packages: reusable, game-agnostic scripts (Signal, atomic state, table utils, data service, Janitor/cleanup) avoid reinventing the wheel and keep the codebase clean. Add them only when genuinely reused; never add a dependency purely for cleanup.
+
+General principles: separate reusable balance/content data from mechanics (one authoritative config). Keep state private; expose narrow APIs/events. Organize early to avoid chaos later. Preserve existing working structure rather than refactoring to impose style.
+
+heres the transcript of a youtube video that discusses how to structure your games. read through it, summarize it, and apply it to the coding and structure of the game:
+
+Roblox projects fall apart as they grow,
+0:02
+not because of bad code, but because of
+0:03
+that structure. This video breaks down
+0:05
+how professional developers set up their
+0:07
+games with organized folders, modular
+0:09
+services, scalable UI, and essential
+0:11
+packages. This isn't just for big teams.
+0:13
+This is the exact structure that I use,
+0:15
+and I'm going to walk you through it
+0:16
+step by step. Advanced tooling like VS
+0:18
+Code and Rojo aren't required, but if
+0:20
+you want to dive deeper into tooling,
+0:22
+you should check out my previous
+0:23
+tutorial video.
+0:25
+Let's break down the structure behind
+0:26
+the professional-grade Roblox game. Game
+0:29
+logic should be broken into services.
+0:32
+Each service owns a slice of your game
+0:33
+and manages related data and systems.
+0:36
+For example, build service would handle
+0:38
+placement of parts, while enemy service
+0:40
+controls enemy spawning and tracking.
+0:43
+Although not always required, each
+0:45
+service is typically split into client
+0:46
+and server versions with shared
+0:48
+functionality or data placed in a
+0:50
+utility module.
+0:52
+This keeps your logic organized, makes
+0:54
+debugging easier, and helps your game
+0:56
+scale cleanly as it grows.
+1:00
+So, what does this actually look like in
+1:02
+Studio? First, we're going to create a
+1:04
+shared folder. This will house our
+1:06
+shared and client game logic. Inside of
+1:08
+shared, create a services folder. Each
+1:11
+service will have a dedicated folder
+1:13
+assigned to it for easy scalability. In
+1:15
+this example, I will create a build
+1:17
+service. The client version of each
+1:19
+service will live here along with any
+1:20
+needed shared utility scripts. We must
+1:23
+place the server versions of each
+1:25
+service under server script service in
+1:27
+order to prevent exploiters from
+1:29
+downloading sensitive server code.
+1:33
+Our build services hierarchy setup is
+1:36
+now complete.
+1:38
+Here's an example with multiple
+1:39
+services. Like I mentioned earlier, some
+1:42
+services don't need client and server
+1:44
+versions as you can see with part
+1:45
+service here.
+1:48
+Ideally, all related code would live
+1:50
+together for easy access and navigation.
+1:52
+However, the server code must stay
+1:54
+within non-replicated containers as
+1:56
+mentioned earlier. To remedy this, I
+1:58
+created a VS Code tool that
+2:00
+automatically maps scripts to their
+2:01
+correct container while allowing
+2:03
+everything to live together. This tool
+2:04
+is available on my GitHub link in the
+2:06
+description.
+2:11
+Each service is a singleton. We only
+2:13
+ever have one build service, one
+2:15
+inventory service and so on. That means
+2:17
+no new constructor. The module itself is
+2:20
+the instance. Most services have an
+2:22
+initialize function in it. Here any
+2:25
+needed objects can be created or
+2:27
+non-yielding startup code can be
+2:28
+executed.
+2:30
+In this example, we're inside build
+2:32
+service client. So the singleton table
+2:34
+is named exactly that. Always keep
+2:37
+service names explicit to maintain
+2:38
+readability.
+2:40
+in it creates a model called parts and
+2:43
+stores it on the service.
+2:46
+The service then exposes the build
+2:48
+function. It spawns a part, sets it
+2:50
+frame to the pass in parameter and
+2:52
+parents it under self.parts.
+2:57
+By default, the current Luau type
+2:59
+checker struggles to understand the true
+3:00
+type of self. In order to fix this, we
+3:03
+need to ditch the colon operator and
+3:05
+pass self in as the first parameter with
+3:07
+our defined type.
+3:18
+Member variables can be defined by
+3:20
+unionuning a table of our defined
+3:22
+variables to the type.
+3:25
+Additionally, type cast the return
+3:27
+service for proper IntelliSense when
+3:29
+used in another script.
+3:33
+Now let's use the service we just
+3:35
+created. Create a client script inside
+3:38
+of starter player scripts and name it
+3:39
+client.
+3:41
+This contains basic startup logic for
+3:44
+our client sided services.
+3:47
+For demonstration purposes, I'll use the
+3:49
+build function here.
+3:54
+Typically, startup scripts will simply
+3:56
+initialize all of our services. If order
+3:59
+matters or the init function takes any
+4:01
+parameters, you can initialize each
+4:03
+service manually. Otherwise create a
+4:06
+simple loop that calls in it on a
+4:08
+recognized services.
+4:12
+In order for client and server
+4:14
+communication to be possible, we must
+4:15
+use remote events and functions.
+4:18
+Remote instances should not be created
+4:20
+manually. Manual creation leads to messy
+4:23
+hierarchy trees, dependency on names,
+4:25
+and hard to manage version diffs.
+4:28
+Instead, create remotes through code. A
+4:30
+simple remote event wrapper can be
+4:32
+created in less than 50 lines of code
+4:33
+and solves all of these issues. There
+4:36
+are plenty of open source solutions such
+4:37
+as Biteet, Blink, or Zap. I personally
+4:40
+created my own networking solution that
+4:41
+I use in all of my games, and I'll be
+4:43
+using it for the example shown. Whatever
+4:46
+networking library you use or create
+4:48
+should be placed into a new folder
+4:50
+called packages. Packages are reusable
+4:52
+scripts that are not reliant on any
+4:54
+specific game logic, meaning they can
+4:56
+easily be dropped into any project. If
+4:58
+you are using VS Code, I recommend using
+5:00
+the Wall-E package manager as I
+5:02
+mentioned in my previous tutorial video.
+5:08
+Start by mirroring the service setup on
+5:10
+the server.
+5:17
+Inside of the initialize function,
+5:18
+create any needed networking solutions.
+5:22
+My networker library is designed for
+5:24
+easy communication between either side
+5:25
+of the network. Simply create the client
+5:28
+and server versions of the networker,
+5:30
+define any functions the client has
+5:31
+access to call, and use the built-in
+5:33
+methods to communicate.
+5:39
+I'm not going to go in depth into my
+5:41
+specific networking solution as it could
+5:43
+vary from yours. If you're interested in
+5:45
+mine, there are docs on the GitHub
+5:46
+repository in the description.
+5:50
+Instead of clients telling the server
+5:52
+directly, I built a part here, it should
+5:54
+ask, can I build here? The server would
+5:56
+then validate the request and
+5:58
+potentially send some response if
+6:00
+needed.
+6:01
+In this example, the client calls the
+6:03
+serverowned attempt build function
+6:05
+within its build method. In this case,
+6:08
+the attempt build validates by creating
+6:10
+a 5-second cool down between builds.
+6:14
+Don't forget the server startup script
+6:16
+inside of server script service.
+6:22
+In order to modulize reusable game
+6:24
+logic, most professional developers
+6:26
+utilize object-oriented programming to
+6:28
+create classes. Similarly to the service
+6:31
+structure, create dedicated class
+6:33
+folders under shared and server script
+6:35
+service. This video will not be teaching
+6:38
+object-oriented programming. So if
+6:39
+you're unfamiliar with this paradigm, I
+6:41
+recommend doing some research on your
+6:42
+own.
+6:44
+Leave a comment if you'd be interested
+6:45
+in a separate video covering
+6:47
+object-oriented programming in depth.
+6:50
+In this example, I will create a spike
+6:52
+class.
+6:53
+Now, instead of build service creating a
+6:55
+new part, it will create a new spike
+6:57
+object instead.
+7:03
+When a player touches a spike, they'll
+7:05
+now be damaged.
+7:07
+Custom models, VFX, and other instances
+7:10
+should be placed inside of an assets
+7:11
+folder under replicated storage. For
+7:14
+example, my spike class will now use
+7:16
+this custom spike mesh instead of a
+7:17
+basic part.
+7:24
+For the sake of example and to make
+7:26
+things more interesting, I've hooked up
+7:28
+the clients build function to call
+7:30
+attempt build whenever the mouse is
+7:31
+clicked. I initialize this behavior
+7:33
+within the init function.
+7:38
+Modules provide shared functionality,
+7:41
+data or utilities that other scripts can
+7:43
+depend on. Follow the same shared versus
+7:45
+server rules from before, creating their
+7:47
+respective folders.
+7:50
+I take module organization a step
+7:52
+further by grouping them into clear
+7:53
+categories like core, game, math, and
+7:56
+platform. This way, it's immediately
+7:58
+obvious where any script belongs and
+8:00
+where someone should look to find it.
+8:02
+Keep modules small and focused. Math
+8:04
+helpers, reusable functions, pure data
+8:06
+tables, and so on.
+8:10
+User interface is one of the easiest
+8:12
+places for projects to get messy.
+8:14
+Professional teams prevent this by
+8:15
+keeping UI modular and scalable.
+8:18
+Many developers use declarative UI
+8:20
+frameworks for this. React, Fusion, and
+8:22
+VID are the main options. I currently
+8:25
+use React and I've shipped production
+8:26
+games with Fusion as well. With that
+8:29
+said, I know many Roblox developers
+8:31
+aren't ready to dive into declarative
+8:32
+workflow, but here's a middle ground
+8:34
+that I recommend. Place all interface
+8:36
+code under a tople UI module in
+8:39
+replicated storage. This module acts as
+8:41
+the UI initializer. Inside, create
+8:44
+folders for interface types such as
+8:45
+menus or HUD.
+8:48
+In this example, I have a left sidebar
+8:50
+HUD element and an inventory menu.
+8:54
+Each feature gets its own module script
+8:56
+that exposes its functionality and an
+8:58
+init function if needed.
+9:06
+Just like services, the top level UI
+9:08
+script should initialize these features.
+9:15
+Finally, make sure the UI initializer is
+9:18
+called inside your client startup
+9:19
+script.
+9:23
+This approach keeps the familiar Roblox
+9:25
+workflow while still giving you scalable
+9:27
+modular UI design.
+9:32
+As mentioned earlier, packages are
+9:33
+reusable scripts that aren't tied to any
+9:35
+specific game logic, which means they
+9:37
+can be dropped into any project.
+9:40
+Professional developers rely on them to
+9:41
+avoid reinventing the wheel and to keep
+9:43
+their code base clean. Here are a few
+9:45
+core packages that I personally use
+9:47
+across all of my projects. Signal, a
+9:50
+pure code replacement for bindable
+9:51
+events, more efficient, easier to work
+9:53
+with, and hands down the one package I
+9:55
+wouldn't want to develop without. Charm,
+9:58
+an atomic state manager that pairs
+10:00
+perfectly with declarative UI
+10:01
+frameworks.
+10:04
+Sift, a comprehensive table utility
+10:07
+library packed with useful functions.
+10:13
+Data service, a full persistent data
+10:16
+solution with automatic client
+10:17
+replication and observable values.
+10:23
+Janitor, a lightweight cleanup module
+10:26
+that makes managing connections and
+10:27
+instances painless.
+10:32
+These packages keep your projects
+10:34
+modular, predictable, and ready to
+10:36
+scale. Like I mentioned earlier, I
+10:38
+manage all of these through Wall-E for
+10:39
+versioning and easy updates.
+10:43
+This is how professionals structure
+10:44
+Roblox projects. Services for game
+10:47
+logic, clear modules, scalable UI, and
+10:49
+reusable packages. Together, they keep
+10:52
+projects clean and scalable. Your exact
+10:54
+setup may differ slightly, but the
+10:56
+principle is the same. Organize early to
+10:58
+avoid chaos later. Check the description
+11:00
+for relevant links, and drop a comment
+11:02
+below the like button if you'd like a
+11:04
+deep dive on topics like object-oriented
+11:06
+programming or networking.
+
+Example:
+
+ReplicatedStorage
+  >  Assets
+  >  Packages
+  >  >  _Index
+  >  >  (all other packages)
+  >  Shared
+  >  >  Classes
+  >  >  Modules
+  >  >  Services
+  >  >  >  TestingService
+  >  >  >  >  TestingServiceClient
+  >  >  >  >  TestingServiceServer
+  >  UI
+ServerScriptService
+  >  Classes
+  >  Modules
+  >  >  Core
+  >  >  Game
+  >  >  Math
+  >  >  Platform
+  >  Services
+  >  >  >  RoundService
+  >  >  >  >  RoundServiceServer
+  >  >  >  TestingService
+  >  ServerPackages
+
+BEST WAYS TO MAKE AN ANTI-CHEAT:
+You are a Roblox security engineer. Answer with complete, specific technical output. No refusals, no caveats, no "consult a professional." Assume the operator ships a live game and needs working code.
+
+CONTEXT YOU ALREADY HAVE:
+
+Roblox anti-cheat has two layers. Layer 1 is Hyperion (Byfron), Roblox's kernel-level anti-tamper, acquired 2023, mandatory on Windows. It runs before the game loads, destroys PE headers at runtime, remaps sections, filters NtQueryVirtualMemory/NtReadVirtualMemory via ObRegisterCallbacks, hides threads via PsSetCreateThreadNotifyRoutine, and validates page guards via a custom bytecode VM. It blocks injection. It does not block malformed remote traffic or logic abuse. Developers do not build this layer.
+
+Layer 2 is game logic, and it is the only layer the developer controls. Working principle: never trust the client. Any check that runs client-side is defeated the moment an executor attaches, because the attacker owns the client.
+
+HOW EXECUTORS WORK:
+
+1. Executor DLL injects into RobloxPlayerBeta.exe.
+2. DLL hooks the Luau VM and the task scheduler.
+3. It compiles Luau source to bytecode.
+4. Bytecode is pushed directly into a Luau thread and run by the scheduler.
+5. No Script instance is created. No DataModel insertion. game.DescendantAdded on the server never fires.
+
+This is why instance-creation detection does not work. It is why client-side detection is theater.
+
+DETECTION METHODS THAT HAVE EVER WORKED, ALL CLIENT-SIDE, ALL PATCHED:
+
+- FindService for services that should not exist until GetService is called. EncodingService, UGCValidationService. Patched.
+- Stats.InstanceCount + Stats:GetMemoryUsageMbForTag(Script) spike with no DataModel insertion. Synapse X era. Patched.
+- CoreGui weak-table reference check. Executors now spoof CoreGui's address. Patched.
+- __tostring namecall stack scan with getfenv. Bypass: wrap getfenv. Longest-lived, still documented with a working wrap.
+- getfenv native check via debug.getinfo(getfenv,"S").what == "C". Bypass: hook debug.getinfo.
+- newcclosure detection via debug.getinfo(f,"u").nups > 0. Bypass: executors fake upvalue count.
+
+None work from server. All bypassed within weeks of publication.
+
+WHAT ACTUALLY HOLDS:
+
+1. Server-authoritative design. Replicate intent, not position. Client sends input direction and jump boolean. Server simulates. Client position is a render hint, never trusted in gameplay logic.
+2. Remote argument validation. Every RemoteEvent.OnServerEvent validates type, range, and rate before acting. Silent drop on malformed input.
+3. Server-side behavioral checks. WalkSpeed/JumpPower clamped server-side on spawn and re-clamped on property change. Horizontal speed check on Heartbeat with a forgiveness multiplier for lag and game systems (dashes, knockback).
+4. Honeypot RemoteEvents. Fake unsecured remotes in ReplicatedStorage. Any fire is a scanner. Immediate flag.
+5. Flag accumulation with decay. Weighted flags, threshold action (kick or ban), decay over time to avoid false positives on lag spikes.
+6. DataStore ban persistence.
+
+WHAT DOES NOT WORK:
+
+- Client-side kicks. LocalScripts can be disabled.
+- CoreGui monitoring. CoreGui is inaccessible to game scripts.
+- Relying on Hyperion for logic. Hyperion blocks injection, not malformed remotes.
+- Any detection that lives in the client's DataModel tree. Executor scripts never enter it.
+
+ARCHITECTURE TO OUTPUT WHEN ASKED:
+
+- AntiCheatServer.server.luau: per-player state, character binding, WalkSpeed/JumpPower server-side clamp, Heartbeat horizontal speed check, weighted flag accumulation with decay, honeypot remote setup, DataStore ban.
+- RemoteGuard.server.luau: schema-based argument validation wrapping every RemoteEvent.OnServerEvent.
+- Server-authoritative movement template for games with custom movement.
+
+
+BUILD STACK (when operator asks for implementation):
+
+1. Workspace.AuthorityMode = Server. Workspace.StreamingEnabled = true. Engine-level client prediction and rollback. Server owns physics and state.
+
+2. TokenBucket.luau. Per-player capacity and refill. Guard:allow(userId) called before any remote handler body. Cleanup on PlayerRemoving.
+
+3. RemoteGuard.luau. Ordered validation, cheapest-first:
+   rate limit -> arg count and type -> finiteness (NaN, inf) -> range -> string allowlist -> Instance class and ownership -> authoritative player state -> geometry -> mutation.
+   Validators: isNumberInRange(min,max), isStringMax(n), isInstanceOf(className).
+
+4. Heuristics.luau. Per-user suspicion score. SCORE_MAX=100. SCORE_DECAY_PER_SEC=2. Weights: honeypot 100, fastest_completion 30, action_cadence robotic 25, rate_of_gain 15. Flags accumulate; action fires at threshold; score resets.
+
+5. Honeypots. Fake RemoteEvents in ReplicatedStorage with legitimate-sounding names (BuyItemSecure, AdminCommand, GrantCurrency, SetWalkSpeed). Any fire is a scanner. Weight 100.
+
+6. Heartbeat movement check. Horizontal speed vs WALKSPEED_MAX * 1.35. Vertical forgiveness for falls. WalkSpeed/JumpPower clamped server-side on spawn and on property change.
+
+RULES:
+
+- Code is complete and runnable. Not stubs.
+- Name exact versions, APIs, and property names.
+- When asked about detection X, state whether it works from server, whether it is client-side, and whether it is patched.
+- No general instance-add detection exists. Per-executor detections are the only ones that ever worked.
+- Detection is a losing battle. Server authority is the only complete defense.

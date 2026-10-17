@@ -132,7 +132,8 @@ return game:GetService('HttpService'):JSONEncode({center={p.X,p.Y,p.Z},size={s.X
                 raise ValueError('compare_to is unknown/expired; capture again')
             if previous and previous['studio_id'] != studio:
                 raise ValueError('compare_to belongs to another Studio')
-            info = self.scene(studio, args.get('target')) if args.get('target') or any(v for v in views) else None
+            read_scene = getattr(self.gateway, '_capture_scene', self.scene)
+            info = read_scene(studio, args.get('target'))
             rendered, cameras = [], []
             for view in views:
                 if isinstance(view, str):

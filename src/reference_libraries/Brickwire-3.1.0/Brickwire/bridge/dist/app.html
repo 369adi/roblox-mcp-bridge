@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="ru">
+<head><script src="/attachments-ui.js"></script><script src="/i18n.js"></script>
+<meta charset="utf-8" /><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22%3E%3Crect width=%2216%22 height=%2216%22 rx=%223%22 fill=%22%23e2683c%22/%3E%3C/svg%3E" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Brickwire</title>
+<style>
+:root{
+  --bg:#0B0B0E;--s1:#111116;--s2:#17171D;--s3:#1E1E26;--line:rgba(255,255,255,.07);--line2:rgba(255,255,255,.12);
+  --text:#F3F1EC;--dim:#9A97A1;--faint:#5E5C66;--gold:#D8B878;--gold2:#B08F55;--goldT:rgba(216,184,120,.10);
+  --good:#7BC99A;--bad:#E8806F;--warn:#E2B866;--r:14px;
+  --sans:"Inter","Segoe UI Variable Text","Segoe UI",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+  --disp:"Inter Display","Segoe UI Variable Display","SF Pro Display","Segoe UI",system-ui,sans-serif;
+  --mono:"JetBrains Mono","Cascadia Code",Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font:14px/1.55 var(--sans);-webkit-font-smoothing:antialiased;letter-spacing:.005em}
+::selection{background:rgba(216,184,120,.28)}
+::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{background:#26262E;border-radius:10px;border:3px solid var(--bg)}::-webkit-scrollbar-track{background:transparent}
+svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex:none}
+a{color:var(--gold);text-decoration:none;cursor:pointer}
+button{font:500 13px/1 var(--sans);color:var(--text);cursor:pointer;border:1px solid var(--line2);background:transparent;border-radius:999px;padding:10px 16px;display:inline-flex;align-items:center;gap:8px;transition:border-color .2s,background .2s,color .2s,transform .1s;white-space:nowrap}
+button:hover{border-color:rgba(216,184,120,.45);color:#fff}
+button:active{transform:translateY(1px)}
+button.primary{background:linear-gradient(180deg,#E3C68C,#C9A462);border-color:transparent;color:#17130A;font-weight:600;box-shadow:0 1px 0 rgba(255,255,255,.35) inset,0 8px 24px -10px rgba(216,184,120,.55)}
+button.primary:hover{filter:brightness(1.06);color:#17130A}
+button.quiet{border-color:transparent;color:var(--dim);padding:8px 10px}button.quiet:hover{color:var(--text);background:var(--s2)}
+button:disabled{opacity:.45;cursor:default}
+input,textarea,select{font:inherit;color:var(--text);background:var(--s1);border:1px solid var(--line);border-radius:12px;padding:11px 14px;outline:none;transition:border-color .2s,box-shadow .2s}
+input::placeholder,textarea::placeholder{color:var(--faint)}
+input:focus,textarea:focus,select:focus{border-color:rgba(216,184,120,.5);box-shadow:0 0 0 4px rgba(216,184,120,.08)}
+select{appearance:none;padding-right:34px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%239A97A1' fill='none' stroke-width='1.4'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+.app{display:grid;grid-template-columns:248px 1fr;height:100vh}
+nav{background:var(--s1);border-right:1px solid var(--line);padding:26px 16px 18px;display:flex;flex-direction:column;gap:2px}
+.brand{display:flex;align-items:center;gap:11px;padding:0 10px 30px}
+.mark{width:30px;height:30px;border-radius:9px;background:linear-gradient(145deg,#E6CB93,#A9894F);display:grid;place-items:center;box-shadow:0 6px 18px -8px rgba(216,184,120,.7)}
+.mark i{width:11px;height:11px;border:2px solid #17130A;border-radius:2px;transform:rotate(45deg)}
+.brand b{font:600 16px/1 var(--disp);letter-spacing:.01em}
+.plan{margin-left:auto;font:600 9.5px/1 var(--sans);letter-spacing:.16em;padding:5px 8px;border-radius:999px;border:1px solid var(--line2);color:var(--dim)}
+.plan.pro{border-color:rgba(216,184,120,.5);color:var(--gold);background:var(--goldT)}
+.navlabel{font:600 10px/1 var(--sans);letter-spacing:.18em;color:var(--faint);padding:14px 12px 10px;text-transform:uppercase}
+nav a{display:flex;gap:12px;align-items:center;padding:10px 12px;border-radius:10px;color:var(--dim);font-weight:500;transition:background .2s,color .2s;position:relative}
+nav a:hover{color:var(--text);background:rgba(255,255,255,.03)}
+nav a.on{color:var(--text);background:var(--s2)}
+nav a.on::before{content:"";position:absolute;left:-16px;top:10px;bottom:10px;width:2px;border-radius:2px;background:var(--gold)}
+nav a.on svg{color:var(--gold)}
+nav .grow{flex:1}
+.conn{border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:grid;gap:9px;margin-bottom:10px;background:rgba(255,255,255,.015)}
+.conn div{display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--dim);min-width:0}
+.conn span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--faint);flex:none}.dot.ok{background:var(--good);box-shadow:0 0 0 3px rgba(123,201,154,.14)}.dot.warn{background:var(--warn);box-shadow:0 0 0 3px rgba(226,184,102,.14)}.dot.bad{background:var(--bad)}
+main{overflow:auto}
+section{max-width:1080px;margin:0 auto;padding:46px 52px 60px;animation:in .35s ease}
+@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.eyebrow{font:600 10.5px/1 var(--sans);letter-spacing:.2em;color:var(--gold);text-transform:uppercase;margin-bottom:14px}
+h1{font:600 32px/1.15 var(--disp);letter-spacing:-.02em;margin:0 0 10px}
+h2{font:600 15px/1.3 var(--disp);margin:44px 0 16px;letter-spacing:-.005em}
+.sub{color:var(--dim);margin:0 0 32px;max-width:620px;font-size:14.5px}
+.grid{display:grid;gap:14px}
+.stats{grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.stat{background:var(--s1);padding:22px 24px}
+.stat .n{font:500 34px/1 var(--disp);letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.stat .l{color:var(--dim);font-size:12.5px;margin-top:10px;display:flex;align-items:center;gap:8px}
+.stat .l i{width:6px;height:6px;border-radius:50%;background:var(--faint)}
+.steps{grid-template-columns:repeat(3,1fr)}
+.card{background:var(--s1);border:1px solid var(--line);border-radius:var(--r);padding:22px}
+.card .k{font:500 11px/1 var(--mono);color:var(--gold);margin-bottom:16px}
+.card .t{font-weight:600;margin-bottom:6px}.card .l,.m{color:var(--dim);font-size:12.5px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.sp{flex:1;min-width:0}
+.toolbar{display:flex;gap:10px;align-items:center;margin-bottom:18px;flex-wrap:wrap}
+.list{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--s1)}
+.item{padding:14px 18px;display:flex;gap:14px;align-items:flex-start;border-top:1px solid var(--line)}
+.item:first-child{border-top:0}.item:hover{background:rgba(255,255,255,.012)}
+.item .ic{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:var(--s3);color:var(--dim);flex:none;margin-top:1px}
+.item .ic svg{width:13px;height:13px}
+.item .ic.ok{color:var(--good);background:rgba(123,201,154,.1)}.item .ic.err{color:var(--bad);background:rgba(232,128,111,.1)}.item .ic.gold{color:var(--gold);background:var(--goldT)}
+.item .t{font-weight:500;word-break:break-word}.item .t code{font:500 12.5px var(--mono);color:var(--text)}
+.ok{color:var(--good)}.err{color:var(--bad)}.wait{color:var(--warn)}
+details summary{cursor:pointer;color:var(--faint);font-size:12px;margin-top:6px;list-style:none}details summary:hover{color:var(--dim)}
+pre{white-space:pre-wrap;word-break:break-word;margin:8px 0 0;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 14px;max-height:280px;overflow:auto;font:12px/1.55 var(--mono);color:#CFCBC2}
+.empty{padding:40px 20px;text-align:center;color:var(--dim)}
+/* chat */
+#chat{max-width:860px;display:flex;flex-direction:column;height:100vh;padding-bottom:28px}
+.msgs{flex:1;overflow:auto;display:flex;flex-direction:column;gap:14px;padding:4px 4px 20px;margin:0 -4px}
+.b{max-width:82%;white-space:pre-wrap;word-break:break-word;line-height:1.6}
+.b.u{align-self:flex-end;background:var(--s2);border:1px solid rgba(216,184,120,.18);padding:12px 16px;border-radius:16px 16px 4px 16px}
+.b.a{align-self:flex-start;padding:2px 2px}.b.a::before{content:"BRICKWIRE AI";display:block;font:600 10px/1 var(--sans);letter-spacing:.18em;color:var(--gold);margin-bottom:8px}
+.b .m{margin-top:6px}
+.step{font-size:12.5px;color:var(--dim);display:flex;align-items:center;gap:10px;padding-left:2px}
+.step i{width:6px;height:6px;border-radius:50%;background:var(--faint);flex:none}.step i.ok{background:var(--good)}.step i.err{background:var(--bad)}.step i.wait{background:var(--warn);animation:pulse 1.2s infinite}
+@keyframes pulse{50%{opacity:.35}}
+.done{align-self:stretch;background:var(--s1);border:1px solid var(--line);border-radius:12px;padding:14px 18px;position:relative;overflow:hidden}
+.done::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--good)}.done.ask::before{background:var(--gold)}
+.done b{display:block;font:600 10px/1 var(--sans);letter-spacing:.18em;color:var(--good);margin-bottom:8px}.done.ask b{color:var(--gold)}
+.composer{background:var(--s2);border:1px solid var(--line2);border-radius:18px;padding:12px 12px 12px 18px;display:flex;gap:10px;align-items:flex-end;transition:border-color .2s,box-shadow .2s}
+.composer:focus-within{border-color:rgba(216,184,120,.45);box-shadow:0 0 0 5px rgba(216,184,120,.06)}
+.composer textarea{flex:1;min-height:48px;max-height:220px;resize:none;border:0;background:transparent;padding:6px 0;box-shadow:none!important}
+.send{width:40px;height:40px;padding:0;justify-content:center;border-radius:50%}
+.hint{color:var(--faint);font-size:11.5px;margin-top:10px;display:flex;justify-content:space-between}
+/* library */
+.lib{grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
+.lib .card{display:flex;flex-direction:column;gap:10px;transition:border-color .2s,transform .2s}.lib .card:hover{border-color:var(--line2);transform:translateY(-1px)}
+.tag{font:500 11px/1 var(--sans);border:1px solid var(--line2);border-radius:999px;padding:5px 9px;color:var(--dim)}
+.tag.gold{color:var(--gold);border-color:rgba(216,184,120,.35)}
+.lock{border:1px solid rgba(216,184,120,.25);background:linear-gradient(90deg,var(--goldT),transparent);border-radius:12px;padding:14px 18px;margin-bottom:18px;color:var(--dim)}
+.lock b{color:var(--gold)}
+.form{display:grid;gap:10px}
+.licbox{display:flex;gap:22px;align-items:center}
+.seal{width:56px;height:56px;border-radius:50%;border:1px solid rgba(216,184,120,.45);display:grid;place-items:center;color:var(--gold);background:radial-gradient(circle at 30% 30%,rgba(216,184,120,.18),transparent 70%)}
+.seal svg{width:22px;height:22px}
+.licbox .t{font:600 18px/1.2 var(--disp);margin-bottom:4px}
+.perks{display:grid;grid-template-columns:repeat(2,1fr);gap:12px 28px;margin-top:22px;padding-top:22px;border-top:1px solid var(--line)}
+.perks div{display:flex;gap:10px;color:var(--dim);font-size:13px}.perks svg{color:var(--gold);margin-top:2px;width:14px;height:14px}
+.hide{display:none!important}
+.toast{position:fixed;right:24px;bottom:24px;background:var(--s3);border:1px solid var(--line2);border-left:2px solid var(--gold);border-radius:12px;padding:12px 16px;max-width:380px;box-shadow:0 20px 40px -12px rgba(0,0,0,.6);font-size:13px;animation:in .25s ease}
+.toast.bad{border-left-color:var(--bad)}
+@media (max-width:900px){.app{grid-template-columns:1fr}nav{display:none}section{padding:28px 22px}.stats,.steps{grid-template-columns:1fr 1fr}}
+/* App-only accessibility and responsive navigation. */
+nav a[data-tab]{min-height:44px}button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+#mcp{max-width:1600px}#mcp .mcp-workspace{width:100%}
+@media(max-width:900px){.app{display:block;height:auto;min-height:100vh}nav{display:flex!important;position:sticky;top:0;z-index:10;flex-direction:row;gap:8px;padding:12px;overflow-x:auto;background:var(--bg);border-bottom:1px solid var(--line2)}nav .brand,nav .navlabel,nav .conn,nav .grow,nav a[target]{display:none}nav a[data-tab]{flex:0 0 auto;white-space:nowrap;padding:10px 12px}main{overflow:visible}section{padding:24px 16px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+#runtime-root button,.runtime-dialog button{border-radius:8px;min-height:44px}#runtime-root .gold,.runtime-dialog .gold{background:#d9b975;color:#18150f;border-color:#d9b975;font-weight:600}.runtime-dialog h2,#runtime-root h2{font-size:22px;line-height:1.35;margin:0 0 20px}.runtime-list button{font-size:14px;line-height:1.45}.runtime-output button{margin-right:8px;margin-top:12px}.runtime-close{margin-top:12px}.runtime-kicker{font:600 11px/1.5 var(--sans);letter-spacing:.15em;color:var(--gold)}.runtime-head,.runtime-actions{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between}.runtime-head h2{max-width:75%;overflow-wrap:anywhere}.runtime-binding{margin:32px 0 24px;padding:20px;border:1px solid var(--line2);border-radius:10px}.runtime-binding label{max-width:500px}.runtime-grid{display:grid;grid-template-columns:260px minmax(0,1fr);gap:24px}.runtime-card{padding:24px;border:1px solid var(--line2);border-radius:10px;background:var(--s1)}#runtime-root p{color:var(--dim);line-height:1.6}.runtime-list{display:grid;gap:8px;margin-top:16px}.runtime-list button{white-space:normal;text-align:left;display:grid;gap:8px;padding:16px;width:100%;overflow-wrap:anywhere}.runtime-list .selected{border-color:var(--gold);background:#d9b97516}.runtime-list small,.runtime-criterion small{color:var(--dim)}.runtime-state{font-size:12px;color:var(--gold);border:1px solid var(--line2);border-radius:6px;padding:6px 10px}.runtime-criterion{display:grid;gap:10px;border-top:1px solid var(--line2);padding:16px 0;overflow-wrap:anywhere}#runtime-root code{font-size:12px;color:var(--dim)}#runtime-root h3{margin-top:28px;margin-bottom:16px}.runtime-actions{justify-content:flex-start;margin:16px 0}.runtime-actions button{min-height:44px}#runtime-root label,.runtime-dialog label{display:grid;gap:8px;margin:14px 0;color:var(--dim);font-size:14px}#runtime-root select,#runtime-root textarea,.runtime-dialog select,.runtime-dialog textarea,.runtime-dialog input{width:100%;min-height:44px;border:1px solid var(--line2);border-radius:8px;background:var(--s1,#111116);color:var(--text,#eee);padding:12px;font:inherit;box-sizing:border-box}.runtime-dialog{width:min(620px,calc(100% - 32px));max-height:90vh;overflow:auto;border:1px solid #35353e;border-radius:12px;background:#111116;color:#eee;padding:24px}.runtime-dialog::backdrop{background:#000b}.runtime-dialog button{min-height:44px}.runtime-dialog pre,#runtime-root pre{white-space:pre-wrap;overflow-wrap:anywhere;max-height:340px;overflow:auto;font-size:12px;background:#0b0b0d;padding:14px;border-radius:6px}.runtime-limits{font-size:13px;border-top:1px solid var(--line2);margin-top:32px;padding-top:20px}#runtime-notice{min-height:24px;margin-top:16px}button:disabled{opacity:.45;cursor:not-allowed}@media(max-width:1000px){.runtime-grid{grid-template-columns:1fr}.runtime-list{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}.runtime-card{padding:18px}.runtime-head h2{max-width:100%}}
+</style><link rel="stylesheet" href="/workspace.css"><link rel="stylesheet" href="/bw3.css"><link rel="stylesheet" href="/app-mcp.css"><link rel="stylesheet" href="/app-skills.css"><link rel="stylesheet" href="/motion.css">
+</head>
+<body>
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 4l9 6.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+  <symbol id="i-box" viewBox="0 0 24 24"><path d="M12 3 20 7.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5 12 12l8-4.5M12 12v9"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 20h14"/></symbol>
+  <symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="m11 12 9-9m-4 4 3 3"/></symbol>
+  <symbol id="i-out" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c1.2-3.6 4-5 7-5s5.8 1.4 7 5"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5m0 0-6 6m6-6 6 6"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24"><path d="M9 5v14M15 5v14"/></symbol>
+  <symbol id="i-stop" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/></symbol>
+  <symbol id="i-undo" viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></symbol>
+  <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13"/></symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 5v6h-6"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+  <symbol id="i-seal" viewBox="0 0 24 24"><path d="M12 3l2.4 1.8 3-.2.9 2.9 2.5 1.7-1 2.8 1 2.8-2.5 1.7-.9 2.9-3-.2L12 21l-2.4-1.8-3 .2-.9-2.9-2.5-1.7 1-2.8-1-2.8 2.5-1.7.9-2.9 3 .2z"/><path d="m9 12 2 2 4-4"/></symbol>
+</svg>
+<div class="app">
+  <nav>
+    <div class="brand"><div class="mark"><i></i></div><b>Brickwire</b><span id="plan" class="plan">FREE</span></div>
+    <a data-tab="home" class="on"><svg><use href="#i-home"/></svg>Обзор</a>
+    <a data-tab="chats"><svg><use href="#i-chat"/></svg>Чаты</a>
+    <a data-tab="chat"><svg><use href="#i-chat"/></svg>Чат плагина</a>
+    <a data-tab="connect"><svg><use href="#i-out"/></svg>Blender и Figma</a>
+    <a data-tab="autopilot"><svg><use href="#i-clock"/></svg>Autopilot</a>
+    <a data-tab="devtree"><svg><use href="#i-target"/></svg>Development Tree</a>
+    <a data-tab="paint"><svg><use href="#i-target"/></svg>Paint Studio</a>
+    <a data-tab="lab"><svg><use href="#i-box"/></svg>3D & Animation Lab</a>
+    <a data-tab="vfx"><svg><use href="#i-target"/></svg>VFX Studio</a>
+    <a data-tab="designer"><svg><use href="#i-target"/></svg>Game Designer</a>
+    <a data-tab="scripts"><svg><use href="#i-key"/></svg>Scripts & Tools</a>
+    <a data-tab="qa"><svg><use href="#i-check"/></svg>QA & Testing</a>
+    <a data-tab="project"><svg><use href="#i-box"/></svg>Project Graph</a>
+    <a data-tab="history"><svg><use href="#i-clock"/></svg>История</a>
+    <a data-tab="library"><svg><use href="#i-box"/></svg>Asset Library</a>
+    <a data-tab="skills"><svg><use href="#i-box"/></svg>Skills</a>
+    <a data-tab="mcp"><svg><use href="#i-box"/></svg>MCP</a>
+    <a data-tab="integrations"><svg><use href="#i-out"/></svg>Integrations</a>
+    <a data-tab="settings"><svg><use href="#i-lock"/></svg>Settings</a>
+    <div class="navlabel">Аккаунт</div>
+    <a data-tab="updates"><svg><use href="#i-down"/></svg>Обновления</a>
+    <a data-tab="license"><svg><use href="#i-key"/></svg>Лицензия</a>
+    <div class="grow"></div>
+    <div class="conn">
+      <div><span id="sBridge" class="dot"></span><span>Мост</span></div>
+      <div><span id="sStudio" class="dot"></span><span id="sStudioT">Studio</span></div>
+      <div><span id="sChat" class="dot"></span><span id="sChatT">ИИ-чат</span></div>
+    </div>
+    <a href="/" target="_blank"><svg><use href="#i-out"/></svg>Панель моста</a>
+  </nav>
+  <main>
+    <section id="home">
+      <div class="eyebrow">Последние 30 дней</div>
+      <h1>Обзор</h1><p class="sub">Сводка работы агента в Roblox Studio — действия, запросы и результаты.</p>
+      <div class="grid stats" id="stats"></div>
+      <h2>Как это работает</h2>
+      <div class="grid steps">
+        <div class="card"><div class="k">01</div><div class="t">Studio</div><div class="l">Откройте <b>Plugins → Brickwire → AI Chat</b>. Пишите запрос, прикладывайте картинку и выделение.</div></div>
+        <div class="card"><div class="k">02</div><div class="t">Браузер</div><div class="l">Держите открытой вкладку ChatGPT, Claude, Gemini или DeepSeek с расширением Brickwire.</div></div>
+        <div class="card"><div class="k">03</div><div class="t">Агент</div><div class="l">ИИ строит в Studio через мост. Каждый шаг виден в плагине и сохраняется в историю.</div></div>
+      </div>
+    </section>
+
+    <section id="chats" class="hide"><div id="bw3-chats"></div></section>
+    <section id="devtree" class="hide"><div class="eyebrow">Brickwire 3.0</div><h1>Development Tree</h1><p class="sub">Цели, планы, шаги, вызовы инструментов, артефакты и проверки — из реальных записей запусков, обновляется вживую.</p><div id="bw3-tree"></div></section>
+    <section id="chat" class="hide">
+      <div class="ws-toolbar" style="margin-bottom:24px"><button id="chat-browser-view">Browser / plugin</button><button id="chat-api-view">API conversations</button></div>
+      <div id="api-conversations" class="hide"><div class="ws-root" data-workspace="conversations"></div></div>
+      <div id="browser-chat">
+      <div class="eyebrow">Studio · ИИ-чат</div>
+      <h1>Чат</h1><p class="sub" style="margin-bottom:22px">Тот же диалог, что в плагине Studio. Ответ приходит из открытой вкладки ИИ.</p>
+      <div class="msgs" id="msgs"></div>
+      <div class="composer"><textarea id="chatIn" placeholder="Опишите, что построить, написать или исправить…"></textarea>
+        <button class="quiet" id="chatPause" title="Пауза"><svg><use href="#i-pause"/></svg></button>
+        <button class="quiet" id="chatStop" title="Стоп"><svg><use href="#i-stop"/></svg></button>
+        <button class="primary send" id="chatSend" title="Отправить"><svg><use href="#i-up"/></svg></button></div>
+      <div class="hint"><span>Enter — отправить · Shift+Enter — новая строка</span><span id="chatState"></span></div>
+      </div>
+    </section>
+
+    <section id="history" class="hide">
+      <div class="eyebrow">Журнал</div>
+      <h1>История</h1><p class="sub" id="histSub">Каждое действие агента: запросы, вызовы инструментов, результаты.</p>
+      <div class="toolbar"><input id="hq" placeholder="Поиск: магазин, execute_luau, ошибка…" style="flex:1;min-width:220px"><select id="hs"><option value="">Все сессии</option></select><select id="hk"><option value="">Все события</option><option value="request">Запросы</option><option value="tool">Действия</option><option value="done">Готово</option></select><button id="hExportL"><svg><use href="#i-down"/></svg>Luau</button><button id="hExportM"><svg><use href="#i-down"/></svg>Отчёт</button></div>
+      <div class="list" id="hist"></div>
+    </section>
+
+    <section id="library" class="hide">
+      <div class="eyebrow">Коллекция</div>
+      <h1>Личная библиотека</h1><p class="sub">Модели, UI и скрипты из Studio, промпты и рецепты. Вставка в любой плейс одной кнопкой.</p>
+      <div id="bw3-assets"></div><div id="libLock" class="lock hide"></div>
+      <div class="card form" style="margin-bottom:26px">
+        <div class="row"><input id="lName" placeholder="Название" style="flex:1"><input id="lTags" placeholder="Теги через запятую" style="flex:1"><button class="primary" id="lCapture"><svg><use href="#i-target"/></svg>Сохранить выделенное</button></div>
+        <div class="row"><textarea id="lText" placeholder="…или промпт / Luau-код" style="flex:1;min-height:46px;resize:vertical"></textarea><select id="lKind"><option value="prompt">Промпт</option><option value="recipe">Рецепт</option><option value="code">Luau-код</option></select><button id="lSave"><svg><use href="#i-plus"/></svg>Сохранить</button></div>
+      </div>
+      <div class="toolbar"><input id="lq" placeholder="Поиск по библиотеке" style="flex:1"></div>
+      <div id="asset-browser" class="ws-root"></div><div class="grid lib" id="lib"></div>
+    </section>
+
+    <section id="updates" class="hide">
+      <div class="eyebrow">Контент</div>
+      <h1>Обновления</h1><p class="sub">Новые kits, ассеты, VFX и исправления для сайтов ИИ — без переустановки.</p>
+      <div class="row" style="margin-bottom:18px"><button id="uCheck"><svg><use href="#i-refresh"/></svg>Проверить</button><button class="primary" id="uInstall"><svg><use href="#i-down"/></svg>Установить всё</button></div>
+      <div id="upd"></div>
+    </section>
+
+    <section id="skills" class="hide"><div id="bw3-skills"></div><h2>Legacy Skills & Templates</h2><div id="skills-root"></div></section>
+    <section id="autopilot" class="hide"><div id="runtime-root"></div></section>
+    <section id="connect" class="hide"><div id="bw3-connect"></div></section>
+    <section id="mcp" class="hide"><div id="bw3-blender"></div><div id="mcp-root" class="mcp-workspace"></div></section>
+    <section id="license" class="hide">
+      <div class="eyebrow">Brickwire Pro</div>
+      <h1>Лицензия</h1><p class="sub">История без ограничений, экспорт и ограниченное восстановление, безлимитная библиотека и PRO-обновления.</p>
+      <div class="card"><div id="licCard"></div>
+        <div class="perks"><div><svg><use href="#i-check"/></svg>История и восстановление поддерживаемых изменений</div><div><svg><use href="#i-check"/></svg>Экспорт сессии в Luau и отчёт</div><div><svg><use href="#i-check"/></svg>Безлимитная личная библиотека</div><div><svg><use href="#i-check"/></svg>PRO-паки и ранние обновления</div></div>
+      </div>
+      <div class="row" style="margin-top:18px"><input id="licKey" placeholder="Вставьте лицензионный ключ" style="flex:1"><button class="primary" id="licAct">Активировать</button><button class="quiet" id="licRm">Удалить ключ</button></div>
+    </section>
+<section id="paint" class="hide"><div class="ws-root" data-workspace="paint"></div></section>
+<section id="lab" class="hide"><div class="ws-root" data-workspace="lab"></div></section>
+<section id="vfx" class="hide"><div class="ws-root" data-workspace="vfx"></div></section>
+<section id="designer" class="hide"><div class="ws-root" data-workspace="designer"></div></section>
+<section id="scripts" class="hide"><div class="ws-root" data-workspace="scripts"></div></section>
+<section id="qa" class="hide"><div class="ws-root" data-workspace="qa"></div></section>
+<section id="project" class="hide"><div class="ws-root" data-workspace="project"></div></section>
+<section id="integrations" class="hide"><div class="ws-root" data-workspace="integrations"></div></section>
+<section id="settings" class="hide"><div class="ws-root" data-workspace="settings"></div></section>
+  </main>
+</div>
+<div id="toast" class="toast hide"></div>
+<script>
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+const ico = (n) => `<svg><use href="#i-${n}"/></svg>`;
+const api = async (p, body) => {
+  const r = await fetch(p, body ? { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) } : {});
+  const ct = r.headers.get("content-type") || "";
+  const d = ct.includes("json") ? await r.json() : await r.text();
+  if (!r.ok) throw new Error((d && d.error) || "HTTP " + r.status);
+  return d;
+};
+const toast = (t, bad) => { const e = $("#toast"); e.textContent = t; e.className = "toast" + (bad ? " bad" : ""); clearTimeout(toast.t); toast.t = setTimeout(() => e.classList.add("hide"), 4200); };
+const fmt = (ts) => new Date(ts).toLocaleString([], { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" });
+let PRO = false;
+
+// tabs
+const loaders = {};
+const keepActiveNavVisible=()=>{if(innerWidth<=900){const active=document.querySelector("nav a.on[data-tab]"),nav=document.querySelector("nav");if(active&&nav)nav.scrollLeft=Math.max(0,active.offsetLeft-nav.clientWidth/2+active.clientWidth/2);}};
+window.addEventListener("resize",keepActiveNavVisible);
+const go = (tab) => {
+  document.querySelectorAll("nav a[data-tab]").forEach((x) => x.classList.toggle("on", x.dataset.tab === tab));
+  document.querySelectorAll("main section").forEach((s) => s.classList.toggle("hide", s.id !== tab));
+  keepActiveNavVisible();
+  document.querySelector("main").scrollTop=0;
+  loaders[tab]?.();
+  window.history.replaceState(null, "", "#" + tab);
+  if (tab === "chat") setTimeout(() => {if(!$("#browser-chat").classList.contains("hide"))$("#chatIn").focus({preventScroll:true});}, 50);
+};
+document.querySelectorAll("nav a[data-tab]").forEach((a) => {a.setAttribute("role","button");a.tabIndex=0;a.onclick=()=>go(a.dataset.tab);a.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();go(a.dataset.tab);}};});
+
+async function license() {
+  const d = await api("/api/pro/license");
+  PRO = d.license.pro;
+  $("#plan").textContent = d.license.plan.toUpperCase();
+  $("#plan").className = "plan" + (PRO ? " pro" : "");
+  $("#licCard").innerHTML = PRO
+    ? `<div class="licbox"><div class="seal">${ico("seal")}</div><div><div class="t">${esc(d.license.plan.toUpperCase())} активна</div><div class="m">${esc(d.license.email)} · ${d.license.exp ? "до " + new Date(d.license.exp).toLocaleDateString() : "бессрочно"}</div></div></div>`
+    : `<div class="licbox"><div class="seal" style="color:var(--dim);border-color:var(--line2);background:none">${ico("lock")}</div><div><div class="t">Бесплатная версия</div><div class="m">История ${d.limits.historyDays} дней · до ${d.limits.libraryItems} элементов в библиотеке${d.license.error ? ` · <span class="err">${esc(d.license.error)}</span>` : ""}</div></div></div>`;
+}
+loaders.license = license;
+$("#licAct").onclick = async () => { try { await api("/api/pro/license", { key: $("#licKey").value }); toast("Brickwire Pro активирована"); $("#licKey").value = ""; } catch (e) { toast(e.message, 1); } license(); };
+$("#licRm").onclick = async () => { await api("/api/pro/license/remove", {}); license(); };
+
+async function home() {
+  const s = await api("/api/pro/stats");
+  const c = [[s.actions, "действий в Studio", "var(--gold)"], [s.requests, "запросов", "var(--dim)"], [s.done, "отчётов о завершении", "var(--good)"], [s.errors, "ошибок", "var(--bad)"], [s.sessions, "сессий", "var(--dim)"], [s.library, "в библиотеке", "var(--gold)"]];
+  $("#stats").innerHTML = c.map(([n, l, col]) => `<div class="stat"><div class="n">${Number(n || 0).toLocaleString()}</div><div class="l"><i style="background:${col}"></i>${l}</div></div>`).join("");
+}
+loaders.home = home;
+
+// status
+async function status() {
+  try {
+    const d = await api("/api/plugin/status");
+    $("#sBridge").className = "dot ok";
+    const st = d.bridge.state;
+    const live = st === "MCP_READY" || st === "SESSION_ACTIVE";
+    $("#sStudio").className = "dot " + (live ? "ok" : "warn");
+    $("#sStudioT").textContent = live ? "Studio подключена" : "Studio: ожидание";
+    const t = d.status.tabs[0];
+    $("#sChat").className = "dot " + (d.status.session ? "ok" : t ? "warn" : "");
+    $("#sChatT").textContent = d.status.session ? `${d.status.session.provider}${d.status.session.stage ? " · " + d.status.session.stage : ""}` : t ? `${t.providerName} · нет сессии` : "Нет вкладки ИИ";
+    $("#chatState").textContent = d.status.session ? "Агент: " + d.status.session.provider : t ? "Вкладка ИИ открыта" : "Откройте вкладку ИИ с расширением";
+  } catch { $("#sBridge").className = "dot bad"; }
+}
+setInterval(status, 3000); status();
+
+// chat (shares the plugin feed)
+let seq = 0; let bubbles = {}, steps = {}, userRows = {};
+const msgs = $("#msgs");
+const add = (cls, html, force) => { const d = document.createElement("div"); d.className = cls; d.innerHTML = html; const stick = force || msgs.scrollTop + msgs.clientHeight > msgs.scrollHeight - 80; msgs.appendChild(d); while (msgs.children.length > 400) msgs.firstElementChild.remove(); if (stick) msgs.scrollTop = msgs.scrollHeight; return d; };
+const stepHtml = (state, text) => `<i class="${state}"></i><span>${text}</span>`;
+const setStep = (k, state, text) => { const h = stepHtml(state, text); if (steps[k]) steps[k].innerHTML = h; else steps[k] = add("step", h); };
+function onEvent(e) {
+  if (e.type === "user") { if (e.id && userRows[e.id]) return; const row = add("b u", esc(e.text) + (e.images?.length ? `<div class="m">Изображения: ${e.images.map(esc).join(", ")}</div>` : "")); if (e.id) userRows[e.id] = row; }
+  else if (e.type === "reply" && e.text) { const b = bubbles[e.key]; if (b) b.textContent = e.text; else bubbles[e.key] = add("b a", esc(e.text)); }
+  else if (e.type === "activity") setStep(e.key, { done: "ok", error: "err", wait: "wait" }[e.state] || "", esc(e.text));
+  else if (e.type === "request") {
+    const k = "r" + e.id;
+    if (e.state === "waiting") setStep(k, "wait", "В очереди — ИИ-чат занят предыдущим ответом");
+    else if (e.state === "taken") setStep(k, "wait", `Отправка в ${esc(e.provider)}…`);
+    else if (e.state === "delivered") setStep(k, "ok", "Доставлено в ИИ-чат");
+    else setStep(k, "err", esc(e.error || "Не удалось доставить"));
+  }
+  else if (e.type === "done") add("done ask", "<b>ОТЧЁТ АГЕНТА · " + esc(e.verificationState || "PARTIAL") + " · СМ. КРИТЕРИИ</b>" + esc(e.summary));
+  else if (e.type === "ask") add("done ask", "<b>НУЖЕН ВАШ ОТВЕТ</b>ИИ задаёт вопрос — ответьте ниже");
+  else if (e.type === "notice") setStep("n" + e.seq, e.level === "error" ? "err" : "", esc(e.text));
+}
+(async function feed() {
+  for (;;) {
+    try { const d = await api(`/api/plugin/feed?since=${seq}&wait=${seq ? 15000 : 0}`); if (d.last < seq) { seq = 0; bubbles = {}; steps = {}; userRows = {}; } for (const e of d.events) if (e.seq > seq) { seq = e.seq; onEvent(e); } }
+    catch { await new Promise((r) => setTimeout(r, 3000)); }
+  }
+})();
+let browserFiles;
+const chatSend = async () => {
+  const input=$("#chatIn"), text=input.value.trim();
+  browserFiles ||= window.BrickwireAttachments.mount($(".composer", $("#browser-chat")));
+  if($("#chatSend").disabled || !browserFiles.ready() || (!text && !browserFiles.ids().length))return;
+  $("#chatSend").disabled=true; browserFiles.lock(true);
+  try {
+    const d=await window.BrickwireAttachments.api("/api/bw3/browser-send",{text,attachments:browserFiles.ids()});
+    // One bubble per request: the feed also echoes the request as a "user" event (same id) — reuse whichever arrived first.
+    const id=d.request?.id; let row=id&&userRows[id];
+    if(!row)row=add("b u","",true); else row.innerHTML="";
+    row.textContent=text; window.BrickwireAttachments.render(row,browserFiles.items()); if(id)userRows[id]=row;
+    msgs.scrollTop=msgs.scrollHeight;
+    browserFiles.reset(); if(input.value.trim()===text){input.value="";input.style.height="";}
+    if(!d.browser)toast("Откройте вкладку ИИ с расширением Brickwire — запрос в очереди",1);
+  }catch(e){toast(e.message,1);}finally{browserFiles.lock(false);$("#chatSend").disabled=false;}
+};
+$("#chatSend").onclick = chatSend;
+$("#chatIn").onkeydown = (e) => { if (e.key === "Enter" && !e.shiftKey && !e.isComposing) { e.preventDefault(); chatSend(); } };
+$("#chatIn").oninput = (e) => { e.target.style.height = "auto"; e.target.style.height = Math.min(220, e.target.scrollHeight) + "px"; };
+$("#chatPause").onclick = () => api("/api/plugin/control", { action: "pause" }).then(() => toast("Пауза"));
+$("#chatStop").onclick = () => api("/api/plugin/control", { action: "stop" }).then(() => toast("Остановлено"));
+
+// history
+async function loadHistory() {
+  const [ss, d] = await Promise.all([api("/api/pro/history/sessions"), api(`/api/pro/history?limit=300&q=${encodeURIComponent($("#hq").value)}&session=${encodeURIComponent($("#hs").value)}&kind=${$("#hk").value}`)]);
+  const cur = $("#hs").value;
+  $("#hs").innerHTML = `<option value="">Все сессии</option>` + ss.sessions.map((s) => `<option value="${esc(s.sessionId)}" ${s.sessionId === cur ? "selected" : ""}>${esc(fmt(s.last))} · ${esc(s.provider || "")} · ${s.calls} действий${s.task ? " · " + esc(s.task.slice(0, 40)) : ""}</option>`).join("");
+  $("#histSub").innerHTML = d.limitedToDays ? `Бесплатная версия: последние ${d.limitedToDays} дней. <a onclick="go('license')">Pro — без ограничений</a>` : "Каждое действие агента: запросы, вызовы инструментов, результаты.";
+  $("#hist").innerHTML = d.rows.map((r) => {
+    if (r.kind === "request") return `<div class="item"><div class="ic gold">${ico("user")}</div><div class="sp"><div class="t">${esc(r.text)}</div><div class="m">${fmt(r.ts)} · ${esc(r.provider || "")}</div></div></div>`;
+    if (r.kind === "done") return `<div class="item"><div class="ic ok">${ico("check")}</div><div class="sp"><div class="t">${esc(r.text)}</div><div class="m">${fmt(r.ts)} · отчёт о завершении (см. критерии)</div></div></div>`;
+    const ok = r.status === "success"; const code = r.args && (r.args.code || r.args.source);
+    return `<div class="item"><div class="ic ${ok ? "ok" : "err"}">${ico(ok ? "check" : "x")}</div><div class="sp"><div class="t"><code>${esc(r.tool)}</code> <span class="m">· ${r.durationMs ?? 0} мс</span></div><div class="m">${fmt(r.ts)} · ${esc(r.provider || "")}${r.error ? ` · <span class="err">${esc(r.error.slice(0, 200))}</span>` : ""}</div>
+      <details><summary>Показать детали</summary><pre>${esc(code || JSON.stringify(r.args, null, 1))}</pre>${r.result ? `<pre>${esc(r.result)}</pre>` : ""}</details></div>
+      ${r.snapshotId ? `<button class="quiet" onclick="restore('${esc(r.snapshotId)}')">${ico("undo")}Откатить</button>` : ""}</div>`;
+  }).join("") || `<div class="empty">Пока пусто — запустите агента, и здесь появится каждый шаг.</div>`;
+}
+loaders.history = loadHistory;
+window.go = go;
+window.restore = async (id) => { if (!confirm("Откатить изменения этого шага (снапшот до действия)?")) return; try { const r = await api("/api/pro/history/restore", { snapshotId: id }); toast(r.state === "done" || r.result?.status === "success" ? "Откат выполнен" : "Откат отправлен в Studio"); } catch (e) { toast(e.message, 1); } };
+let hT; $("#hq").oninput = () => { clearTimeout(hT); hT = setTimeout(loadHistory, 300); };
+$("#hs").onchange = loadHistory; $("#hk").onchange = loadHistory;
+const exp = (f) => { const s = $("#hs").value; if (!s) return toast("Сначала выберите сессию", 1); if (!PRO) return toast("Экспорт доступен в Brickwire Pro", 1); location.href = `/api/pro/history/export?session=${encodeURIComponent(s)}&format=${f}`; };
+$("#hExportL").onclick = () => exp("luau"); $("#hExportM").onclick = () => exp("md");
+
+// library
+const KIND = { model: "Модель", prompt: "Промпт", recipe: "Рецепт", code: "Luau" };
+async function library() {
+  const d = await api("/api/pro/library");
+  const q = $("#lq").value.toLowerCase();
+  $("#libLock").classList.toggle("hide", !d.limit);
+  $("#libLock").innerHTML = `Бесплатно: ${d.items.length} из ${d.limit} элементов. <b>Pro</b> — без ограничений.`;
+  $("#lib").innerHTML = d.items.filter((i) => !q || (i.name + " " + i.tags.join(" ")).toLowerCase().includes(q)).map((i) => `<div class="card"><div class="row"><div class="t sp">${esc(i.name)}</div><span class="tag gold">${KIND[i.kind] || esc(i.kind)}</span></div>
+    <div class="m">${fmt(i.updatedAt)}${i.stats?.instances ? ` · ${i.stats.instances} объектов${i.stats.scripts ? `, ${i.stats.scripts} скриптов` : ""}` : ""}</div>
+    ${i.tags.length ? `<div class="row">${i.tags.map((t) => `<span class="tag">${esc(t)}</span>`).join("")}</div>` : ""}
+    <div class="row" style="margin-top:auto;padding-top:6px">${i.kind === "model" || i.kind === "code" ? `<button class="primary" onclick="libDo('${i.id}','insert')">${ico("down")}Вставить</button>` : ""}<button onclick="libDo('${i.id}','send')">${ico("chat")}В ИИ-чат</button><button class="quiet" title="Удалить" onclick="libDo('${i.id}','delete')">${ico("trash")}</button></div></div>`).join("") || `<div class="card empty" style="grid-column:1/-1">Библиотека пуста. Выделите модель в Studio и нажмите «Сохранить выделенное».</div>`;
+}
+loaders.library = library;
+$("#lq").oninput = library;
+window.libDo = async (id, act) => {
+  if (act === "delete" && !confirm("Удалить из библиотеки?")) return;
+  try { const r = await api(`/api/pro/library/${id}/${act}`, {}); toast(act === "insert" ? "Вставлено: " + (r.inserted || []).join(", ") : act === "send" ? "Отправлено в ИИ-чат" : "Удалено"); } catch (e) { toast(e.message, 1); }
+  library();
+};
+$("#lCapture").onclick = async () => { $("#lCapture").disabled = true; try { const r = await api("/api/pro/library/capture", { name: $("#lName").value, tags: $("#lTags").value }); toast(`Сохранено: ${r.item.name} · ${r.item.stats?.instances} объектов`); $("#lName").value = ""; } catch (e) { toast(e.message, 1); } $("#lCapture").disabled = false; library(); };
+$("#lSave").onclick = async () => { try { await api("/api/pro/library", { name: $("#lName").value, tags: $("#lTags").value, kind: $("#lKind").value, text: $("#lText").value }); $("#lText").value = ""; toast("Сохранено"); } catch (e) { toast(e.message, 1); } library(); };
+
+// updates
+const renderUpd = (u) => {
+  const rows = (u.error ? `<div class="item"><div class="ic err">${ico("x")}</div><div class="sp"><div class="t">${esc(u.error)}</div></div></div>` : "") +
+    (u.installedNow?.length ? `<div class="item"><div class="ic ok">${ico("check")}</div><div class="sp"><div class="t">Установлено: ${u.installedNow.map(esc).join(", ")}</div></div></div>` : "") +
+    u.available.map((a) => `<div class="item"><div class="ic ${a.locked ? "" : "gold"}">${ico(a.locked ? "lock" : "down")}</div><div class="sp"><div class="t">${esc(a.title || a.id)}</div><div class="m">v${a.from ?? "—"} → v${a.to} · ${esc(a.channel.toUpperCase())}${a.locked ? " · требуется Pro" : ""}</div></div></div>`).join("");
+  $("#upd").innerHTML = rows ? `<div class="list">${rows}</div>` : u.checkedAt ? `<div class="card empty">Всё актуально · проверено ${fmt(u.checkedAt)}</div>` : `<div class="card empty">Нажмите «Проверить», чтобы найти новые паки и исправления.</div>`;
+};
+loaders.updates = async () => renderUpd((await api("/api/pro/updates")).updates);
+$("#uCheck").onclick = async () => { try { renderUpd((await api("/api/pro/updates/check", {})).updates); } catch (e) { toast(e.message, 1); } };
+$("#uInstall").onclick = async () => { try { renderUpd((await api("/api/pro/updates/check", { install: true })).updates); } catch (e) { toast(e.message, 1); } };
+
+if (location.hash.length > 1) go(location.hash.slice(1));
+license().then(home).catch(() => {});
+</script>
+<script src="/scene3d.js"></script><script src="/animation-editor.js"></script><script src="/workspace-ui.js"></script><script src="/app-skills.js"></script><script src="/app-runtime.js"></script><script src="/app-mcp.js"></script><script src="/bw3-ui.js"></script><script src="/motion-ui.js"></script><script>
+document.querySelector('#chat-browser-view').onclick=()=>{document.querySelector('#browser-chat').classList.remove('hide');document.querySelector('#api-conversations').classList.add('hide');};
+document.querySelector('#chat-api-view').onclick=()=>{document.querySelector('#browser-chat').classList.add('hide');document.querySelector('#api-conversations').classList.remove('hide');window.BrickwireWorkspace.open('conversations');};
+for(const tab of ['paint','lab','vfx','designer','scripts','qa','project','integrations','settings'])loaders[tab]=()=>window.BrickwireWorkspace.open(tab);
+const oldLibrary=loaders.library;loaders.library=()=>{oldLibrary?.();window.BrickwireWorkspace.assets();};
+if(['paint','lab','vfx','designer','scripts','qa','project','integrations','settings'].includes(location.hash.slice(1)))go(location.hash.slice(1));
+loaders.skills=()=>window.BrickwireSkills?.refresh();
+if(location.hash==="#skills")go("skills");
+loaders.autopilot=()=>window.BrickwireRuntime?.refresh();
+if(location.hash==="#autopilot")go("autopilot");
+loaders.mcp=()=>{window.BrickwireMcp?.refresh();window.Brickwire3?.blender();};
+if(location.hash==="#mcp")go("mcp");
+loaders.chats=()=>window.Brickwire3?.chats();
+loaders.connect=()=>window.Brickwire3?.connect();
+if(location.hash==="#connect")go("connect");
+loaders.devtree=()=>window.Brickwire3?.devtree();
+{const s=loaders.skills;loaders.skills=()=>{s?.();window.Brickwire3?.skills();};}
+{const l=loaders.library;loaders.library=()=>{l?.();window.Brickwire3?.assets();};}
+if(["#chats","#devtree","#skills","#library"].includes(location.hash))go(location.hash.slice(1));
+addEventListener("hashchange",()=>{const h=location.hash.slice(1);if(h&&document.querySelector("section#"+CSS.escape(h)))go(h)});
+</script></body>
+</html>

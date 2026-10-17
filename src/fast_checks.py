@@ -37,6 +37,7 @@ def run_fast_checks(bridge, request):
         calls.append(params)
         return {'content': [{'type': 'image', 'mimeType': 'image/png', 'data': base64.b64encode(png.getvalue()).decode()}]}
     gateway._capture_provider = provider
+    gateway._capture_scene = lambda *_: {'center':[0,0,0],'size':[10,10,10],'camera':[0,0,10,1,0,0,0,1,0,0,0,1],'fov':70}
     with tempfile.TemporaryDirectory() as directory:
         gateway.capture_dir = Path(directory)
         small = gateway.capture({'studio_id': 'fixture'})

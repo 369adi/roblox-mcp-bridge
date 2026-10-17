@@ -1,0 +1,121 @@
+{
+  "manifest_version": 3,
+  "name": "Brickwire — Roblox Agent",
+  "short_name": "Brickwire",
+  "version": "3.1.0",
+  "description": "Turns Notion AI, DeepSeek, ChatGPT, Claude, Gemini, Grok, Qwen, Kimi, GLM, Mistral, Perplexity, Copilot, Poe, Arena (or any chat site you add) into a Roblox Studio agent.",
+  "minimum_chrome_version": "116",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Roblox Agent",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png"
+    }
+  },
+  "options_page": "options.html",
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": [
+    "storage",
+    "scripting"
+  ],
+  "optional_host_permissions": [
+    "https://*/*"
+  ],
+  "host_permissions": [
+    "http://127.0.0.1/*",
+    "http://localhost/*",
+    "https://ui-resources.com/*",
+    "https://uiassets.commissiontoolz.xyz/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://chatgpt.com/*",
+        "https://chat.openai.com/*",
+        "https://chat.deepseek.com/*",
+        "https://claude.ai/*",
+        "https://gemini.google.com/*",
+        "https://chat.qwen.ai/*",
+        "https://www.kimi.com/*",
+        "https://kimi.com/*",
+        "https://www.kimi.ai/*",
+        "https://kimi.ai/*",
+        "https://chat.z.ai/*",
+        "https://lmarena.ai/*",
+        "https://arena.ai/*",
+        "https://www.arena.ai/*",
+        "https://www.notion.so/*",
+        "https://notion.so/*",
+        "https://app.notion.com/*",
+        "https://grok.com/*",
+        "https://chat.mistral.ai/*",
+        "https://www.perplexity.ai/*",
+        "https://perplexity.ai/*",
+        "https://copilot.microsoft.com/*",
+        "https://poe.com/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_idle",
+      "all_frames": false
+    },
+    {
+      "matches": [
+        "https://chatgpt.com/*",
+        "https://chat.openai.com/*",
+        "https://chat.deepseek.com/*",
+        "https://claude.ai/*",
+        "https://gemini.google.com/*",
+        "https://chat.qwen.ai/*",
+        "https://www.kimi.com/*",
+        "https://kimi.com/*",
+        "https://www.kimi.ai/*",
+        "https://kimi.ai/*",
+        "https://chat.z.ai/*",
+        "https://lmarena.ai/*",
+        "https://arena.ai/*",
+        "https://www.arena.ai/*",
+        "https://www.notion.so/*",
+        "https://notion.so/*",
+        "https://app.notion.com/*",
+        "https://grok.com/*",
+        "https://chat.mistral.ai/*",
+        "https://www.perplexity.ai/*",
+        "https://perplexity.ai/*",
+        "https://copilot.microsoft.com/*",
+        "https://poe.com/*"
+      ],
+      "js": [
+        "keepawake.js"
+      ],
+      "run_at": "document_start",
+      "world": "MAIN",
+      "all_frames": false
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "library/previews.json",
+        "library/community.json",
+        "library/packs.json",
+        "library/packs/*",
+        "paint.html",
+        "paint.js"
+      ],
+      "matches": [
+        "https://*/*"
+      ]
+    }
+  ]
+}

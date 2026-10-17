@@ -1,0 +1,4 @@
+Lurong model (studded) training pack
+- Lurong-stud-model-training-prompt.txt : the combined model prompt (modeling.md + shared helpers + cottage template)
+- agent-instructions/modeling.md        : main modeling instruction; AGENT.md core; world.md, physics.md related
+- model-templates/                      : _shared boot/helpers/finish.lua and ready model templates

@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head><script src="/i18n.js"></script>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Brickwire Bridge</title>
+<style>
+:root{--bg:#0B0B0E;--panel:#111116;--panel2:#17171D;--line:rgba(255,255,255,.08);--text:#F3F1EC;--mut:#9A97A1;--blue:#D8B878;--purple:#B08F55;--cyan:#D8B878;--green:#7BC99A;--yellow:#E2B866;--red:#E8806F;--r:14px}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.55 Inter,"Segoe UI Variable Text","Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--cyan)}header{display:flex;align-items:center;gap:14px;padding:14px 22px;border-bottom:1px solid var(--line);background:rgba(11,11,14,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:5}
+.logo{width:28px;height:28px;border-radius:8px;background:linear-gradient(180deg,#E3C68C,#C9A462);display:grid;place-items:center;font-size:0;box-shadow:0 6px 16px -6px rgba(216,184,120,.7)}.logo::after{content:"";width:9px;height:9px;border:1.8px solid #17130A;border-radius:2px;transform:rotate(45deg)}
+.brand{font-weight:600;letter-spacing:.01em;font-size:14px}.brand small{display:block;color:var(--mut);letter-spacing:0;font-weight:500}
+nav{display:flex;gap:4px;margin-left:24px;flex-wrap:wrap}nav a{color:var(--mut);text-decoration:none;padding:6px 12px;border-radius:8px}nav a.on,nav a:hover{color:var(--text);background:var(--panel2)}
+.pill{margin-left:auto;display:flex;align-items:center;gap:8px;padding:6px 12px;border:1px solid var(--line);border-radius:99px;background:var(--panel)}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--mut);}.g{background:var(--green);color:var(--green)}.y{background:var(--yellow);color:var(--yellow)}.r{background:var(--red);color:var(--red)}.b{background:var(--blue);color:var(--blue)}
+main{padding:22px;max-width:1300px;margin:0 auto}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.card h3{margin:0 0 10px;font-size:10px;letter-spacing:.18em;color:var(--blue);font-weight:600;text-transform:uppercase}.big{font-size:20px;font-weight:650}
+.mut{color:var(--mut)}table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}th{color:var(--mut);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.08em}
+td code,pre{font:12px/1.4 ui-monospace,Consolas,monospace;color:#CFCBC2;white-space:pre-wrap;word-break:break-word}pre{background:#08080A;border:1px solid var(--line);border-radius:8px;padding:10px;max-height:340px;overflow:auto;margin:0}
+.tag{display:inline-block;padding:1px 8px;border-radius:99px;font-size:11px;border:1px solid var(--line)}.t-read{color:var(--cyan)}.t-write{color:var(--yellow)}.t-destructive{color:var(--red)}.t-mcp{color:var(--blue)}.t-composite{color:var(--purple)}.t-bridge{color:var(--green)}
+.s-success{color:var(--green)}.s-error,.s-timeout{color:var(--red)}.s-denied,.s-rejected{color:var(--yellow)}
+button{background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:99px;padding:8px 14px;cursor:pointer;font:inherit}button:hover{border-color:var(--blue)}button.pri{background:linear-gradient(180deg,#E3C68C,#C9A462);border:0;color:#17130A;font-weight:600}button.ok{background:var(--green);color:#04130a;border:0}button.no{background:transparent;color:var(--red);border-color:var(--red)}
+select,input,textarea{background:#08080A;color:var(--text);border:1px solid var(--line);border-radius:8px;padding:7px 10px;font:inherit}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.sec{margin-top:18px}.approval{border-color:var(--yellow);box-shadow:0 0 0 1px rgba(226,184,102,.25)}
+.feed div{padding:6px 0;border-bottom:1px dashed var(--line);font-size:13px}.hidden{display:none}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">▣</div>
+  <div class="brand">BRICKWIRE<small>Roblox Agent Bridge</small></div>
+  <nav id="nav"></nav>
+  <a href="/ui-builder" target="_blank" style="margin-left:8px;color:#8ea2ff;text-decoration:none">🧱 UI Builder</a>
+  <div class="pill"><span class="dot" id="hdot"></span><span id="hstate">…</span></div>
+</header>
+<main id="app"></main>
+<script>
+const PAGES=["Overview","Sessions","Headless","Tools","Projects","Logs","Providers","Settings"];
+let H=null,feed=[];const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const api=async(p,o={})=>{const r=await fetch(p,{headers:{"Content-Type":"application/json"},...o,body:o.body?JSON.stringify(o.body):undefined});return r.json()};
+const dotFor=s=>({MCP_READY:"g",SESSION_ACTIVE:"b",STUDIO_FOUND:"y",STUDIO_NOT_FOUND:"y",MCP_CONNECTING:"y",BRIDGE_READY:"y",ERROR:"r",OFFLINE:"r"}[s]||"");
+function navRender(){const cur=(location.hash.slice(1)||"Overview");$("#nav").innerHTML=PAGES.map(p=>`<a href="#${p}" class="${p===cur?"on":""}">${p}</a>`).join("")}
+async function render(){navRender();const page=location.hash.slice(1)||"Overview";const el=$("#app");
+ try{el.innerHTML=await (VIEWS[page]||VIEWS.Overview)()}catch(e){el.innerHTML=`<div class="card">Bridge unreachable: ${esc(e.message)}</div>`}}
+const VIEWS={
+async Headless(){const h=await api("/api/headless");const s=h.status;const modeTxt={headless:"Headless (bridge talks to the LLM API)",browser:"Browser extension",idle:"Idle"}[h.activeMode];
+ return `<div class="card"><h3>Active mode: <span id="hmode">${esc(modeTxt)}</span></h3>
+ ${h.configured?`<div class="row sec">Provider <code>${esc(h.provider)}</code> · model <code>${esc(h.model)}</code></div>`:`<div class="row sec" style="color:#f87171">${esc(h.configError)}</div><div class="row sec">Set BRICKWIRE_LLM_PROVIDER / _URL / _KEY / _MODEL in .env and restart the bridge.</div>`}
+ <div class="row sec"><input id="htask" placeholder="Task for the headless agent" style="flex:1" ${h.configured?"":"disabled"}><button class="pri" onclick="hlStart()" ${h.configured&&s.state!=="running"?"":"disabled"}>Start</button><button onclick="hlStop()" ${s.state==="running"?"":"disabled"}>Stop</button></div>
+ <div class="row sec">State <b>${esc(s.state)}</b> · turns ${s.turns} · calls ${s.calls}${s.error?` · <span style="color:#f87171">${esc(s.error)}</span>`:""}${s.summary?` · ${esc(s.summary)}`:""}</div>
+ <div class="feed sec">${s.log.map(l=>`<div>${esc(l)}</div>`).join("")}</div></div>`},
+async Overview(){if(!H)H=await api("/api/health");const calls=(await api("/api/logs?calls=1&limit=12")).logs.reverse();
+ const s=H.session;const aps=H.pendingApprovals||[];
+ return `${aps.map(a=>`<div class="card approval sec"><h3>Approval required</h3><div class="big">${esc(a.tool)}</div><div class="mut">${esc(a.reason)}</div><pre>${esc(JSON.stringify(a.args,null,2))}</pre><div class="row sec"><button class="ok" onclick="decide('${a.id}',true)">Approve</button><button class="no" onclick="decide('${a.id}',false)">Reject</button></div></div>`).join("")}
+ <div class="grid sec">
+ <div class="card"><h3>Bridge</h3><div class="big"><span class="dot ${dotFor(H.state)}"></span> ${esc(H.state)}</div><div class="mut">${esc(H.reason)}</div></div>
+ <div class="card"><h3>Studio MCP</h3><div class="big">${esc(H.mcp.state)}</div><div class="mut">${esc(H.mcp.serverName||"")} ${esc(H.mcp.serverVersion||"")} · ${H.mcp.toolCount} tools</div><div class="mut">${esc(H.mcp.lastError||"")}</div></div>
+ <div class="card"><h3>Studio</h3><div class="big">${H.studio.selected?esc(H.studio.selected.name):"—"}</div><div class="mut">${H.studio.instances.length} instance(s) · process ${H.studio.processRunning===null?"n/a":H.studio.processRunning?"running":"not running"}</div></div>
+ <div class="card"><h3>Session</h3><div class="big">${s?esc(s.provider)+" · "+esc(s.stage):"none"}</div><div class="mut">${s?esc(s.projectName)+" · "+s.toolCalls+" calls · "+s.errors+" errors":""}</div>${s?`<button class="no sec" onclick="stopS('${s.id}')">Stop session</button>`:""}</div>
+ <div class="card"><h3>Safety mode</h3><div class="big">${esc(H.settings.mode)}</div><div class="mut">auto-snapshot ${H.settings.autoSnapshot?"on":"off"}</div></div>
+ </div>
+ <div class="card sec"><h3>Last actions</h3>${table(["Time","Provider","Tool","Status","Duration"],calls.map(c=>[c.ts.slice(11,19),esc(c.provider||""),`<code>${esc(c.tool)}</code>`,`<span class="s-${c.status}">${esc(c.status)}</span>`,(c.durationMs??"")+"ms"]))}</div>
+ <div class="card sec"><h3>Live feed</h3><div class="feed" id="feed">${feed.map(feedRow).join("")}</div></div>`},
+async Sessions(){const ss=(await api("/api/sessions")).sessions;return `<div class="card">${table(["Id","Provider","Project","Started","Stage","Calls","Errors","Active"],ss.map(s=>[`<code>${s.id}</code>`,esc(s.provider),esc(s.projectName),s.startedAt.replace("T"," ").slice(0,19),esc(s.stage),s.toolCalls,s.errors,s.active?`<button class="no" onclick="stopS('${s.id}')">Stop</button>`:"—"]))}</div>`},
+async Tools(){const ts=(await api("/api/tools")).tools;return `<div class="row"><button onclick="api('/api/tools/refresh',{method:'POST'}).then(render)">Refresh from MCP</button><button onclick="api('/api/mcp/restart',{method:'POST'})">Restart MCP</button><span class="mut">${ts.filter(t=>t.available).length}/${ts.length} available</span></div><div class="card sec">${table(["Tool","Description","Status","Source","Risk"],ts.map(t=>[`<code>${esc(t.name)}</code>`,esc(t.description).slice(0,220),t.available?'<span class="s-success">available</span>':`<span class="s-error">unavailable</span><div class="mut">${esc(t.unavailableReason||"")}</div>`,`<span class="tag t-${t.source}">${t.source}</span>`,`<span class="tag t-${t.risk}">${t.risk}</span>`]))}</div>`},
+async Projects(){const ps=(await api("/api/projects")).projects;let html=`<div class="card">${table(["Key","Name","PlaceId","Updated",""],ps.map(p=>[`<code>${esc(p.key)}</code>`,esc(p.name),esc(p.placeId??""),esc(p.updatedAt),`<button onclick="openP('${p.key}')">Open</button>`]))}</div><div id="proj"></div>`;return html},
+async Logs(){const ls=(await api("/api/logs?limit=400")).logs.reverse();return `<div class="card">${table(["Timestamp","Level","Event","Provider","Tool","Arguments","Result","Duration","Status"],ls.map(l=>[l.ts.replace("T"," ").slice(0,23),esc(l.level),esc(l.event),esc(l.provider||""),`<code>${esc(l.tool||"")}</code>`,l.args?`<code>${esc(JSON.stringify(l.args)).slice(0,300)}</code>`:esc(l.message||""),l.result!==undefined?`<code>${esc(typeof l.result==="string"?l.result:JSON.stringify(l.result)).slice(0,300)}</code>`:"",l.durationMs!==undefined?l.durationMs+"ms":"",`<span class="s-${l.status||""}">${esc(l.status||"")}</span>`]))}</div>`},
+async Providers(){const ps=(await api("/api/providers")).providers;return `<div class="card">${table(["Provider","Hosts","Status","Default","Notes"],ps.map(p=>[`<b>${esc(p.name)}</b>`,p.hosts.map(h=>`<code>${esc(h)}</code>`).join(" "),`<span class="tag ${p.status==="beta"?"t-read":p.status==="experimental"?"t-write":"t-destructive"}">${p.status}</span>`,p.enabledByDefault?"on":"off",esc(p.notes)]))}</div><p class="mut">Status is reported honestly: "beta" adapters are implemented against public DOM knowledge and verified against mock pages; real sites change often — see PROVIDERS.md.</p>`},
+async Settings(){const s=(await api("/api/settings")).settings;H=await api("/api/health");return `<div class="card"><h3>Safety & execution</h3>
+ <div class="row sec">Mode <select id="mode">${["full","auto","approval","safe"].map(m=>`<option ${m===s.mode?"selected":""}>${m}</option>`).join("")}</select>
+ <span class="mut">auto: confirm destructive · approval: confirm every change · safe: read-only</span></div>
+ <div class="row sec">Tool timeout (ms) <input id="tt" type="number" value="${s.toolTimeoutMs}"> Approval timeout (ms) <input id="at" type="number" value="${s.approvalTimeoutMs}"></div>
+ <div class="row sec"><label><input id="as" type="checkbox" ${s.autoSnapshot?"checked":""}> Auto-snapshot before changes</label> Max result chars <input id="mr" type="number" value="${s.maxResultChars}"></div>
+ <div class="row sec">Studio instance <select id="st"><option value="">(first available)</option>${H.studio.instances.map(i=>`<option value="${esc(i.id)}" ${i.id===s.selectedStudioId?"selected":""}>${esc(i.name)} ${i.placeId?"#"+esc(i.placeId):""}</option>`).join("")}</select></div>
+ <div class="row sec"><button class="pri" onclick="saveS()">Save</button><button class="no" onclick="if(confirm('Stop the bridge?'))api('/api/shutdown',{method:'POST'})">Shut down bridge</button></div></div>`}
+};
+function table(h,rows){return `<table><thead><tr>${h.map(x=>`<th>${x}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join("")}</tr>`).join("")||`<tr><td colspan="${h.length}" class="mut">nothing yet</td></tr>`}</tbody></table>`}
+function feedRow(l){return `<div><span class="mut">${l.ts.slice(11,19)}</span> ${esc(l.event)} ${l.tool?`<code>${esc(l.tool)}</code>`:""} <span class="s-${l.status||""}">${esc(l.status||"")}</span> <span class="mut">${esc((l.message||"").slice(0,160))}</span></div>`}
+async function decide(id,ok){await api("/api/approvals/"+id,{method:"POST",body:{approve:ok}});H=await api("/api/health");render()}
+async function stopS(id){await api("/api/sessions/stop",{method:"POST",body:{sessionId:id}});H=await api("/api/health");render()}
+async function saveS(){await api("/api/settings",{method:"PUT",body:{mode:$("#mode").value,toolTimeoutMs:+$("#tt").value,approvalTimeoutMs:+$("#at").value,autoSnapshot:$("#as").checked,maxResultChars:+$("#mr").value}});await api("/api/studio/select",{method:"POST",body:{studioId:$("#st").value||null}});render()}
+async function openP(k){const r=await api("/api/projects/"+k);const m=r.project;$("#proj").innerHTML=`<div class="card sec"><h3>${esc(m.name)}</h3><pre>${esc(r.summary)}</pre>
+ <div class="row sec"><select id="nc">${["system","important_script","important_gui","dependency","preference","note"].map(c=>`<option>${c}</option>`).join("")}</select><input id="np" placeholder="path (optional)"><input id="nt" placeholder="e.g. MenuCasov already exists — don't create CaseMenu" style="flex:1"><button class="pri" onclick="addN('${k}')">Add</button></div>
+ <h3 class="sec">Snapshots</h3>${table(["Id","Label","Created","Paths","Restored",""],m.snapshots.slice().reverse().map(s=>[`<code>${s.id}</code>`,esc(s.label),esc(s.createdAt),esc(s.entries.map(e=>e.path).join(", ")),esc(s.restoredAt||""),`<button onclick="restoreS('${s.id}','${k}')">Restore</button>`]))}
+ <h3 class="sec">Changes</h3>${table(["Time","Tool","Summary"],m.changes.slice(-30).reverse().map(c=>[esc(c.ts),esc(c.tool),esc(c.summary)]))}</div>`}
+async function restoreS(id,k){if(!confirm("Restore snapshot "+id+" in Studio? (approve it in Overview if asked)"))return;const r=await api(`/api/snapshots/${id}/restore`,{method:"POST",body:{waitMs:3000}});alert(r.state==="done"?(r.result.status+(r.result.error?": "+r.result.error:"")):"Waiting for approval — see Overview");openP(k)}
+async function addN(k){await api(`/api/projects/${k}/notes`,{method:"POST",body:{category:$("#nc").value,path:$("#np").value||undefined,text:$("#nt").value}});openP(k)}
+function connect(){const es=new EventSource("/api/events");
+ es.addEventListener("health",e=>{H=JSON.parse(e.data);$("#hdot").className="dot "+dotFor(H.state);$("#hstate").textContent=H.state;if((location.hash.slice(1)||"Overview")==="Overview")render()});
+ es.addEventListener("log",e=>{const l=JSON.parse(e.data);feed.unshift(l);feed=feed.slice(0,60);const f=$("#feed");if(f)f.innerHTML=feed.map(feedRow).join("")});
+ es.onerror=()=>{$("#hdot").className="dot r";$("#hstate").textContent="OFFLINE"}}
+window.addEventListener("hashchange",render);connect();render();
+async function hlStart(){const t=$("#htask").value.trim();if(!t)return;const r=await api("/api/headless/start",{method:"POST",body:{task:t}});if(r.error)alert(r.error);render()}
+async function hlStop(){await api("/api/headless/stop",{method:"POST",body:{}});render()}
+setInterval(()=>{if((location.hash.slice(1))==="Headless")render()},3000);
+</script>
+</body>
+</html>

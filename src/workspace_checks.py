@@ -86,6 +86,7 @@ def run_workspace_checks(bridge, request):
 
     try:
         ImageGrab.grab = forbidden
+        bridge.roblox._capture_scene = lambda *_: {'center':[0,0,0],'size':[10,10,10],'camera':[0,0,10,1,0,0,0,1,0,0,0,1],'fov':70}
         bridge.roblox.call = provider
         bridge.roblox._capture_provider = lambda params: provider({'name': 'screen_capture', 'arguments': params})
         call('screen_capture', {}, expect_error=True)
@@ -106,5 +107,6 @@ def run_workspace_checks(bridge, request):
         call('screen_capture', {'studio_id': 'fixture'}, expect_error=True)
     finally:
         ImageGrab.grab, bridge.roblox.call, bridge.roblox._capture_provider = original_grab, original_call, original_capture
+        del bridge.roblox._capture_scene
     passed.append('Studio-only screenshot routing: missing/legacy desktop arguments rejected, MCP image forwarded, provider failure has no desktop fallback')
     return passed

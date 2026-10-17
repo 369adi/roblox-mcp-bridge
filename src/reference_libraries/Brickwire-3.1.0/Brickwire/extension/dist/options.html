@@ -1,0 +1,43 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Brickwire — Settings</title>
+<style>
+body{margin:0;background:#0B0B0E;color:#F3F1EC;font:14px/1.6 Inter,"Segoe UI Variable Text","Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+main{max-width:760px;margin:56px auto;padding:0 28px}h1{font-size:30px;font-weight:600;letter-spacing:-.02em;margin:0 0 28px}
+h1::before{content:"SETTINGS";display:block;font-size:10.5px;letter-spacing:.2em;color:#D8B878;font-weight:600;margin-bottom:12px}
+.card{background:#111116;border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:22px 24px;margin:16px 0}
+.card>b{font-weight:600;font-size:15px}
+label{display:block;margin:12px 0;color:#9A97A1}input:not([type]){background:#0B0B0E;color:#F3F1EC;border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:8px 12px;margin-left:8px;outline:none}
+.cs{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06)}.cs button{padding:6px 14px;background:transparent;color:#F3F1EC;border:1px solid rgba(255,255,255,.14)}
+input[type=number],select{background:#0B0B0E;color:#F3F1EC;border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:8px 12px;margin-left:8px;width:130px;outline:none}
+input:focus,select:focus{border-color:rgba(216,184,120,.5)}
+input[type=checkbox]{accent-color:#D8B878}
+.prov{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.06)}.prov small{color:#9A97A1}
+.tag{font-size:10.5px;padding:2px 8px;border-radius:99px;border:1px solid rgba(255,255,255,.14);letter-spacing:.04em}.beta{color:#D8B878}.experimental{color:#E2B866}.unavailable{color:#E8806F}
+button{background:linear-gradient(180deg,#E3C68C,#C9A462);color:#17130A;border:0;border-radius:99px;padding:11px 22px;font-weight:600;cursor:pointer;font:inherit;font-weight:600}
+.mut{color:#9A97A1}
+</style></head>
+<body><main>
+<h1>Brickwire</h1>
+<div class="card"><b>Bridge</b> <span class="mut" id="bstate"></span>
+  <label>Bridge port <input id="port" type="number"></label>
+  <label>Safety mode <select id="mode"><option value="full">full — never ask</option><option value="auto">auto — confirm destructive</option><option value="approval">approval — confirm every change</option><option value="safe">safe — read-only</option></select></label>
+</div>
+<div class="card"><b>Agent loop</b>
+  <label>Max automatic turns per task <input id="turns" type="number"></label>
+  <label>Reminders when the AI stops using tools <input id="rem" type="number"></label>
+  <label>Max tool calls executed per message <input id="calls" type="number"></label>
+</div>
+<div class="card"><b>Providers</b><div id="provs"></div></div>
+<div class="card"><b>Other AI sites</b> <span class="mut">— any chat site: Brickwire uses the generic adapter and reads replies via its delivery markers.</span>
+  <div id="customs"></div>
+  <label>Host <input id="c_host" placeholder="chat.example.com" style="width:220px"></label>
+  <label>Name <input id="c_name" placeholder="My AI" style="width:220px"></label>
+  <details><summary class="mut">Optional selectors (only if auto-detection fails; alternatives separated by ||)</summary>
+  <label>Message box <input id="c_comp" style="width:420px" placeholder="textarea#prompt"></label>
+  <label>Send button <input id="c_send" style="width:420px" placeholder="button[type=submit]"></label>
+  <label>Stop button <input id="c_stop" style="width:420px" placeholder="button[aria-label*=Stop]"></label></details>
+  <button id="c_add">Add site</button> <span id="c_msg" class="mut"></span>
+</div>
+<div class="card"><b>Panel</b><label><input id="floating" type="checkbox"> Floating panel (instead of docking above the message box)</label></div>
+<button id="save">Save</button> <span id="saved" class="mut"></span>
+</main><script src="options.js"></script></body></html>
