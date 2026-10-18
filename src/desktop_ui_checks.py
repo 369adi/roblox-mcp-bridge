@@ -3,6 +3,7 @@ import json
 import tempfile
 import time
 from types import SimpleNamespace
+from unittest.mock import patch
 from desktop_ui import DesktopUI, DESKTOP_UI_TOOLS
 from studio_ui_checks import FakeWindow
 
@@ -52,4 +53,9 @@ def run_desktop_ui_checks(bridge):
         bridge.studio_ui.stop()
         assert bridge.desktop_ui.cancelled.is_set()
         assert not any(t['name']=='desktop_arm' for t in DESKTOP_UI_TOOLS)
+        image={'content':[{'type':'image','mimeType':'image/jpeg','data':'fixture'}]}
+        with patch.object(bridge.desktop_ui,'capture',return_value=image):
+            for name,args in [('desktop_capture',{}),('tool_call',{'name':'desktop_capture'})]:
+                result=bridge.dispatch({'jsonrpc':'2.0','id':1,'method':'tools/call','params':{'name':name,'arguments':args}})
+                assert result['result']==image  # Native image block, never base64 inside JSON text.
     return ['Full-PC UI: all-app fixture capture/input, Win+R/Alt+Tab, fresh observations, focus-change rejection, local consent and shared emergency stop; no real desktop input sent']

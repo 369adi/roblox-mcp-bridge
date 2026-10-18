@@ -178,7 +178,7 @@ class Bridge:
             else:
                 try:
                     output = handlers[name](args)
-                    if name in {"rea_call_tool", "roblox_call_tool", "roblox_studios", "roblox_state", "library_read", "brickwire_execute", "screen_capture", "capture_get", "studio_window_capture", "screen_windows", "run_builder", "model_summary", "model_check"}:
+                    if name in {"rea_call_tool", "roblox_call_tool", "roblox_studios", "roblox_state", "library_read", "brickwire_execute", "screen_capture", "capture_get", "studio_window_capture", "desktop_capture", "screen_windows", "run_builder", "model_summary", "model_check"}:
                         value = output
                     else:
                         value = result_text(output)
