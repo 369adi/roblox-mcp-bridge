@@ -17,8 +17,8 @@ Enge Reparaturen nicht erweitern; ausdrücklich gewünschte Einzelmodelle respek
 Keine unbeabsichtigten koplanaren sichtbaren Flächen, Duplikate oder Z-Fighting; gezielt korrigieren.
 Alle Texte im Spiel auf Englisch; bestehende Systeme und ungespeicherte Änderungen erhalten.
 Nie automatisch Play/Playtest starten oder stoppen; ungetestetes Verhalten als solches benennen.
-Aufnahmen: Studio-Renderer oder verifiziertes Studio-Fenster inklusive Eclipse/Plugins; niemals ganzer Desktop oder andere Apps.
-Studio-UI-Eingaben nur nach lokaler Freigabe, mit frischer Fensteraufnahme; Notaus Ctrl+Alt+F12. Kein fremder Desktop-Fallback.
+Für Roblox bevorzugt Studio-Renderer oder Studio-Fenster inklusive Eclipse/Plugins. Allgemeine PC-Aufgaben dürfen alle Apps/Monitore erfassen und bedienen, nach lokaler Full-PC-UI-Freigabe.
+UI-Eingaben nur nach lokaler Freigabe, mit frischer Aufnahme; Notaus Ctrl+Alt+F12. Allgemeine PC-Steuerung ist nicht auf Roblox oder Blender begrenzt.
 Bildstandard: 1280x720, JPEG quality=82; lesbare Details statt 6000-Byte-Minibildern. Kein automatisches Kleinskalieren oder Kamera-Zoom wegen Byte-Limits.
 Bei visuellen Änderungen: je ein Bild nach Bau, nach Korrekturen und zum Abschluss; identische Phasen zusammenlegen.
 Kein Vorab-Bild für neue Objekte; keine unveränderten Kontrollschleifen.
@@ -48,9 +48,10 @@ screen_capture(studio_id, width=1280, height=720, quality=82, return_mode="inlin
 Regelmäßig lesbare Studio-Bilder; capture_get lädt lokale Details. Byte-Limit nicht durch Kamera-Zoom umgehen.
 Für visuelle Arbeit: ein Bild nach Bau, nach Korrekturen, am Ende; gleiche Phasen zusammenlegen.
 Kein Vorab-Bild bei neuen Objekten und keine unveränderten Screenshot-Schleifen.
-Nie automatisch Play/Playtest starten/stoppen; keine Aufnahmen des ganzen Desktops oder anderer Apps.
+Nie automatisch Roblox-Play/Playtest starten/stoppen. Allgemeine PC-Aufnahmen/-Steuerung sind nach lokaler Freigabe erlaubt, nicht nur Roblox/Blender.
 Für Eclipse/Plugin-UI: studio_windows, dann studio_window_capture des verifizierten Studio-Fensters.
 Studio-UI-Maus/Tastatur nur nach lokaler Freigabe; frische capture_id, Notaus Ctrl+Alt+F12.
+Für beliebige PC-Apps: desktop_windows/desktop_capture, dann desktop_mouse/drag/scroll/type/hotkey/focus via tool_call; Enable Full PC UI lokal erforderlich, kein UAC-/Login-Bypass.
 Keine unbeabsichtigten koplanaren sichtbaren Flächen; neue Modelle in 2–3 echten Varianten.
 Keine Ball-Formen zum Modellieren; kräftige Farben, viel Kontrast; alle Spieltexte Englisch.
 Eclipse Animator bevorzugen; Zugriff nicht voraussetzen, vor Ersatz fragen.

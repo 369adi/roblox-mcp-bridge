@@ -35,11 +35,12 @@ from brickwire_runtime import BrickwireRuntime, RUNTIME_TOOLS
 from auto_update import AutoUpdater
 from ultracode_tools import UltraCodeTools, ULTRACODE_TOOLS
 from studio_ui import StudioUI, STUDIO_UI_TOOLS
+from desktop_ui import DesktopUI, DESKTOP_UI_TOOLS
 from roblox_rules import SERVER_INSTRUCTIONS, RobloxContext
 from builder_tools import BuilderTools, BUILDER_TOOLS, CONTEXT_TOOL
 import tailscale_gateway
 
-VERSION = "5.7.2"
+VERSION = "5.8.0"
 PROTOCOLS = ("2025-03-26", "2025-06-18", "2025-11-25")
 BRIDGE_TOOLS = [tool if tool["name"] != "screen_capture" else capture_schema() for tool in TOOLS if tool["name"] not in {"mouse_action","keyboard_type","keyboard_hotkey"}] + REA_TOOLS + WORKSPACE_TOOLS + ROBLOX_TOOLS + SCREEN_TOOLS + LIBRARY_TOOLS + BRICKWIRE_TOOLS + DESIGN_TOOLS + RUNTIME_TOOLS + BUILDER_TOOLS + [CONTEXT_TOOL] + ULTRACODE_TOOLS + STUDIO_UI_TOOLS
 BRIDGE_TOOLS += [
@@ -47,6 +48,7 @@ BRIDGE_TOOLS += [
     {"name": "tool_call", "description": "Call a discovered bridge tool by name, preserving image results and safety checks. Supports older cached clients.", "inputSchema": {"type": "object", "properties": {"name": {"type": "string"}, "arguments": {"type": "object"}}, "required": ["name"]}},
     {"name": "refresh_tools", "description": "Refresh catalogs of running providers without restarting tasks; notify connected SSE clients. Other clients must reconnect to reload cached schemas/instructions.", "inputSchema": {"type": "object", "properties": {}}},
 ]
+BRIDGE_TOOLS += DESKTOP_UI_TOOLS
 
 
 class Bridge:
@@ -85,6 +87,8 @@ class Bridge:
         self.context = RobloxContext(self.workspace, self.libraries, self.design)
         self.ultracode = UltraCodeTools(self.libraries)
         self.studio_ui = StudioUI(self.workspace.data_dir,self.emit,listen=self.persistent)
+        self.desktop_ui = DesktopUI(self.workspace.data_dir,self.studio_ui,self.emit)
+        self.studio_ui.on_stop = self.desktop_ui.stop
         self.roblox.capture_dir = self.workspace.data_dir / "captures"
 
     def emit(self, kind, text):
@@ -159,7 +163,7 @@ class Bridge:
                 name, args = args.get("name"), args.get("arguments", {})
                 if isinstance(name, str) and name in {"tool_call", "roblox_call_tool"} and (name == "tool_call" or isinstance(args, dict) and str(args.get("name", "")).startswith("bridge.")):
                     return {"jsonrpc": "2.0", "id": ident, "result": result_text("Recursive bridge adapters are not allowed", is_error=True)}
-            handlers = {**HANDLERS, **self.workspace.handlers(), **self.libraries.handlers(), **self.brickwire.handlers(), **self.design.handlers(), **self.runtime.handlers(), **self.builders.handlers(), **self.ultracode.handlers(), **self.studio_ui.handlers(), "roblox_context": self.context.get, "capture_get": self.roblox.capture_get, "screen_capture": self.roblox.capture, "screen_windows": self.roblox.studios,
+            handlers = {**HANDLERS, **self.workspace.handlers(), **self.libraries.handlers(), **self.brickwire.handlers(), **self.design.handlers(), **self.runtime.handlers(), **self.builders.handlers(), **self.ultracode.handlers(), **self.studio_ui.handlers(), **self.desktop_ui.handlers(), "roblox_context": self.context.get, "capture_get": self.roblox.capture_get, "screen_capture": self.roblox.capture, "screen_windows": self.roblox.studios,
                         "rea_status": self.rea.status, "rea_list_tools": self.rea.list_tools, "rea_call_tool": self.rea.call,
                         "roblox_status": self.roblox.status, "roblox_studios": self.roblox.studios, "roblox_state": self.roblox.state,
                         "roblox_list_tools": self.roblox.list_tools, "roblox_call_tool": self.roblox.call,
@@ -386,6 +390,7 @@ class Bridge:
 
     def stop(self):
         self.studio_ui.close()
+        self.desktop_ui.close()
         self.stopped.set()  # Reject new calls immediately, including on existing connections.
         if not self.persistent:
             self.oauth.revoke_all()
@@ -409,7 +414,7 @@ class Bridge:
 class App:
     def __init__(self, auto_start=True):
         self.root = Tk()
-        self.root.title(f"PC MCP Bridge {VERSION} - Roblox")
+        self.root.title(f"PC MCP Bridge {VERSION} - Full PC / Roblox")
         self.root.geometry("900x660")
         self.root.minsize(800, 580)
         self.root.protocol("WM_DELETE_WINDOW", self.close)
@@ -422,7 +427,7 @@ class App:
         frame = ttk.Frame(self.root, padding=20)
         frame.pack(fill="both", expand=True)
         ttk.Label(frame, text="PC MCP Bridge", font=("Segoe UI", 20, "bold")).pack(anchor="w")
-        ttk.Label(frame, text="Roblox Studio | Persistent project memory | Codebase search | Screenshots | REA", wraplength=840).pack(anchor="w", pady=(4, 18))
+        ttk.Label(frame, text="General PC control | Roblox Studio | Project memory | Codebase search | Screenshots | REA", wraplength=840).pack(anchor="w", pady=(4, 18))
         form = ttk.Frame(frame)
         form.pack(fill="x")
         form.columnconfigure(0, weight=1)
@@ -450,11 +455,17 @@ class App:
         ui_controls=ttk.Frame(frame)
         ui_controls.pack(fill="x",pady=(8,0))
         ttk.Button(ui_controls,text="Enable Studio UI",command=self.enable_studio_ui).pack(side="left")
-        ttk.Button(ui_controls,text="STOP UI (Ctrl+Alt+F12)",command=self.stop_studio_ui).pack(side="left",padx=8)
+        ttk.Button(ui_controls,text="STOP ALL UI (Ctrl+Alt+F12)",command=self.stop_studio_ui).pack(side="left",padx=8)
         self.studio_ui_status=StringVar(value="Studio UI: off")
         ttk.Label(ui_controls,textvariable=self.studio_ui_status).pack(side="left")
         self.refresh_button = ttk.Button(ui_controls, text="Refresh tools", command=self.refresh_tools)
         self.refresh_button.pack(side="left", padx=8)
+        pc_controls=ttk.Frame(frame)
+        pc_controls.pack(fill="x",pady=(8,0))
+        ttk.Button(pc_controls,text="Enable Full PC UI",command=self.enable_desktop_ui).pack(side="left")
+        ttk.Button(pc_controls,text="Stop Full PC UI",command=lambda: self.bridge.desktop_ui.stop() if self.bridge else None).pack(side="left",padx=8)
+        self.desktop_ui_status=StringVar(value="Full PC UI: off")
+        ttk.Label(pc_controls,textvariable=self.desktop_ui_status).pack(side="left")
         ttk.Label(frame, textvariable=self.local, foreground="#555555").pack(anchor="w", pady=(10, 4))
         ttk.Label(frame, text="Memory: " + str(WorkspaceTools().db_path), foreground="#555555", wraplength=840).pack(anchor="w", pady=(0, 5))
         self.log = Text(frame, height=12, state="disabled", font=("Consolas", 9), wrap="word")
@@ -502,6 +513,15 @@ class App:
             finally:
                 bridge.emit("refresh_done", "")
         threading.Thread(target=run, daemon=True).start()
+
+    def enable_desktop_ui(self):
+        from tkinter import messagebox
+        if not self.bridge:
+            self.add_log("Start the bridge first.")
+            return
+        if messagebox.askyesno("Full PC UI access", "Allow connected clients to capture ALL monitors and control mouse/keyboard in ALL applications?\n\nVisible private data may be shared with the connected client. Only enable for trusted clients.\n\nNo timer. Stop with Ctrl+Alt+F12, STOP ALL UI, or close the bridge. Windows security boundaries are not bypassed.",parent=self.root):
+            try: self.bridge.desktop_ui.arm()
+            except Exception as exc: self.add_log(str(exc))
 
     def stop_studio_ui(self):
         if self.bridge: self.bridge.studio_ui.stop()
@@ -570,9 +590,11 @@ class App:
     def poll(self):
         if self.bridge:
             ui_state=self.bridge.studio_ui.status({})
+            self.desktop_ui_status.set("Full PC UI: ON (all apps)" if self.bridge.desktop_ui.status({})['armed'] else "Full PC UI: off")
             self.studio_ui_status.set("Studio UI: ON (until stopped)" if ui_state["armed"] else "Studio UI: off")
         else:
             self.studio_ui_status.set("Studio UI: off")
+            self.desktop_ui_status.set("Full PC UI: off")
         if self.bridge:
             try:
                 while True:
@@ -665,6 +687,8 @@ def self_test(report_path=None, tunnel=False):
         passed.extend(run_fast_checks(bridge, request))
         from studio_ui_checks import run_studio_ui_checks
         passed.extend(run_studio_ui_checks(bridge))
+        from desktop_ui_checks import run_desktop_ui_checks
+        passed.extend(run_desktop_ui_checks(bridge))
         from quality_checks import run_quality_checks
         passed.extend(run_quality_checks(bridge))
         from creative_checks import run_creative_checks

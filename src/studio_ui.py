@@ -215,6 +215,7 @@ class StudioUI:
 
     def stop(self,*_):
         self.cancelled.set(); self.deadline=0; self.emit('log','Studio UI disarmed. Re-enable only with the local bridge button.')
+        if getattr(self, 'on_stop', None): self.on_stop()
         return self.status({})
 
     def close(self):

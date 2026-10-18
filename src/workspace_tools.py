@@ -97,6 +97,17 @@ class WorkspaceTools:
                         'Studio-UI-Eingaben nur nach lokaler Freigabe, mit frischer Fensteraufnahme; Notaus Ctrl+Alt+F12. Kein fremder Desktop-Fallback.')
                     connection.execute("UPDATE notes SET content=?,updated=? WHERE namespace='global' AND id='roblox-rules'",(new,time.time()))
                 connection.execute("INSERT INTO settings VALUES('roblox-studio-window-ui-v1','1')")
+        if not connection.execute("SELECT 1 FROM settings WHERE key='full-pc-ui-v1'").fetchone():
+            with connection:
+                row=connection.execute("SELECT content FROM notes WHERE namespace='global' AND id='roblox-rules'").fetchone()
+                if row:
+                    old=row['content']
+                    connection.execute("INSERT OR IGNORE INTO settings VALUES(?,?)",('full-pc-ui-v1-backup',old))
+                    new=old.replace('Aufnahmen: Studio-Renderer oder verifiziertes Studio-Fenster inklusive Eclipse/Plugins; niemals ganzer Desktop oder andere Apps.',
+                        'Für Roblox bevorzugt Studio-Renderer oder Studio-Fenster inklusive Eclipse/Plugins. Allgemeine PC-Aufgaben dürfen alle Apps/Monitore erfassen und bedienen, nach lokaler Full-PC-UI-Freigabe.')
+                    new=new.replace('Kein fremder Desktop-Fallback.','Allgemeine PC-Steuerung ist nach lokaler Full-PC-UI-Freigabe erlaubt, nicht nur Roblox oder Blender.')
+                    connection.execute("UPDATE notes SET content=?,updated=? WHERE namespace='global' AND id='roblox-rules'",(new,time.time()))
+                connection.execute("INSERT INTO settings VALUES('full-pc-ui-v1','1')")
         connection.commit()
         return connection
 

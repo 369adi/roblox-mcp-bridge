@@ -1,4 +1,10 @@
-# Roblox MCP Bridge 5.7.2
+# PC / Roblox MCP Bridge 5.8.0
+
+## General PC control
+
+New `desktop_*` tools cover all applications and monitors, not only Roblox or Blender: window listing, readable screenshot with local original, focus, click/double click, drag, scroll, Unicode typing and shortcuts including Win+R and Alt+Tab. Click **Enable Full PC UI** locally and confirm the privacy warning. It stays enabled without a timer until stopped/closed; never silently enabled by an update or restart. **Ctrl+Alt+F12 / STOP ALL UI** disables both Studio and general desktop UI. Each input needs a matching screenshot less than 30 seconds old, then a fresh capture. Display/focus changes invalidate observations. Windows permissions, UIPI, sign-in and secure-desktop/UAC restrictions still apply; no elevation bypass is provided. Existing unrestricted shell/file tools are not sandboxed by this UI opt-in.
+
+Everyone with this repository's updater can receive this release, but existing installations stage/apply updates on normal bridge close/restart, not forcibly in the middle of work. Clients may need Refresh tools/reconnection for new schemas; cached clients can use tool_catalog/tool_call.
 
 ## Refresh tools
 
@@ -15,7 +21,7 @@ This is **full-PC access with your Windows user's permissions**, not a sandbox.
 Only connect trusted clients. Keep keys private and use the visible Stop/revoke controls.
 Identity/OAuth data is DPAPI-encrypted per Windows user; local notes are ordinary SQLite.
 Neither belongs in this repository or a release. Tailscale is installed/configured separately.
-No auto-Play; screenshots use either the official Studio renderer or explicit verified Studio-window capture. Never the whole desktop or unrelated apps.
+No auto-Play. Roblox renderer/window tools retain their narrower scope; the separately consented desktop tools can capture/control unrelated applications and all monitors for general PC tasks.
 
 ## Run/build
 
