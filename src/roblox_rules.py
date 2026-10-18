@@ -20,7 +20,7 @@ Nie automatisch Play/Playtest starten oder stoppen; ungetestetes Verhalten als s
 Für Roblox bevorzugt Studio-Renderer oder Studio-Fenster inklusive Eclipse/Plugins. Allgemeine PC-Aufgaben dürfen alle Apps/Monitore erfassen und bedienen, nach lokaler Full-PC-UI-Freigabe.
 UI-Eingaben nur nach lokaler Freigabe, mit frischer Aufnahme; Notaus Ctrl+Alt+F12. Allgemeine PC-Steuerung ist nicht auf Roblox oder Blender begrenzt.
 Bildstandard: 1280x720, JPEG quality=82; lesbare Details statt 6000-Byte-Minibildern. Kein automatisches Kleinskalieren oder Kamera-Zoom wegen Byte-Limits.
-Nach visuellen Änderungen liefert run_builder/execute_luau/Brickwire automatisch ein Studio-Bild; angehängte Bilder ansehen und sichtbare Fehler korrigieren. Abschlussbild nur bei Bedarf zusätzlich.
+Visuelle Aufrufe mit Zielpfad target/capture_target: Kamera kurz zum Modell, Bild, vorherige Position/Blickrichtung/Fokus/FOV wiederherstellen; nie Spielfigur teleportieren. Bild ansehen und sichtbare Fehler korrigieren.
 Kein Vorab-Bild für neue Objekte; keine unveränderten Kontrollschleifen.
 FAST: sofort bauen, danach ein kompakter Prüfaufruf und ein Studio-Bild, sofern visuell.
 Luau-Ausgaben maximal 4000 Zeichen; Prüfungen nur Zahlen und höchstens 10 Problemfälle.
@@ -46,7 +46,7 @@ execute_luau-Ausgaben sind auf 4000 Zeichen begrenzt; niemals vollständige Teil
 Bei fix/floating/faces-Prüfungen: Zahlen und höchstens 10 Problemfälle, keine automatischen Massenkorrekturen.
 screen_capture(studio_id, width=1280, height=720, quality=82, return_mode="inline"|"file"|"preview").
 Regelmäßig lesbare Studio-Bilder; capture_get lädt lokale Details. Byte-Limit nicht durch Kamera-Zoom umgehen.
-Visuelle Bau-/Luau-/Brickwire-Aufrufe liefern automatisch ein Bild: ansehen, sichtbare Fehler korrigieren, nicht ohne Bildprüfung fertig melden. Kein doppelter Screenshot derselben Phase.
+Visuelle Aufrufe: target (Builder/Brickwire) bzw. capture_target (Luau) angeben; Kamera kurz zum Modell, Bild, vorherige Kamera wiederherstellen. Nie Avatar teleportieren. Bild prüfen, sichtbare Fehler korrigieren.
 Kein Vorab-Bild bei neuen Objekten und keine unveränderten Screenshot-Schleifen.
 Nie automatisch Roblox-Play/Playtest starten/stoppen. Allgemeine PC-Aufnahmen/-Steuerung sind nach lokaler Freigabe erlaubt, nicht nur Roblox/Blender.
 Für Eclipse/Plugin-UI: studio_windows, dann studio_window_capture des verifizierten Studio-Fensters.

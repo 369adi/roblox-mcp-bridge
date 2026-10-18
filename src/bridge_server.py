@@ -41,7 +41,7 @@ from roblox_rules import SERVER_INSTRUCTIONS, RobloxContext
 from builder_tools import BuilderTools, BUILDER_TOOLS, CONTEXT_TOOL
 import tailscale_gateway
 
-VERSION = "5.8.1"
+VERSION = "5.8.2"
 PROTOCOLS = ("2025-03-26", "2025-06-18", "2025-11-25")
 BRIDGE_TOOLS = [tool if tool["name"] != "screen_capture" else capture_schema() for tool in TOOLS if tool["name"] not in {"mouse_action","keyboard_type","keyboard_hotkey"}] + REA_TOOLS + WORKSPACE_TOOLS + ROBLOX_TOOLS + SCREEN_TOOLS + LIBRARY_TOOLS + BRICKWIRE_TOOLS + DESIGN_TOOLS + RUNTIME_TOOLS + BUILDER_TOOLS + [CONTEXT_TOOL] + ULTRACODE_TOOLS + STUDIO_UI_TOOLS
 BRIDGE_TOOLS += [
@@ -696,6 +696,8 @@ def self_test(report_path=None, tunnel=False):
         passed.extend(run_desktop_ui_checks(bridge))
         from visual_feedback_checks import run_visual_feedback_checks
         passed.extend(run_visual_feedback_checks(bridge))
+        from camera_restore_checks import run_camera_restore_checks
+        passed.extend(run_camera_restore_checks(bridge))
         from quality_checks import run_quality_checks
         passed.extend(run_quality_checks(bridge))
         from creative_checks import run_creative_checks

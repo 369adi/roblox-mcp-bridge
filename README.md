@@ -1,4 +1,6 @@
-# PC / Roblox MCP Bridge 5.8.1
+# PC / Roblox MCP Bridge 5.8.2
+
+For visual work specify `target="Workspace.Model"` in run_builder/brickwire_prepare or `capture_target` in roblox_call_tool. The renderer temporarily frames that model, captures it, and the bridge verifies/restores the original Studio camera CFrame, Focus, FOV and type in a finally-cleanup, including renderer errors/timeouts. No avatar teleport or Play. Without a target, the current view is captured (no guessed object). If Studio disconnects or recovery fails, report that camera restoration could not be verified; never pretend recovery succeeded or replay the builder.
 
 ## Automatic visual feedback
 

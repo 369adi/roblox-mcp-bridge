@@ -118,6 +118,16 @@ class WorkspaceTools:
                         'Nach visuellen Änderungen liefert run_builder/execute_luau/Brickwire automatisch ein Studio-Bild; angehängte Bilder ansehen und sichtbare Fehler korrigieren. Abschlussbild nur bei Bedarf zusätzlich.')
                     connection.execute("UPDATE notes SET content=?,updated=? WHERE namespace='global' AND id='roblox-rules'",(new,time.time()))
                 connection.execute("INSERT INTO settings VALUES('auto-visual-feedback-v1','1')")
+        if not connection.execute("SELECT 1 FROM settings WHERE key='studio-camera-roundtrip-v1'").fetchone():
+            with connection:
+                row=connection.execute("SELECT content FROM notes WHERE namespace='global' AND id='roblox-rules'").fetchone()
+                if row:
+                    old=row['content']
+                    connection.execute("INSERT OR IGNORE INTO settings VALUES(?,?)",('studio-camera-roundtrip-v1-backup',old))
+                    new=old.replace('Nach visuellen Änderungen liefert run_builder/execute_luau/Brickwire automatisch ein Studio-Bild; angehängte Bilder ansehen und sichtbare Fehler korrigieren. Abschlussbild nur bei Bedarf zusätzlich.',
+                        'Visuelle Aufrufe mit Zielpfad target/capture_target: Kamera kurz zum Modell, Bild, vorherige Position/Blickrichtung/Fokus/FOV wiederherstellen; nie Spielfigur teleportieren. Bild ansehen und sichtbare Fehler korrigieren.')
+                    connection.execute("UPDATE notes SET content=?,updated=? WHERE namespace='global' AND id='roblox-rules'",(new,time.time()))
+                connection.execute("INSERT INTO settings VALUES('studio-camera-roundtrip-v1','1')")
         connection.commit()
         return connection
 

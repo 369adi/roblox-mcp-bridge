@@ -10,7 +10,7 @@ from workspace_tools import spec
 
 RUNTIME_TOOLS = [
     spec('brickwire_prepare', 'Prepare a reviewed per-call BW runtime for code targeting one Studio instance. Adds original Brickwire helpers and only needed kits/assets; does not execute or install anything. Returns plan id/hash, selected sources, asset/script metadata and the user code. Unknown assets and embedded asset scripts are rejected by default. No playtest is started.',
-         {'studio_id': {'type': 'string'}, 'code': {'type': 'string'}, 'assets': {'type': 'array', 'items': {'type': 'string'}}, 'allow_embedded_scripts': {'type': 'boolean'}}, ['studio_id', 'code']),
+         {'studio_id': {'type': 'string'}, 'code': {'type': 'string'}, 'target':{'type':'string','description':'Exact model path for automatic temporary-camera framing after execution; original Studio camera is restored.'}, 'assets': {'type': 'array', 'items': {'type': 'string'}}, 'allow_embedded_scripts': {'type': 'boolean'}}, ['studio_id', 'code']),
     spec('brickwire_execute', 'Execute one previously reviewed Brickwire plan once in the bound Studio Edit datamodel. Requires exact plan id/hash and confirm=true within the user-authorized task. Refuses non-Edit mode; never starts/stops playtests. User code may change the game, so inspect it and existing instance names before confirming. No automatic retries or permanent global BW installation.',
          {'plan_id': {'type': 'string'}, 'sha256': {'type': 'string'}, 'confirm': {'type': 'boolean'}}, ['plan_id', 'sha256', 'confirm'], readonly=False),
 ]
@@ -82,6 +82,9 @@ class BrickwireRuntime:
 
     def prepare(self, args):
         studio = args.get('studio_id')
+        target=args.get('target')
+        if target is not None and (not isinstance(target,str) or not target.strip() or len(target)>1000):
+            raise ValueError('target must be an exact model path, at most 1000 characters')
         code = args.get('code')
         if not isinstance(studio, str) or not studio.strip() or len(studio) > 200:
             raise ValueError('studio_id is required')
@@ -125,7 +128,7 @@ class BrickwireRuntime:
             sha = hashlib.sha256((studio + '\n' + compiled).encode()).hexdigest()
             report = {'plan_id': ident, 'sha256': sha, 'studio_id': studio, 'expires': now + 600, 'runtime': 'Brickwire 3.1.0 per-call local BW',
                       'sources': manifest, 'assets': assets, 'bytes': len(compiled.encode()), 'prelude_lines': prelude.count('\n') + 1,
-                      'user_code': code, 'executed': False, 'playtest': 'never automatically started',
+                      'user_code': code, 'target':target, 'executed': False, 'playtest': 'never automatically started',
                       'review': 'Review the user code and affected names before confirming. BW runtime is local to this call; BW.kit may create scripts/instances. Existing game systems are not automatically migrated.'}
             self.plans[ident] = {**report, 'compiled': compiled}
             return report
@@ -146,7 +149,7 @@ class BrickwireRuntime:
         text = '\n'.join(c.get('text', '') for c in state.get('content', []) if c.get('type') == 'text')
         if state.get('isError') or not re.search(r'Current Studio Mode:\s*Edit\b', text):
             raise ValueError('Studio must already be in Edit mode. Manual playtest policy: no automatic start/stop; plan consumed for safety.')
-        result = self.gateway.call({'name': 'execute_luau', 'arguments': {'studio_id': plan['studio_id'], 'datamodel_type': 'Edit', 'code': plan['compiled']}})
+        result = self.gateway.call({'name': 'execute_luau', 'capture_target':plan.get('target'), 'arguments': {'studio_id': plan['studio_id'], 'datamodel_type': 'Edit', 'code': plan['compiled']}})
         return {**result, 'content': [*result.get('content', []), {'type': 'text', 'text': json.dumps({'brickwire_plan': plan['plan_id'], 'sha256': plan['sha256'], 'prelude_lines': plan['prelude_lines'], 'automatic_playtest': False, 'retry': 'Inspect actual state before preparing any further call.'})}]}
 
     def handlers(self):

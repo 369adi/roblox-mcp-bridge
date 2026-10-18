@@ -85,7 +85,7 @@ local p,s
 if t:IsA('Model') then p,s=t:GetBoundingBox()
 elseif t:IsA('BasePart') then p,s=t.CFrame,t.Size
 else p,s=CFrame.new(0,0,0),Vector3.new(20,20,20) end
-return game:GetService('HttpService'):JSONEncode({center={p.X,p.Y,p.Z},size={s.X,s.Y,s.Z},camera={cam.CFrame:GetComponents()},fov=cam.FieldOfView})
+return game:GetService('HttpService'):JSONEncode({center={p.X,p.Y,p.Z},size={s.X,s.Y,s.Z},camera={cam.CFrame:GetComponents()},focus={cam.Focus:GetComponents()},camera_type=cam.CameraType.Name,fov=cam.FieldOfView})
 '''
         result = self.gateway.call({'name': 'execute_luau', 'visual':False, 'arguments': {'studio_id': studio, 'datamodel_type': 'Edit', 'code': code}})
         if result.get('isError'):
@@ -102,6 +102,33 @@ return game:GetService('HttpService'):JSONEncode({center={p.X,p.Y,p.Z},size={s.X
                 except (ValueError, TypeError):
                     continue
         raise ValueError('Studio did not provide target bounding box/camera metadata')
+
+    def restore_camera(self,studio,info):
+        """Verify native temporary-camera cleanup and repair drift, even on render failure."""
+        saved=json.dumps({k:info[k] for k in ('camera','focus','camera_type','fov') if k in info},allow_nan=False)
+        code='''assert(game:GetService('RunService'):IsEdit(),'Camera recovery is Edit-only; Play is manual')
+local saved=game:GetService('HttpService'):JSONDecode(SNAPSHOT)
+local cam=workspace.CurrentCamera
+assert(cam,'Studio camera unavailable; camera restoration could not be verified')
+local cf=CFrame.new(table.unpack(saved.camera))
+local focus=saved.focus and CFrame.new(table.unpack(saved.focus))
+local function sameFrame(a,b)
+ local av,bv={a:GetComponents()},{b:GetComponents()}
+ for i=1,12 do if math.abs(av[i]-bv[i])>0.0001 then return false end end
+ return true
+end
+if saved.camera_type and cam.CameraType.Name~=saved.camera_type then cam.CameraType=Enum.CameraType[saved.camera_type] end
+if cam.FieldOfView~=saved.fov then cam.FieldOfView=saved.fov end
+if not sameFrame(cam.CFrame,cf) then cam.CFrame=cf end
+if focus and not sameFrame(cam.Focus,focus) then cam.Focus=focus end
+assert(sameFrame(cam.CFrame,cf) and math.abs(cam.FieldOfView-saved.fov)<0.001,'Studio camera restoration failed')
+if focus then assert(sameFrame(cam.Focus,focus),'Studio camera focus restoration failed') end
+if saved.camera_type then assert(cam.CameraType.Name==saved.camera_type,'Studio camera type restoration failed') end
+return 'Studio camera restored and verified; no avatar movement'
+'''.replace('SNAPSHOT',json.dumps(saved))
+        result=self.gateway.call({'name':'execute_luau','visual':False,'arguments':{'studio_id':studio,'datamodel_type':'Edit','code':code}})
+        if result.get('isError'):
+            raise RuntimeError('camera_restore_failed: '+ ' '.join(c.get('text','') for c in result.get('content',[]))[:600])
 
     def capture(self, args):
         allowed = {'studio_id','capture_id','camera_position','look_at_position','max_width','width','height','quality','format','max_bytes','max_tokens','return_mode','output','views','target','padding','fov','hide_ui','isolate','radius','neutral_lighting','compare_to','annotate','skip_unchanged'}
@@ -163,7 +190,15 @@ return game:GetService('HttpService'):JSONEncode({center={p.X,p.Y,p.Z},size={s.X
                     params[key] = vector(value)
                 if camera and camera['camera_position'] == camera['look_at_position']:
                     raise ValueError('Camera and target must differ')
-                rendered.append(self.decode(self.gateway._capture_provider(params)))
+                if camera:
+                    try:
+                        frame=self.decode(self.gateway._capture_provider(params))
+                    finally:
+                        # No avatar, selection or Play changes. Cleanup also runs on errors/timeouts.
+                        self.restore_camera(studio,info)
+                    rendered.append(frame)
+                else:
+                    rendered.append(self.decode(self.gateway._capture_provider(params)))
                 cameras.append({'position': camera.get('camera_position'), 'look_at': camera.get('look_at_position'),
                                 'original_cframe': info['camera'] if info else None, 'fov': info['fov'] if info else None})
             width = integer(args, 'width', args.get('max_width', 1280), 64, 1920)
@@ -184,7 +219,8 @@ return game:GetService('HttpService'):JSONEncode({center={p.X,p.Y,p.Z},size={s.X
             digest=hashlib.sha256(sheet.tobytes()+str(sheet.size).encode()).hexdigest()
             key=json.dumps({'studio':studio,'target':args.get('target'),'views':views,'cameras':cameras,'size':sheet.size,'compare':compare},sort_keys=True)
             meta={'studio_id':studio,'hash':digest,'cameras':cameras,'desktop_fallback':False,
-                  'camera_restore':'Official renderer uses temporary camera positions; no bridge scene edits',
+                  'camera_restore':'verified_after_temporary_views' if any(c['position'] is not None for c in cameras) else 'current_view_no_camera_move',
+                  'target':args.get('target'),'avatar_moved':False,
                   'hide_ui':'Studio renderer only; native UI/gizmo toggles are not exposed',
                   'visual_tokens':'model-dependent; encoded bytes are not image tokens',
                   'automatic_resolution_reduction':False}

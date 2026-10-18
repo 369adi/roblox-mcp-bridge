@@ -3,7 +3,7 @@ import json
 from workspace_tools import spec
 
 STUDIO = {'type': 'string'}
-TARGET = {'type': 'string', 'description': 'Exact dotted instance path, e.g. Workspace.House; duplicate sibling names are rejected.'}
+TARGET = {'type': 'string', 'description': 'Exact dotted model/part path, e.g. Workspace.House. For visual building supply this to frame the result temporarily and restore the previous Studio camera afterward. Duplicate sibling names are rejected.'}
 CONTEXT_TOOL = spec('roblox_context', 'Optional once-per-chat rules/short skill/design bundle. Reuse chat_id. FAST or rules_read skips loading. Never required before building.',
     {'chat_id': {'type': 'string'}, 'mode': {'type': 'string', 'enum': ['NORMAL', 'FAST']}, 'rules_read': {'type': 'boolean'},
      'include_skill': {'type': 'boolean'}, 'design_namespace': {'type': 'string'}}, ['chat_id'])
