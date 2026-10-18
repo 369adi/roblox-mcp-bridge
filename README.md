@@ -1,4 +1,4 @@
-# Roblox MCP Bridge 5.7
+# Roblox MCP Bridge 5.7.1
 
 Visible Windows MCP bridge for local Roblox Studio, with persistent notes, focused
 Brickwire references, optional REA tooling and Tailscale Funnel connectivity.
@@ -46,8 +46,8 @@ return_mode=file returns a **PC-local path**, not a public URL.
 
 For Eclipse and other Studio plugin panels, use studio_windows and studio_window_capture.
 The latter captures the verified Studio process window, not desktop rectangles.
-In the bridge click **Enable Studio UI (10 min)**. This is local-only, never remotely armable.
-**Ctrl+Alt+F12** or **STOP UI** disarms it. Restart/expiry does not silently re-enable it.
+In the bridge click **Enable Studio UI**. This is local-only, never remotely armable.
+**Ctrl+Alt+F12** or **STOP UI** disarms it. There is no time limit after local enabling. App restart does not silently re-enable it.
 Use studio_focus, then a fresh studio_window_capture, then studio_mouse / studio_drag /
 studio_scroll / studio_type / studio_hotkey. Coordinates belong to that returned image;
 position, dimensions and DPI mapping are checked. Each input invalidates its capture_id;

@@ -2,6 +2,7 @@
 import json
 import tempfile
 import time
+from unittest.mock import patch
 from PIL import Image
 from studio_ui import StudioUI, STUDIO_UI_TOOLS
 
@@ -37,6 +38,10 @@ def run_studio_ui_checks(bridge):
         rejects(lambda:ui.capture({'window_id':11}))
         rejects(ui.arm)
         ui.hotkey_ready=True; ui.arm()
+        future=time.monotonic()+86400
+        with patch('studio_ui.time.monotonic',return_value=future):
+            assert ui.status({})['armed'] and ui.status({})['seconds_left'] is None
+            ui.guard(fake.info(11),True)
         def shot():
             result=ui.capture({'window_id':11})
             assert result['content'][0]['type']=='image'

@@ -39,7 +39,7 @@ from roblox_rules import SERVER_INSTRUCTIONS, RobloxContext
 from builder_tools import BuilderTools, BUILDER_TOOLS, CONTEXT_TOOL
 import tailscale_gateway
 
-VERSION = "5.7.0"
+VERSION = "5.7.1"
 PROTOCOLS = ("2025-03-26", "2025-06-18", "2025-11-25")
 BRIDGE_TOOLS = [tool if tool["name"] != "screen_capture" else capture_schema() for tool in TOOLS if tool["name"] not in {"mouse_action","keyboard_type","keyboard_hotkey"}] + REA_TOOLS + WORKSPACE_TOOLS + ROBLOX_TOOLS + SCREEN_TOOLS + LIBRARY_TOOLS + BRICKWIRE_TOOLS + DESIGN_TOOLS + RUNTIME_TOOLS + BUILDER_TOOLS + [CONTEXT_TOOL] + ULTRACODE_TOOLS + STUDIO_UI_TOOLS
 
@@ -360,7 +360,7 @@ class App:
         ttk.Label(controls, textvariable=self.status, font=("Segoe UI", 9, "bold")).pack(side="left", padx=8)
         ui_controls=ttk.Frame(frame)
         ui_controls.pack(fill="x",pady=(8,0))
-        ttk.Button(ui_controls,text="Enable Studio UI (10 min)",command=self.enable_studio_ui).pack(side="left")
+        ttk.Button(ui_controls,text="Enable Studio UI",command=self.enable_studio_ui).pack(side="left")
         ttk.Button(ui_controls,text="STOP UI (Ctrl+Alt+F12)",command=self.stop_studio_ui).pack(side="left",padx=8)
         self.studio_ui_status=StringVar(value="Studio UI: off")
         ttk.Label(ui_controls,textvariable=self.studio_ui_status).pack(side="left")
@@ -461,7 +461,7 @@ class App:
     def poll(self):
         if self.bridge:
             ui_state=self.bridge.studio_ui.status({})
-            self.studio_ui_status.set("Studio UI: ON ("+str(ui_state["seconds_left"])+"s)" if ui_state["armed"] else "Studio UI: off")
+            self.studio_ui_status.set("Studio UI: ON (until stopped)" if ui_state["armed"] else "Studio UI: off")
         else:
             self.studio_ui_status.set("Studio UI: off")
         if self.bridge:

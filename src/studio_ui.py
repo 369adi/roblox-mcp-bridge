@@ -211,7 +211,7 @@ class StudioUI:
 
     def arm(self):
         if not self.hotkey_ready: raise ValueError('Emergency hotkey unavailable; cannot enable Studio UI')
-        self.deadline=time.monotonic()+600; self.cancelled.clear(); self.emit('log','Studio UI enabled locally for 10 minutes. Emergency stop: Ctrl+Alt+F12.')
+        self.deadline=float('inf'); self.cancelled.clear(); self.emit('log','Studio UI enabled locally until STOP UI, Ctrl+Alt+F12 or app close. No time limit.')
 
     def stop(self,*_):
         self.cancelled.set(); self.deadline=0; self.emit('log','Studio UI disarmed. Re-enable only with the local bridge button.')
@@ -221,7 +221,8 @@ class StudioUI:
         self.stop(); self.closed.set()
 
     def status(self,_):
-        return {'armed':not self.cancelled.is_set() and time.monotonic()<self.deadline,'seconds_left':max(0,int(self.deadline-time.monotonic())),
+        return {'armed':not self.cancelled.is_set() and time.monotonic()<self.deadline,'seconds_left':None if self.deadline==float('inf') else max(0,int(self.deadline-time.monotonic())),
+                'authorization_duration':'Until STOP UI, Ctrl+Alt+F12 or app close; no timer',
                 'hotkey_available':self.hotkey_ready,'emergency_stop':'Ctrl+Alt+F12','scope':'Verified Roblox Studio windows only; other full-PC bridge tools are NOT sandboxed.'}
 
     def guard(self,info,foreground=False,point=None):
