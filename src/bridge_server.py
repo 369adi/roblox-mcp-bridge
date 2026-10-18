@@ -34,13 +34,14 @@ from design_tools import DesignTools, DESIGN_TOOLS
 from brickwire_runtime import BrickwireRuntime, RUNTIME_TOOLS
 from auto_update import AutoUpdater
 from ultracode_tools import UltraCodeTools, ULTRACODE_TOOLS
+from studio_ui import StudioUI, STUDIO_UI_TOOLS
 from roblox_rules import SERVER_INSTRUCTIONS, RobloxContext
 from builder_tools import BuilderTools, BUILDER_TOOLS, CONTEXT_TOOL
 import tailscale_gateway
 
-VERSION = "5.6.0"
+VERSION = "5.7.0"
 PROTOCOLS = ("2025-03-26", "2025-06-18", "2025-11-25")
-BRIDGE_TOOLS = [tool if tool["name"] != "screen_capture" else capture_schema() for tool in TOOLS] + REA_TOOLS + WORKSPACE_TOOLS + ROBLOX_TOOLS + SCREEN_TOOLS + LIBRARY_TOOLS + BRICKWIRE_TOOLS + DESIGN_TOOLS + RUNTIME_TOOLS + BUILDER_TOOLS + [CONTEXT_TOOL] + ULTRACODE_TOOLS
+BRIDGE_TOOLS = [tool if tool["name"] != "screen_capture" else capture_schema() for tool in TOOLS if tool["name"] not in {"mouse_action","keyboard_type","keyboard_hotkey"}] + REA_TOOLS + WORKSPACE_TOOLS + ROBLOX_TOOLS + SCREEN_TOOLS + LIBRARY_TOOLS + BRICKWIRE_TOOLS + DESIGN_TOOLS + RUNTIME_TOOLS + BUILDER_TOOLS + [CONTEXT_TOOL] + ULTRACODE_TOOLS + STUDIO_UI_TOOLS
 
 
 class Bridge:
@@ -74,6 +75,7 @@ class Bridge:
         self.builders = BuilderTools(self.roblox)
         self.context = RobloxContext(self.workspace, self.libraries, self.design)
         self.ultracode = UltraCodeTools(self.libraries)
+        self.studio_ui = StudioUI(self.workspace.data_dir,self.emit,listen=self.persistent)
         self.roblox.capture_dir = self.workspace.data_dir / "captures"
 
     def emit(self, kind, text):
@@ -101,10 +103,12 @@ class Bridge:
         elif method == "tools/call":
             name = params.get("name")
             args = params.get("arguments", {})
-            handlers = {**HANDLERS, **self.workspace.handlers(), **self.libraries.handlers(), **self.brickwire.handlers(), **self.design.handlers(), **self.runtime.handlers(), **self.builders.handlers(), **self.ultracode.handlers(), "roblox_context": self.context.get, "capture_get": self.roblox.capture_get, "screen_capture": self.roblox.capture, "screen_windows": self.roblox.studios,
+            handlers = {**HANDLERS, **self.workspace.handlers(), **self.libraries.handlers(), **self.brickwire.handlers(), **self.design.handlers(), **self.runtime.handlers(), **self.builders.handlers(), **self.ultracode.handlers(), **self.studio_ui.handlers(), "roblox_context": self.context.get, "capture_get": self.roblox.capture_get, "screen_capture": self.roblox.capture, "screen_windows": self.roblox.studios,
                         "rea_status": self.rea.status, "rea_list_tools": self.rea.list_tools, "rea_call_tool": self.rea.call,
                         "roblox_status": self.roblox.status, "roblox_studios": self.roblox.studios, "roblox_state": self.roblox.state,
                         "roblox_list_tools": self.roblox.list_tools, "roblox_call_tool": self.roblox.call}
+            for legacy in ("mouse_action","keyboard_type","keyboard_hotkey"):
+                handlers.pop(legacy,None)
             if not isinstance(name, str) or name not in handlers or not isinstance(args, dict):
                 return {"jsonrpc": "2.0", "id": ident, "error": {"code": -32602, "message": "Unknown tool or invalid arguments"}}
             self.emit("log", f"Tool requested: {name}")
@@ -113,7 +117,7 @@ class Bridge:
             else:
                 try:
                     output = handlers[name](args)
-                    if name in {"rea_call_tool", "roblox_call_tool", "roblox_studios", "roblox_state", "library_read", "brickwire_execute", "screen_capture", "capture_get", "screen_windows", "run_builder", "model_summary", "model_check"}:
+                    if name in {"rea_call_tool", "roblox_call_tool", "roblox_studios", "roblox_state", "library_read", "brickwire_execute", "screen_capture", "capture_get", "studio_window_capture", "screen_windows", "run_builder", "model_summary", "model_check"}:
                         value = output
                     else:
                         value = result_text(output)
@@ -292,6 +296,7 @@ class Bridge:
             self.stop()
 
     def stop(self):
+        self.studio_ui.close()
         self.stopped.set()  # Reject new calls immediately, including on existing connections.
         if not self.persistent:
             self.oauth.revoke_all()
@@ -353,6 +358,12 @@ class App:
         ttk.Button(controls, text="Add library folder", command=self.add_library).pack(side="left", padx=4)
         ttk.Button(controls, text="Rotate key", command=self.rotate_key).pack(side="left", padx=4)
         ttk.Label(controls, textvariable=self.status, font=("Segoe UI", 9, "bold")).pack(side="left", padx=8)
+        ui_controls=ttk.Frame(frame)
+        ui_controls.pack(fill="x",pady=(8,0))
+        ttk.Button(ui_controls,text="Enable Studio UI (10 min)",command=self.enable_studio_ui).pack(side="left")
+        ttk.Button(ui_controls,text="STOP UI (Ctrl+Alt+F12)",command=self.stop_studio_ui).pack(side="left",padx=8)
+        self.studio_ui_status=StringVar(value="Studio UI: off")
+        ttk.Label(ui_controls,textvariable=self.studio_ui_status).pack(side="left")
         ttk.Label(frame, textvariable=self.local, foreground="#555555").pack(anchor="w", pady=(10, 4))
         ttk.Label(frame, text="Memory: " + str(WorkspaceTools().db_path), foreground="#555555", wraplength=840).pack(anchor="w", pady=(0, 5))
         self.log = Text(frame, height=12, state="disabled", font=("Consolas", 9), wrap="word")
@@ -376,6 +387,15 @@ class App:
                 self.add_log("Reference library registered: " + entry["name"] + ". Use library_list / skills_list. Brickwire is already bundled.")
             except Exception as exc:
                 self.add_log("Library could not be added: " + str(exc))
+
+    def enable_studio_ui(self):
+        try:
+            if not self.bridge: raise ValueError("Start the bridge first")
+            self.bridge.studio_ui.arm()
+        except Exception as exc: self.add_log(str(exc))
+
+    def stop_studio_ui(self):
+        if self.bridge: self.bridge.studio_ui.stop()
 
     def toggle_token(self):
         self.token_entry.configure(show="" if self.token_entry.cget("show") else "\u2022")
@@ -439,6 +459,11 @@ class App:
         threading.Thread(target=finish, daemon=True).start()
 
     def poll(self):
+        if self.bridge:
+            ui_state=self.bridge.studio_ui.status({})
+            self.studio_ui_status.set("Studio UI: ON ("+str(ui_state["seconds_left"])+"s)" if ui_state["armed"] else "Studio UI: off")
+        else:
+            self.studio_ui_status.set("Studio UI: off")
         if self.bridge:
             try:
                 while True:
@@ -527,6 +552,8 @@ def self_test(report_path=None, tunnel=False):
         passed.extend(run_update_checks())
         from fast_checks import run_fast_checks
         passed.extend(run_fast_checks(bridge, request))
+        from studio_ui_checks import run_studio_ui_checks
+        passed.extend(run_studio_ui_checks(bridge))
         from quality_checks import run_quality_checks
         passed.extend(run_quality_checks(bridge))
         from creative_checks import run_creative_checks

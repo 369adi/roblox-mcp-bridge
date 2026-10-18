@@ -11,4 +11,6 @@ Avoid accidental duplicate layers and animation conflicts; preserve intended GUI
 For visual changes take a Studio-only image after build, corrections and final review; merge identical phases.
 No pre-build image for a new screen. No desktop workaround. Playtests remain manual.
 Report unverified runtime layout honestly; no extra checklist loops.
+Plugin UI may use studio_window_capture and locally armed Studio-only input tools. Fresh window capture required; Ctrl+Alt+F12 stops input. Never capture other apps or the whole desktop.
+
 

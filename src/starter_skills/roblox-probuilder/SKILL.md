@@ -23,4 +23,6 @@ Return compact counts and at most 10 issues instead of complete part lists.
 Use run_builder for clone-loader/ChangeHistory boilerplate; model_summary for compact inspection.
 UltraCode methods are optional via ultracode(query), never a new mandatory loading ritual.
 Read [the full profile](references/full-profile.md) only when the user requests long-form guidance.
+Plugin UI may use studio_window_capture and locally armed Studio-only input tools. Fresh window capture required; Ctrl+Alt+F12 stops input. Never capture other apps or the whole desktop.
+
 

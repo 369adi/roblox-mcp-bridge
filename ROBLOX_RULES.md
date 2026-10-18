@@ -1,4 +1,4 @@
-# Server-Anleitung (26 Zeilen)
+# Server-Anleitung (28 Zeilen)
 
 ```text
 Roblox MCP: direkt umsetzen, kurze Ergebnisse statt wiederholter Planung.
@@ -21,7 +21,9 @@ screen_capture(studio_id, width=1280, height=720, quality=82, return_mode="inlin
 Regelmäßig lesbare Studio-Bilder; capture_get lädt lokale Details. Byte-Limit nicht durch Kamera-Zoom umgehen.
 Für visuelle Arbeit: ein Bild nach Bau, nach Korrekturen, am Ende; gleiche Phasen zusammenlegen.
 Kein Vorab-Bild bei neuen Objekten und keine unveränderten Screenshot-Schleifen.
-Nie automatisch Play/Playtest starten/stoppen; keine Desktop-Aufnahmen oder Screenshot-Workarounds.
+Nie automatisch Play/Playtest starten/stoppen; keine Aufnahmen des ganzen Desktops oder anderer Apps.
+Für Eclipse/Plugin-UI: studio_windows, dann studio_window_capture des verifizierten Studio-Fensters.
+Studio-UI-Maus/Tastatur nur nach lokaler Freigabe; frische capture_id, Notaus Ctrl+Alt+F12.
 Keine unbeabsichtigten koplanaren sichtbaren Flächen; neue Modelle in 2–3 echten Varianten.
 Keine Ball-Formen zum Modellieren; kräftige Farben, viel Kontrast; alle Spieltexte Englisch.
 Eclipse Animator bevorzugen; Zugriff nicht voraussetzen, vor Ersatz fragen.
@@ -43,16 +45,17 @@ Enge Reparaturen nicht erweitern; ausdrücklich gewünschte Einzelmodelle respek
 Keine unbeabsichtigten koplanaren sichtbaren Flächen, Duplikate oder Z-Fighting; gezielt korrigieren.
 Alle Texte im Spiel auf Englisch; bestehende Systeme und ungespeicherte Änderungen erhalten.
 Nie automatisch Play/Playtest starten oder stoppen; ungetestetes Verhalten als solches benennen.
-Nur Studio-gerenderte Bilder: kein Desktop, Monitor, OS-Fenster oder Screenshot-Workaround.
-Wenn Studio-Aufnahme nicht möglich ist: Fehler melden, kein Desktop-Fallback.
+Aufnahmen: Studio-Renderer oder verifiziertes Studio-Fenster inklusive Eclipse/Plugins; niemals ganzer Desktop oder andere Apps.
+Studio-UI-Eingaben nur nach lokaler Freigabe, mit frischer Fensteraufnahme; Notaus Ctrl+Alt+F12. Kein fremder Desktop-Fallback.
 Bildstandard: 1280x720, JPEG quality=82; lesbare Details statt 6000-Byte-Minibildern. Kein automatisches Kleinskalieren oder Kamera-Zoom wegen Byte-Limits.
 Bei visuellen Änderungen: je ein Bild nach Bau, nach Korrekturen und zum Abschluss; identische Phasen zusammenlegen.
 Kein Vorab-Bild für neue Objekte; keine unveränderten Kontrollschleifen.
 FAST: sofort bauen, danach ein kompakter Prüfaufruf und ein Studio-Bild, sofern visuell.
 Luau-Ausgaben maximal 4000 Zeichen; Prüfungen nur Zahlen und höchstens 10 Problemfälle.
-Animationen bevorzugt mit Eclipse Animator; Verfügbarkeit prüfen und vor Ersatz fragen.
+Animationen mit Eclipse Animator: Plugins → Eclipse Animator → Eclipse Animator; Rig Tools ist separat. Verfügbarkeit prüfen und vor Ersatz fragen.
 Brickwire nur gezielt als Referenz/Runtime nutzen; keine automatische Komplettinstallation.
 Nur beauftragte Änderungen; keine Veröffentlichung, Uploads oder Produktionsdaten-Tests ohne Auftrag.
 ```
+
 
 

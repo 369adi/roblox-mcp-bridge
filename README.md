@@ -1,4 +1,4 @@
-# Roblox MCP Bridge 5.6
+# Roblox MCP Bridge 5.7
 
 Visible Windows MCP bridge for local Roblox Studio, with persistent notes, focused
 Brickwire references, optional REA tooling and Tailscale Funnel connectivity.
@@ -9,7 +9,7 @@ This is **full-PC access with your Windows user's permissions**, not a sandbox.
 Only connect trusted clients. Keep keys private and use the visible Stop/revoke controls.
 Identity/OAuth data is DPAPI-encrypted per Windows user; local notes are ordinary SQLite.
 Neither belongs in this repository or a release. Tailscale is installed/configured separately.
-No auto-Play; screenshots use only the official Studio renderer, never OS capture.
+No auto-Play; screenshots use either the official Studio renderer or explicit verified Studio-window capture. Never the whole desktop or unrelated apps.
 
 ## Run/build
 
@@ -41,6 +41,26 @@ Unchanged suppression is opt-in so new chats are not denied an unseen image.
 Opt-in unchanged checks return metadata and a reusable capture_id. Actual visual tokens are model-dependent, not measured.
 The official renderer does not expose isolation/neutral lighting/part overlays/custom FOV; true requests fail clearly rather than mutate the scene.
 return_mode=file returns a **PC-local path**, not a public URL.
+
+## Locally enabled Studio plugin UI
+
+For Eclipse and other Studio plugin panels, use studio_windows and studio_window_capture.
+The latter captures the verified Studio process window, not desktop rectangles.
+In the bridge click **Enable Studio UI (10 min)**. This is local-only, never remotely armable.
+**Ctrl+Alt+F12** or **STOP UI** disarms it. Restart/expiry does not silently re-enable it.
+Use studio_focus, then a fresh studio_window_capture, then studio_mouse / studio_drag /
+studio_scroll / studio_type / studio_hotkey. Coordinates belong to that returned image;
+position, dimensions and DPI mapping are checked. Each input invalidates its capture_id;
+captures expire after 30 seconds. Other foreground windows or occlusion cause rejection.
+Windows keys, shell-switch combinations and Play function keys are blocked.
+Never click Play through the UI. The regular renderer capture still handles pure game views.
+Old unscoped mouse_action/keyboard_type/keyboard_hotkey are not exposed by this server.
+Native window capture uses PrintWindow, has a bounded wait and may fail on minimized/GPU windows.
+Failure is an error, never a desktop screenshot. Floating plugin windows must belong to the
+verified Studio process. OS dialogs, other processes and arbitrary windows are not allowed.
+Windows input is focus-guarded, not an OS-isolated input channel: external focus races
+cannot be eliminated completely. Other full-PC shell/filesystem tools are still not sandboxed.
+No real mouse/key mutation was used in the fixture tests; verify Eclipse workflows deliberately.
 
 ## Extension-free method/reference features
 

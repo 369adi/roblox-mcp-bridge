@@ -85,6 +85,18 @@ class WorkspaceTools:
                                     'Bildstandard: 1280x720, JPEG quality=82; lesbare Details statt 6000-Byte-Minibildern. Kein automatisches Kleinskalieren oder Kamera-Zoom wegen Byte-Limits.')
                     connection.execute("UPDATE notes SET content=?,updated=? WHERE namespace='global' AND id='roblox-rules'",(new,time.time()))
                 connection.execute("INSERT INTO settings VALUES('roblox-capture-quality-v3','1')")
+        if not connection.execute("SELECT 1 FROM settings WHERE key='roblox-studio-window-ui-v1'").fetchone():
+            with connection:
+                row=connection.execute("SELECT content FROM notes WHERE namespace='global' AND id='roblox-rules'").fetchone()
+                if row:
+                    new=row['content'].replace('Nur Studio-gerenderte Bilder: kein Desktop, Monitor, OS-Fenster oder Screenshot-Workaround.',
+                        'Aufnahmen: Studio-Renderer oder verifiziertes Studio-Fenster inklusive Eclipse/Plugins; niemals ganzer Desktop oder andere Apps.')
+                    new=new.replace('Animationen bevorzugt mit Eclipse Animator; Verfügbarkeit prüfen und vor Ersatz fragen.',
+                        'Animationen mit Eclipse Animator: Plugins → Eclipse Animator → Eclipse Animator; Rig Tools ist separat. Verfügbarkeit prüfen und vor Ersatz fragen.')
+                    new=new.replace('Wenn Studio-Aufnahme nicht möglich ist: Fehler melden, kein Desktop-Fallback.',
+                        'Studio-UI-Eingaben nur nach lokaler Freigabe, mit frischer Fensteraufnahme; Notaus Ctrl+Alt+F12. Kein fremder Desktop-Fallback.')
+                    connection.execute("UPDATE notes SET content=?,updated=? WHERE namespace='global' AND id='roblox-rules'",(new,time.time()))
+                connection.execute("INSERT INTO settings VALUES('roblox-studio-window-ui-v1','1')")
         connection.commit()
         return connection
 
