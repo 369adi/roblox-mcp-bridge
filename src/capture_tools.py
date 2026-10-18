@@ -87,7 +87,7 @@ elseif t:IsA('BasePart') then p,s=t.CFrame,t.Size
 else p,s=CFrame.new(0,0,0),Vector3.new(20,20,20) end
 return game:GetService('HttpService'):JSONEncode({center={p.X,p.Y,p.Z},size={s.X,s.Y,s.Z},camera={cam.CFrame:GetComponents()},fov=cam.FieldOfView})
 '''
-        result = self.gateway.call({'name': 'execute_luau', 'arguments': {'studio_id': studio, 'datamodel_type': 'Edit', 'code': code}})
+        result = self.gateway.call({'name': 'execute_luau', 'visual':False, 'arguments': {'studio_id': studio, 'datamodel_type': 'Edit', 'code': code}})
         if result.get('isError'):
             raise RuntimeError('Cannot read target/camera; no screenshot attempted')
         text = '\n'.join(c.get('text', '') for c in result.get('content', []))

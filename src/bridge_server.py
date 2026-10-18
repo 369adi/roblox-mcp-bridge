@@ -36,11 +36,12 @@ from auto_update import AutoUpdater
 from ultracode_tools import UltraCodeTools, ULTRACODE_TOOLS
 from studio_ui import StudioUI, STUDIO_UI_TOOLS
 from desktop_ui import DesktopUI, DESKTOP_UI_TOOLS
+from visual_feedback import attach_capture
 from roblox_rules import SERVER_INSTRUCTIONS, RobloxContext
 from builder_tools import BuilderTools, BUILDER_TOOLS, CONTEXT_TOOL
 import tailscale_gateway
 
-VERSION = "5.8.0"
+VERSION = "5.8.1"
 PROTOCOLS = ("2025-03-26", "2025-06-18", "2025-11-25")
 BRIDGE_TOOLS = [tool if tool["name"] != "screen_capture" else capture_schema() for tool in TOOLS if tool["name"] not in {"mouse_action","keyboard_type","keyboard_hotkey"}] + REA_TOOLS + WORKSPACE_TOOLS + ROBLOX_TOOLS + SCREEN_TOOLS + LIBRARY_TOOLS + BRICKWIRE_TOOLS + DESIGN_TOOLS + RUNTIME_TOOLS + BUILDER_TOOLS + [CONTEXT_TOOL] + ULTRACODE_TOOLS + STUDIO_UI_TOOLS
 BRIDGE_TOOLS += [
@@ -178,7 +179,11 @@ class Bridge:
             else:
                 try:
                     output = handlers[name](args)
-                    if name in {"rea_call_tool", "roblox_call_tool", "roblox_studios", "roblox_state", "library_read", "brickwire_execute", "screen_capture", "capture_get", "studio_window_capture", "desktop_capture", "screen_windows", "run_builder", "model_summary", "model_check"}:
+                    ui_action = name in {prefix+action for prefix in ('studio_','desktop_') for action in ('mouse','drag','scroll','type','hotkey','focus')}
+                    if ui_action:
+                        capture = (lambda:self.desktop_ui.capture({})) if name.startswith('desktop_') else (lambda:self.studio_ui.capture({'window_id':args.get('window_id')}))
+                        output=attach_capture(result_text(output),capture)
+                    if ui_action or name in {"rea_call_tool", "roblox_call_tool", "roblox_studios", "roblox_state", "library_read", "brickwire_execute", "screen_capture", "capture_get", "studio_window_capture", "desktop_capture", "screen_windows", "run_builder", "model_summary", "model_check"}:
                         value = output
                     else:
                         value = result_text(output)
@@ -689,6 +694,8 @@ def self_test(report_path=None, tunnel=False):
         passed.extend(run_studio_ui_checks(bridge))
         from desktop_ui_checks import run_desktop_ui_checks
         passed.extend(run_desktop_ui_checks(bridge))
+        from visual_feedback_checks import run_visual_feedback_checks
+        passed.extend(run_visual_feedback_checks(bridge))
         from quality_checks import run_quality_checks
         passed.extend(run_quality_checks(bridge))
         from creative_checks import run_creative_checks

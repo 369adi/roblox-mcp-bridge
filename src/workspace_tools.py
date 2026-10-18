@@ -108,6 +108,16 @@ class WorkspaceTools:
                     new=new.replace('Kein fremder Desktop-Fallback.','Allgemeine PC-Steuerung ist nach lokaler Full-PC-UI-Freigabe erlaubt, nicht nur Roblox oder Blender.')
                     connection.execute("UPDATE notes SET content=?,updated=? WHERE namespace='global' AND id='roblox-rules'",(new,time.time()))
                 connection.execute("INSERT INTO settings VALUES('full-pc-ui-v1','1')")
+        if not connection.execute("SELECT 1 FROM settings WHERE key='auto-visual-feedback-v1'").fetchone():
+            with connection:
+                row=connection.execute("SELECT content FROM notes WHERE namespace='global' AND id='roblox-rules'").fetchone()
+                if row:
+                    old=row['content']
+                    connection.execute("INSERT OR IGNORE INTO settings VALUES(?,?)",('auto-visual-feedback-v1-backup',old))
+                    new=old.replace('Bei visuellen Änderungen: je ein Bild nach Bau, nach Korrekturen und zum Abschluss; identische Phasen zusammenlegen.',
+                        'Nach visuellen Änderungen liefert run_builder/execute_luau/Brickwire automatisch ein Studio-Bild; angehängte Bilder ansehen und sichtbare Fehler korrigieren. Abschlussbild nur bei Bedarf zusätzlich.')
+                    connection.execute("UPDATE notes SET content=?,updated=? WHERE namespace='global' AND id='roblox-rules'",(new,time.time()))
+                connection.execute("INSERT INTO settings VALUES('auto-visual-feedback-v1','1')")
         connection.commit()
         return connection
 

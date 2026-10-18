@@ -11,6 +11,7 @@ from PIL import Image
 from pathlib import Path
 from rea_gateway import REAGateway
 from pc_mcp_bridge import result_text
+from visual_feedback import attach_capture
 
 
 def tool(name, description, properties=None, required=None, readonly=True):
@@ -28,7 +29,7 @@ ROBLOX_TOOLS = [
     tool("roblox_list_tools", "Search the official Studio tool catalog (scripts, Luau execution, tree/instances, console, playtests, screenshots, assets, UI input). Pass name to retrieve its exact input schema before calling roblox_call_tool.",
          {"query": {"type": "string"}, "name": {"type": "string"}, "offset": {"type": "integer"}, "limit": {"type": "integer", "maximum": 100}}),
     tool("roblox_call_tool", "Call an official Roblox Studio MCP tool, preserving images and structured results. Discover arguments with roblox_list_tools(name). Calls may modify the game, run playtests, generate or upload assets. Choose studio_id explicitly, follow the user's requested scope, and keep all game text English.",
-         {"name": {"type": "string"}, "arguments": {"type": "object", "additionalProperties": True}}, ["name"], readonly=False),
+         {"name": {"type": "string"}, "arguments": {"type": "object", "additionalProperties": True}, "visual": {"type": "boolean", "description": "execute_luau automatically returns a post-action Studio image by default; false only for read-only diagnostics or nonvisual script/system work."}, "capture_target":{'type':'string','description':'Optional exact instance path to frame in the post-Luau image; otherwise current Studio view.'}}, ["name"], readonly=False),
 ]
 
 
@@ -57,6 +58,11 @@ class RobloxGateway(REAGateway):
         self._start_process([str(self.binary())])
 
     def call(self, args):
+        if 'visual' in args and not isinstance(args['visual'],bool):
+            raise ValueError('visual must be boolean')
+        target=args.get('capture_target')
+        if target is not None and (not isinstance(target,str) or not target.strip() or len(target)>1000):
+            raise ValueError('capture_target must be an exact instance path, at most 1000 characters')
         if args.get('name') == 'start_stop_play':
             return result_text('Manual playtest preference: this bridge does not start or stop Studio playtests. The user performs these in Studio.', is_error=True)
         if args.get('name') == 'screen_capture':
@@ -64,6 +70,11 @@ class RobloxGateway(REAGateway):
         result = super().call(args)
         if args.get('name') == 'execute_luau':
             result = self.compact(result)
+            params=args.get('arguments',{})
+            if args.get('visual',True) and not result.get('isError') and params.get('studio_id'):
+                capture_args={'studio_id':params['studio_id'],'width':1280,'height':720,'quality':82,'return_mode':'inline'}
+                if target is not None: capture_args['target']=target
+                result=attach_capture(result,lambda:self.capture(capture_args))
         return result
 
     @staticmethod

@@ -1,4 +1,8 @@
-# PC / Roblox MCP Bridge 5.8.0
+# PC / Roblox MCP Bridge 5.8.1
+
+## Automatic visual feedback
+
+`run_builder`, Brickwire execution and raw `execute_luau` now return a readable post-action Studio renderer image in the same MCP result by default. `visual=false` is available only for nonvisual script/system work; summary/check/camera metadata helpers already skip capture. Studio/desktop mouse, drag, scroll, type, hotkey and focus actions return their respective post-action window/desktop image after local consent. No cross-scope desktop fallback is attempted. Review attached images before claiming visual completion; the bridge cannot itself force a model to understand or fix an image. Capture errors are separate warnings and never replay the completed action or turn a successful build into a misleading mutation failure. No Play is started. Images remain native MCP image blocks rather than Base64 JSON strings.
 
 ## General PC control
 

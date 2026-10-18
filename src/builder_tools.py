@@ -8,8 +8,8 @@ CONTEXT_TOOL = spec('roblox_context', 'Optional once-per-chat rules/short skill/
     {'chat_id': {'type': 'string'}, 'mode': {'type': 'string', 'enum': ['NORMAL', 'FAST']}, 'rules_read': {'type': 'boolean'},
      'include_skill': {'type': 'boolean'}, 'design_namespace': {'type': 'string'}}, ['chat_id'])
 BUILDER_TOOLS = [
-    spec('run_builder', 'Run authorized Luau in Edit with ChangeHistory recording and optional fresh cloned ModuleScript loader. builder is require(clone); clone cleaned up even on error. Partial changes on error remain undoable, not automatically rolled back. Module may be an exact path or unique name. No Play.',
-         {'studio_id': STUDIO, 'module': {'type': 'string'}, 'code': {'type': 'string'}}, ['studio_id', 'code'], readonly=False),
+    spec('run_builder', 'Run authorized Luau in Edit, then automatically return a readable Studio screenshot in the same result. Inspect it and correct visible issues. ChangeHistory and optional cloned module loader included; builder is require(clone). No Play; never repeat a build merely because capture failed.',
+         {'studio_id': STUDIO, 'module': {'type': 'string'}, 'code': {'type': 'string'}, 'target':TARGET, 'visual': {'type':'boolean','description':'Default true. False only for nonvisual script/system tasks; visual building/corrections must keep this enabled.'}}, ['studio_id', 'code'], readonly=False),
     spec('model_summary', 'Compact model/BasePart summary: counts, top 10 shapes/colors, bounding box. No per-part dump.',
          {'studio_id': STUDIO, 'path': TARGET}, ['studio_id', 'path']),
     spec('model_check', 'Read-only bounded candidate check: fix=Ball/thin geometry, floating=no nearby support, faces=identical visible part transforms. Counts and at most 10 examples; heuristics, NOT proof of no coplanarity/flicker. Does not repair.',
@@ -38,12 +38,12 @@ class BuilderTools:
     def __init__(self, gateway):
         self.gateway = gateway
 
-    def execute(self, args, code):
+    def execute(self, args, code, visual=False, target=None):
         studio = args.get('studio_id')
         if not isinstance(studio, str) or not studio.strip():
             raise ValueError('studio_id required')
         code = "assert(game:GetService('RunService'):IsEdit(), 'Edit mode required; Play is manual')\n" + code
-        return self.gateway.call({'name': 'execute_luau', 'arguments': {'studio_id': studio, 'datamodel_type': 'Edit', 'code': code}})
+        return self.gateway.call({'name': 'execute_luau', 'visual':visual, 'capture_target':target, 'arguments': {'studio_id': studio, 'datamodel_type': 'Edit', 'code': code}})
 
     def run(self, args):
         code, module = args.get('code'), args.get('module')
@@ -84,7 +84,7 @@ history:FinishRecording(recording,Enum.FinishRecordingOperation.Commit)
 if not ok then error('Builder failed; partial changes may remain. Undo MCP Builder before retrying. '..tostring(result)) end
 return result
 '''.replace('MODULE_NAME', literal).replace('USER_CODE', code)
-        return self.execute(args, wrapped)
+        return self.execute(args, wrapped, visual=args.get('visual',True), target=args.get('target'))
 
     def summary(self, args):
         return self.execute(args, self._target(args) + '''
