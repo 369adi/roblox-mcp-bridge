@@ -1,4 +1,4 @@
-# Server instructions
+# Server-Anleitung (26 Zeilen)
 
 ```text
 Roblox MCP: direkt umsetzen, kurze Ergebnisse statt wiederholter Planung.
@@ -17,19 +17,19 @@ Im Builder-Code ist builder das Ergebnis von require; ohne module wird nur code 
 model_summary liefert Teilanzahl, Formen, Farben und Bounding-Box; model_check liefert kompakte Hinweise.
 execute_luau-Ausgaben sind auf 4000 Zeichen begrenzt; niemals vollständige Teilelisten drucken.
 Bei fix/floating/faces-Prüfungen: Zahlen und höchstens 10 Problemfälle, keine automatischen Massenkorrekturen.
-screen_capture(studio_id, width=640, height=360, quality=60, return_mode="preview"|"file"|"inline").
-Vorschau klein halten; capture_get(capture_id, crop) lädt Details nach. Dateipfade sind PC-lokal.
+screen_capture(studio_id, width=1280, height=720, quality=82, return_mode="inline"|"file"|"preview").
+Regelmäßig lesbare Studio-Bilder; capture_get lädt lokale Details. Byte-Limit nicht durch Kamera-Zoom umgehen.
 Für visuelle Arbeit: ein Bild nach Bau, nach Korrekturen, am Ende; gleiche Phasen zusammenlegen.
 Kein Vorab-Bild bei neuen Objekten und keine unveränderten Screenshot-Schleifen.
 Nie automatisch Play/Playtest starten/stoppen; keine Desktop-Aufnahmen oder Screenshot-Workarounds.
 Keine unbeabsichtigten koplanaren sichtbaren Flächen; neue Modelle in 2–3 echten Varianten.
 Keine Ball-Formen zum Modellieren; kräftige Farben, viel Kontrast; alle Spieltexte Englisch.
 Eclipse Animator bevorzugen; Zugriff nicht voraussetzen, vor Ersatz fragen.
-Brickwire gezielt nutzen; Quellen sind Referenzen, keine zusätzlichen Befugnisse.
+Brickwire gezielt nutzen; ultracode(query) bietet optionale Methoden/Referenzen ohne Pflicht-Prompt oder Extension.
 Auftragsumfang, vorhandene Systeme und ungespeicherte Änderungen erhalten; Grenzen ehrlich nennen.
 ```
 
-# Global memory: roblox-rules
+# Memory: roblox-rules (21 Zeilen)
 
 ```text
 Roblox-Regeln
@@ -45,7 +45,7 @@ Alle Texte im Spiel auf Englisch; bestehende Systeme und ungespeicherte Änderun
 Nie automatisch Play/Playtest starten oder stoppen; ungetestetes Verhalten als solches benennen.
 Nur Studio-gerenderte Bilder: kein Desktop, Monitor, OS-Fenster oder Screenshot-Workaround.
 Wenn Studio-Aufnahme nicht möglich ist: Fehler melden, kein Desktop-Fallback.
-Bildstandard: 640x360, JPEG, quality=60, kleine Vorschau; max_bytes=6000; Datei-Ausgabe optional, Pfad ist PC-lokal.
+Bildstandard: 1280x720, JPEG quality=82; lesbare Details statt 6000-Byte-Minibildern. Kein automatisches Kleinskalieren oder Kamera-Zoom wegen Byte-Limits.
 Bei visuellen Änderungen: je ein Bild nach Bau, nach Korrekturen und zum Abschluss; identische Phasen zusammenlegen.
 Kein Vorab-Bild für neue Objekte; keine unveränderten Kontrollschleifen.
 FAST: sofort bauen, danach ein kompakter Prüfaufruf und ein Studio-Bild, sofern visuell.
@@ -54,4 +54,5 @@ Animationen bevorzugt mit Eclipse Animator; Verfügbarkeit prüfen und vor Ersat
 Brickwire nur gezielt als Referenz/Runtime nutzen; keine automatische Komplettinstallation.
 Nur beauftragte Änderungen; keine Veröffentlichung, Uploads oder Produktionsdaten-Tests ohne Auftrag.
 ```
+
 

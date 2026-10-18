@@ -1,4 +1,4 @@
-PC MCP Bridge 5.0.0 bundles:
+PC MCP Bridge 5.6.0 bundles:
 
 Brickwire 3.1.0 reference distribution
 Imported from the user-provided Brickwire-3.1.0 (1).zip, without running its code.
@@ -28,3 +28,15 @@ PyInstaller. Their original copyrights and licenses continue to apply.
 PyInstaller permits application distribution under its bootloader exception.
 
 No license for external commercial analysis providers is included.
+
+SyphoDev Roblox Skills - text reference subset from PlazCode 1.24.20
+Creator: https://www.youtube.com/@SyphoDev
+Original project: https://github.com/SyphoDev-yt/roblox-ai-skills
+Keep reference_libraries/SyphoDev-PlazCode-1.24.20/LICENSE.txt and ATTRIBUTION.md.
+The separate free license permits use/modification for projects, including games,
+but prohibits selling these skills or including them in a paid bundle. Free sharing
+must retain the source/channel credit. Only text documentation is imported;
+upstream scripts, installers, fonts, images and executables are not included.
+The independently written method router and capture improvements do not incorporate
+PlazCode's GPL extension/program code, browser screenshot fallback or provider setup.
+

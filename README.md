@@ -1,4 +1,4 @@
-# Roblox MCP Bridge
+# Roblox MCP Bridge 5.6
 
 Visible Windows MCP bridge for local Roblox Studio, with persistent notes, focused
 Brickwire references, optional REA tooling and Tailscale Funnel connectivity.
@@ -31,7 +31,26 @@ Design profiles are game-scoped and only relevant for actual design work.
 `model_summary` returns counts, top colors/shapes and bounding box.
 `model_check` returns heuristic counts and <=10 examples, not proof of rendering correctness.
 `execute_luau` output is capped at 4000 characters, including duplicate structured payloads.
-Captures default to 640x360 JPEG quality 60 with a <=480x270 preview and 6000-byte image budget.\nViews/presets, target framing, compare_to and capture_get crops are supported.\nUnchanged frames return metadata only. Actual visual tokens are model-dependent, not measured.\nThe official renderer does not expose isolation/neutral lighting/part overlays/custom FOV; true requests fail clearly rather than mutate the scene.\nreturn_mode=file returns a **PC-local path**, not a public URL.
+Captures default to readable 1280x720 JPEG quality 82. Preview (640x360) is optional, not mandatory.
+The normal byte safety limit is 1 MiB, independent of deprecated max_tokens.
+The bridge never silently shrinks an image or changes the camera to fit a tiny byte budget.
+An insufficient explicit budget returns a clear error plus a locally stored capture_id for recovery.
+Views/presets, target framing, compare_to and capture_get crops are supported.
+Original per-view pixels are stored losslessly; capture_get(view=0, crop=...) reads original detail.
+Unchanged suppression is opt-in so new chats are not denied an unseen image.
+Opt-in unchanged checks return metadata and a reusable capture_id. Actual visual tokens are model-dependent, not measured.
+The official renderer does not expose isolation/neutral lighting/part overlays/custom FOV; true requests fail clearly rather than mutate the scene.
+return_mode=file returns a **PC-local path**, not a public URL.
+
+## Extension-free method/reference features
+
+`ultracode(query)` is an independently implemented, bounded task-method router: UI, Luau,
+maps, models, animation, VFX, audio and materials. It returns at most three methods.
+It is not the PlazCode extension, a model upgrade, a benchmark claim or a giant system prompt.
+The bundled `syphodev` library is a text-only subset of eleven separately licensed skills
+supplied in PlazCode 1.24.20. No scripts, installers, executables, browser integration or fonts
+are imported. Follow the separate LICENSE.txt and ATTRIBUTION.md; some links target absent files.
+No full PlazCode GPL program code was incorporated; the bridge is not silently relicensed.
 
 ## Updates
 

@@ -1,0 +1,232 @@
+{
+  "source_release": "PlazCode 1.24.20 user-supplied ZIP",
+  "zip_sha256": "b67d5525f72447fba87da0610b53796026f531b309e5aee7a46ad76946530041",
+  "files": [
+    {
+      "path": "LICENSE.txt",
+      "sha256": "bf7cd247e12e45233befb359d01576d8b28bf382ae4fb9a372eeb8606d5eb55b"
+    },
+    {
+      "path": "PLAZCODE-ADAPTER.md",
+      "sha256": "a239b5a015976cd5d590147ce40e6a973ee6d6ff48c58de79967afc8a5063217"
+    },
+    {
+      "path": "README.md",
+      "sha256": "5b811e3e9004c40236b3d70666cd4c1f4ce66995f2d9ee77b3e615ae4ffb129d"
+    },
+    {
+      "path": "agents/roblox-asset-anim.md",
+      "sha256": "9f183bf32f1eeb3c8ed2260aeaf6e0326942b4c786dd228780d760368cc73fd5"
+    },
+    {
+      "path": "agents/roblox-asset-map.md",
+      "sha256": "16999e9eaf917351b0f4b938c8e7b27982055456583802cceed80ece27ed0c2e"
+    },
+    {
+      "path": "agents/roblox-asset-mesh.md",
+      "sha256": "27207f037c66f65034c92e3819ee54b8d6dc5a7d898f872b83e18ee0efa8808a"
+    },
+    {
+      "path": "agents/roblox-asset-sfx.md",
+      "sha256": "7ce0a87272e2f704d5c2be932e675357ae2713d63eab1da818fc689390588b2a"
+    },
+    {
+      "path": "agents/roblox-asset-ui.md",
+      "sha256": "09689bae7a2a04c89b20bfacb175bde216a64530bb85543bda43a5d5061b0b7c"
+    },
+    {
+      "path": "agents/roblox-asset-vfx.md",
+      "sha256": "e42d266ea4745460caca47fa2645407a9bfd0e6a368ff7039f6be2db2da7989b"
+    },
+    {
+      "path": "agents/roblox-market-scout.md",
+      "sha256": "2763b42addd6d1cd1f163bffba550a7cec4861ac97a99156ff05a59d73c335bc"
+    },
+    {
+      "path": "skills/create-roblox-game/LOCAL.template.md",
+      "sha256": "285d8dca371e9ed4c44a6115ef199c76d96df7908f46065020d29ae0f790f53b"
+    },
+    {
+      "path": "skills/create-roblox-game/SKILL.md",
+      "sha256": "1a0aabcd2adf4cf80271ce4e3189d62993cc622e243a455b94e675e1fbbbbf0c"
+    },
+    {
+      "path": "skills/create-roblox-game/references/game-plan.md",
+      "sha256": "589827bdcde27de0a20bc6bc25da96f0a3e2a56123d63bb01f9e41623797560f"
+    },
+    {
+      "path": "skills/create-roblox-game/references/mcp.md",
+      "sha256": "eb50c9dccae732791a107e93efed108a6b7137d39062489fb9ffe3bb18582dd0"
+    },
+    {
+      "path": "skills/create-roblox-game/references/pipeline.md",
+      "sha256": "3bc27d995c2d8c7c1a0f58dd030ef30040ee1c099cbcb52190c9423248e5f08a"
+    },
+    {
+      "path": "skills/create-roblox-game/references/recovery.md",
+      "sha256": "e272967a10438c0691f52851ae975a0380da1fcdf9e787b03a8481469c7227d5"
+    },
+    {
+      "path": "skills/roblox-3d-model/LOCAL.template.md",
+      "sha256": "4fb692cb5b5754db1e80bca8656f2d4c112fc65a03650d3aa54fd051c4ea7484"
+    },
+    {
+      "path": "skills/roblox-3d-model/SKILL.md",
+      "sha256": "d7f0f201afc452d903af8426e7aa665c621baf644730549a5ca745f25359162a"
+    },
+    {
+      "path": "skills/roblox-3d-model/references/hard-surface-route.md",
+      "sha256": "4688831e4caa541747453943e2514a53cab9485982ed9f71d0ab5f08ad561f3a"
+    },
+    {
+      "path": "skills/roblox-3d-model/references/kiln-route.md",
+      "sha256": "d0fcf8efee759489463598a9aa4db036b517b99876b95d3f74f0d1cf24487c96"
+    },
+    {
+      "path": "skills/roblox-3d-model/references/licences.md",
+      "sha256": "bef9d7f6bcdf8097e9bac63f76e5c569c3db3ad020c9d058b306f1730d4b396f"
+    },
+    {
+      "path": "skills/roblox-3d-model/references/traps.md",
+      "sha256": "3f3175360eabba9425629ec32b1a351f9e4d4cc70cc98b9ef380bea89daba1a8"
+    },
+    {
+      "path": "skills/roblox-animation/LOCAL.template.md",
+      "sha256": "c86a3376b25d698b5e6cbcbd61964b1b30a5155e2ee60f5376b15355a17f494c"
+    },
+    {
+      "path": "skills/roblox-animation/SKILL.md",
+      "sha256": "402e70c398a1b65f8a5db7e26cc6d44feef68022f1f77732eee00a10d184db64"
+    },
+    {
+      "path": "skills/roblox-animation/references/pose-recipes.md",
+      "sha256": "128854fb76645ffcd68f8d799e6909bcc3312af354885ab76799405a7337608b"
+    },
+    {
+      "path": "skills/roblox-animation/references/traps.md",
+      "sha256": "b5cc0d598e14c04c2c58c8afc6d505575e3cee0b50489dbefdb02508f854ad0d"
+    },
+    {
+      "path": "skills/roblox-build-orchestrator/LOCAL.template.md",
+      "sha256": "8e62785e85efc93d07a15faae0323ce3168def238ba596344d4595582f0672c1"
+    },
+    {
+      "path": "skills/roblox-build-orchestrator/SKILL.md",
+      "sha256": "3833fce97ee528f7d62a500561d74f0ae05edd9f90147bf30a6471deec6938fb"
+    },
+    {
+      "path": "skills/roblox-build-orchestrator/agents/roblox-asset-anim.md",
+      "sha256": "9f183bf32f1eeb3c8ed2260aeaf6e0326942b4c786dd228780d760368cc73fd5"
+    },
+    {
+      "path": "skills/roblox-build-orchestrator/agents/roblox-asset-mesh.md",
+      "sha256": "27207f037c66f65034c92e3819ee54b8d6dc5a7d898f872b83e18ee0efa8808a"
+    },
+    {
+      "path": "skills/roblox-build-orchestrator/agents/roblox-asset-sfx.md",
+      "sha256": "7ce0a87272e2f704d5c2be932e675357ae2713d63eab1da818fc689390588b2a"
+    },
+    {
+      "path": "skills/roblox-build-orchestrator/agents/roblox-asset-ui.md",
+      "sha256": "09689bae7a2a04c89b20bfacb175bde216a64530bb85543bda43a5d5061b0b7c"
+    },
+    {
+      "path": "skills/roblox-build-orchestrator/agents/roblox-asset-vfx.md",
+      "sha256": "e42d266ea4745460caca47fa2645407a9bfd0e6a368ff7039f6be2db2da7989b"
+    },
+    {
+      "path": "skills/roblox-build-orchestrator/agents/roblox-market-scout.md",
+      "sha256": "2763b42addd6d1cd1f163bffba550a7cec4861ac97a99156ff05a59d73c335bc"
+    },
+    {
+      "path": "skills/roblox-build-orchestrator/references/stage-briefs.md",
+      "sha256": "ad08347a05e6029733dad53ef63831f7b0e9fee2467d90a99ec9377ea33bb85a"
+    },
+    {
+      "path": "skills/roblox-build-orchestrator/references/write-boundary.md",
+      "sha256": "e4897c236e7ab5aa76e587b969a53a0d3da10afe30e7755b231475edabf60d0d"
+    },
+    {
+      "path": "skills/roblox-code/LOCAL.template.md",
+      "sha256": "6fc0307371f13e31ed0dcacc6f575b95227eb2e2986548f109494abb49fb2e65"
+    },
+    {
+      "path": "skills/roblox-code/SKILL.md",
+      "sha256": "f63f2562972dedf13c7351c3e0a8625b448c28c0704380bd315684eb7a0e2078"
+    },
+    {
+      "path": "skills/roblox-code/references/patterns.md",
+      "sha256": "fe0211ac58967a4d79b35702e090b42aedadd3d1ec04a4725da85e3d6f6f7fa4"
+    },
+    {
+      "path": "skills/roblox-code/references/traps.md",
+      "sha256": "2dd9207fa1127607774170abcb88268e6c6f2ec043fc93da63d708c6d7891642"
+    },
+    {
+      "path": "skills/roblox-map/LOCAL.template.md",
+      "sha256": "6a4f43bd6c43cb6fdcd7ca235758b139c70242200271857146052fa60c445fde"
+    },
+    {
+      "path": "skills/roblox-map/SKILL.md",
+      "sha256": "a914f84005c8a9f26dd56ba0716967367de5755708f4bd1457c7ed85281a7b51"
+    },
+    {
+      "path": "skills/roblox-map/references/map-design.md",
+      "sha256": "ac6a6428f84ff9594dc90a16f7054a7fe4566bbd2c0bfcf94ded6e28700e81ce"
+    },
+    {
+      "path": "skills/roblox-map/references/movement-numbers.md",
+      "sha256": "5ecf3f4fcac19aa97b4db3043b8edada75d13c15bee4a275b04c17764195d98f"
+    },
+    {
+      "path": "skills/roblox-sfx/LOCAL.template.md",
+      "sha256": "811d6f693816ef16e9eaad4b66ac2c7346a4fd260e7470943150af9b9191b812"
+    },
+    {
+      "path": "skills/roblox-sfx/SKILL.md",
+      "sha256": "677d0885ce395a021250253dc745cba030425546fa177c5c1ea5a470304a7e4a"
+    },
+    {
+      "path": "skills/roblox-skills-setup/SKILL.md",
+      "sha256": "464798f55af4dc9927d0b0ae4397fd87b63e6cce903086bc31454a2ec2dfc70e"
+    },
+    {
+      "path": "skills/roblox-texture-gen/LOCAL.template.md",
+      "sha256": "1c29705d7862675a2313033e61b6147bab1f627f242a5a6f998247de34545040"
+    },
+    {
+      "path": "skills/roblox-texture-gen/SKILL.md",
+      "sha256": "eb088f6663a5ec624e1266d4f45a23e93c42fa9f7eebc0d226e027ab0e5fca77"
+    },
+    {
+      "path": "skills/roblox-ui/LOCAL.template.md",
+      "sha256": "90921f2e0b56f27eab28b6da986c6220189e391b7621867ec6365f28997f225b"
+    },
+    {
+      "path": "skills/roblox-ui/SKILL.md",
+      "sha256": "1384de590d617fcd77b0a247e68b6bcc25f75369ffcf661a9eab8fb4901be037"
+    },
+    {
+      "path": "skills/roblox-ui/references/fonts/OFL.txt",
+      "sha256": "45cea911a9a091fdc7a1a7be362729c4f4cf99fa0a40d202d841c548fae02ff5"
+    },
+    {
+      "path": "skills/roblox-ui/references/ui-recipes.md",
+      "sha256": "ef3aed6eff1d63f08feef8275bae33d482cae2c9ea6620ad24d27329f0f7d442"
+    },
+    {
+      "path": "skills/roblox-vfx/LOCAL.template.md",
+      "sha256": "7cc81c45c227833f2ba0696fdcc79225679effef78027c8c6740db5d2fc76e4b"
+    },
+    {
+      "path": "skills/roblox-vfx/SKILL.md",
+      "sha256": "01e16ac628505e9c8f26240daf7d53b55421bd4e192d27d2d0bd4a8608f93817"
+    },
+    {
+      "path": "skills/roblox-vfx/references/property-surface.md",
+      "sha256": "08da2c7c62eeee860895922c01b2fc20cc6dc996dd37aff37f4ca2431fc0d846"
+    }
+  ],
+  "text_references_only": true,
+  "executables_and_setup_scripts_imported": false
+}

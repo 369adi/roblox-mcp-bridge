@@ -96,7 +96,7 @@ def run_workspace_checks(bridge, request):
         status, response = request(bridge.local_url, {'jsonrpc': '2.0', 'id': 80, 'method': 'tools/call', 'params': {'name': 'screen_capture', 'arguments': {'studio_id': 'fixture', 'capture_id': 'Roblox_test'}}}, bridge.token)
         assert status == 200 and not response['result'].get('isError')
         image = Image.open(io.BytesIO(base64.b64decode(response['result']['content'][0]['data'])))
-        assert image.size == (480, 270) and image.format == 'JPEG'
+        assert image.size == (1280, 720) and image.format == 'JPEG'
         assert calls[-1]['arguments'] == {'studio_id': 'fixture', 'capture_id': 'Roblox_test'}
         assert 'studios' in call('screen_windows', {})
 

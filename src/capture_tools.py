@@ -35,30 +35,30 @@ class StudioCaptures:
 
     @staticmethod
     def encode(image, args, preview=False):
-        width = integer(args, 'width', args.get('max_width', 640), 64, 1280)
-        height = integer(args, 'height', max(36, round(width * 9 / 16)), 36, 720)
-        quality = integer(args, 'quality', 60, 1, 100)
+        width = integer(args, 'width', args.get('max_width', 1280), 64, 1920)
+        height = integer(args, 'height', max(36, round(width * 9 / 16)), 36, 1080)
+        quality = integer(args, 'quality', 82, 1, 100)
         fmt = args.get('format', 'jpeg')
         if fmt not in ('jpeg', 'png', 'webp'):
             raise ValueError('format must be jpeg, webp or png')
-        # This is a wire-size estimate, not a claim about model-specific visual tokens.
-        tokens = integer(args, 'max_tokens', 4000, 1000, 16000)
-        budget = integer(args, 'max_bytes', tokens * 3 // 2, 1500, 200000)
+        # Encoded bytes do not predict visual tokens. Never derive resolution from max_tokens.
+        if 'max_tokens' in args:
+            integer(args, 'max_tokens', 4000, 1, 1000000)  # Deprecated compatibility hint only.
+        budget = integer(args, 'max_bytes', 1024 * 1024, 1500, 8 * 1024 * 1024)
         image = image.copy()
-        image.thumbnail((min(width, 480) if preview else width, min(height, 270) if preview else height), Image.Resampling.LANCZOS)
-        for _ in range(36):
+        image.thumbnail((min(width, 640) if preview else width, min(height, 360) if preview else height), Image.Resampling.LANCZOS)
+        floor = min(quality, 70)
+        for _ in range(20):
             stream = io.BytesIO()
             options = {'quality': quality} if fmt in ('jpeg', 'webp') else {'optimize': True}
             image.save(stream, format=fmt.upper(), **options)
             data = stream.getvalue()
             if len(data) <= budget:
                 return image, data, fmt, quality
-            if fmt != 'png' and quality > 25:
-                quality = max(25, quality - 10)
-            elif image.width > 64 and image.height > 36:
-                image = image.resize((max(64, int(image.width * .8)), max(36, int(image.height * .8))), Image.Resampling.LANCZOS)
+            if fmt != 'png' and quality > floor:
+                quality = max(floor, quality - 6)
             else:
-                raise ValueError('Image cannot fit max_bytes without truncation; increase the budget')
+                raise ValueError('max_bytes is too small at the requested resolution/quality. Increase it or explicitly request a preview; no automatic shrinking, truncation or camera zoom.')
         raise ValueError('Image budget could not be met; no partial data returned')
 
     @staticmethod
@@ -117,7 +117,7 @@ return game:GetService('HttpService'):JSONEncode({center={p.X,p.Y,p.Z},size={s.X
             raise ValueError('This Studio renderer has no safe isolation/neutral-lighting/part-overlay API. Options are not silently ignored; no scene changes made.')
         if args.get('fov') is not None:
             raise ValueError('Custom FOV is not supported by the official temporary-camera renderer; current FOV is used and scene is not modified.')
-        mode = args.get('return_mode', 'inline' if args.get('output') == 'image' else 'file' if args.get('output') == 'file' else 'preview')
+        mode = args.get('return_mode', 'file' if args.get('output') == 'file' else 'inline')
         if mode not in ('preview', 'inline', 'file'):
             raise ValueError('return_mode must be preview/file/inline')
         # Validate output limits before asking Studio to render anything.
@@ -166,12 +166,13 @@ return game:GetService('HttpService'):JSONEncode({center={p.X,p.Y,p.Z},size={s.X
                 rendered.append(self.decode(self.gateway._capture_provider(params)))
                 cameras.append({'position': camera.get('camera_position'), 'look_at': camera.get('look_at_position'),
                                 'original_cframe': info['camera'] if info else None, 'fov': info['fov'] if info else None})
-            width = integer(args, 'width', args.get('max_width', 640), 64, 1280)
-            height = integer(args, 'height', round(width*9/16), 36, 720)
+            width = integer(args, 'width', args.get('max_width', 1280), 64, 1920)
+            height = integer(args, 'height', round(width*9/16), 36, 1080)
             columns = 2 if len(rendered)>1 else 1
             rows = math.ceil(len(rendered)/columns)
             sheet = Image.new('RGB',(width,height),(24,24,24))
-            for index, img in enumerate(rendered):
+            for index, original in enumerate(rendered):
+                img=original.copy()
                 cell = (width//columns,height//rows)
                 img.thumbnail(cell,Image.Resampling.LANCZOS)
                 x,y=(index%columns)*cell[0],(index//columns)*cell[1]
@@ -185,11 +186,12 @@ return game:GetService('HttpService'):JSONEncode({center={p.X,p.Y,p.Z},size={s.X
             meta={'studio_id':studio,'hash':digest,'cameras':cameras,'desktop_fallback':False,
                   'camera_restore':'Official renderer uses temporary camera positions; no bridge scene edits',
                   'hide_ui':'Studio renderer only; native UI/gizmo toggles are not exposed',
-                  'token_estimate_only':True}
-            if args.get('skip_unchanged',True) and self.hashes.get(key)==digest:
-                return result_text({**meta,'status':'unchanged'})
-            self.hashes[key]=digest; self.hashes.move_to_end(key)
-            while len(self.hashes)>128: self.hashes.popitem(last=False)
+                  'visual_tokens':'model-dependent; encoded bytes are not image tokens',
+                  'automatic_resolution_reduction':False}
+            if args.get('skip_unchanged',False) and self.hashes.get(key)==digest:
+                previous_id=next((ident for ident,saved in reversed(self.saved.items()) if saved['metadata']['hash']==digest and saved['studio_id']==studio),None)
+                return result_text({**meta,'status':'unchanged','capture_id':previous_id,
+                                    'next_step':'Use capture_get if this image has not been seen in the current chat.'})
             folder=getattr(self.gateway,'capture_dir',None)
             if folder is None:
                 raise ValueError('Capture storage not configured')
@@ -197,27 +199,48 @@ return game:GetService('HttpService'):JSONEncode({center={p.X,p.Y,p.Z},size={s.X
             ident='Studio_'+secrets.token_hex(12)
             path=folder/(ident+'.png')
             sheet.save(path,format='PNG')
-            self.saved[ident]={'path':path,'studio_id':studio,'metadata':meta,'created':time.time()}
+            frames=[]
+            for index, frame in enumerate(rendered):
+                frame_path=folder/(ident+'_view'+str(index)+'.png')
+                frame.save(frame_path,format='PNG')
+                frames.append({'path':frame_path,'resolution':list(frame.size)})
+            self.saved[ident]={'path':path,'frames':frames,'studio_id':studio,'metadata':meta,'created':time.time()}
             while len(self.saved)>64: self.saved.popitem(last=False)
-            meta.update(capture_id=ident,path=str(path),local_only=True,full_resolution=list(sheet.size))
+            meta.update(capture_id=ident,path=str(path),local_only=True,full_resolution=list(sheet.size),
+                        source_views=[{'index':i,'resolution':f['resolution']} for i,f in enumerate(frames)])
             if mode=='file':
+                self.hashes[key]=digest
+                while len(self.hashes)>128: self.hashes.popitem(last=False)
                 return result_text({**meta,'width':sheet.width,'height':sheet.height,'format':'png','bytes':path.stat().st_size})
-            return self.reply(sheet,args,meta,mode=='preview')
+            result = self.reply(sheet,args,meta,mode=='preview')
+            if not result.get('isError'):
+                self.hashes[key]=digest; self.hashes.move_to_end(key)
+                while len(self.hashes)>128: self.hashes.popitem(last=False)
+            return result
 
     def reply(self,image,args,meta,preview=False):
-        image,data,fmt,quality=self.encode(image,args,preview)
+        try:
+            image,data,fmt,quality=self.encode(image,args,preview)
+        except ValueError as exc:
+            return {**result_text({**meta,'status':'image_budget_exceeded','message':str(exc),
+                                  'next_step':'capture_get with the capture_id and a larger max_bytes; do not move the camera to compensate.'},is_error=True)}
         meta={**meta,'width':image.width,'height':image.height,'format':fmt,'quality':quality,'bytes':len(data),
-              'estimated_wire_tokens':math.ceil(len(data)*4/3/4),'visual_tokens':'model-dependent; not measured'}
+              'visual_tokens':'model-dependent; not measured','automatic_resolution_reduction':False}
         return {'content':[{'type':'image','mimeType':'image/'+fmt,'data':base64.b64encode(data).decode()},
                            {'type':'text','text':json.dumps(meta)}]}
 
     def get(self,args):
-        if set(args)-{'capture_id','width','height','crop','quality','format','max_bytes','max_tokens'}:
+        if set(args)-{'capture_id','width','height','crop','quality','format','max_bytes','max_tokens','view','return_mode'}:
             raise ValueError('Unknown capture_get arguments')
         with self.lock:
             saved=self.saved.get(args.get('capture_id'))
             if not saved: raise ValueError('Capture unknown/expired; create a fresh Studio capture')
-            image=Image.open(saved['path']).convert('RGB')
+            source_path=saved['path']
+            if 'view' in args:
+                index=integer(args,'view',0,0,len(saved['frames'])-1)
+                source_path=saved['frames'][index]['path']
+            with Image.open(source_path) as source:
+                image=source.convert('RGB')
             crop=args.get('crop')
             if crop is not None:
                 if not isinstance(crop,list) or len(crop)!=4 or any(isinstance(x,bool) or not isinstance(x,int) for x in crop):
@@ -225,4 +248,9 @@ return game:GetService('HttpService'):JSONEncode({center={p.X,p.Y,p.Z},size={s.X
                 l,t,r,b=crop
                 if not (0<=l<r<=image.width and 0<=t<b<=image.height): raise ValueError('Crop outside image')
                 image=image.crop(tuple(crop))
-            return self.reply(image,args,{**saved['metadata'],'capture_id':args['capture_id'],'crop':crop})
+            if args.get('return_mode') not in (None,'inline','file','preview'):
+                raise ValueError('return_mode must be inline/file/preview')
+            meta={**saved['metadata'],'capture_id':args['capture_id'],'crop':crop,'view':args.get('view'),'source_resolution':list(image.size)}
+            if args.get('return_mode')=='file':
+                return result_text({**meta,'path':str(source_path),'local_only':True,'crop_applied':False})
+            return self.reply(image,args,meta,args.get('return_mode')=='preview')

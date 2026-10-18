@@ -76,6 +76,15 @@ class WorkspaceTools:
                 for ident in LEGACY_RULE_IDS:
                     connection.execute("DELETE FROM notes WHERE namespace='global' AND id=?", (ident,))
                 connection.execute("INSERT INTO settings VALUES('roblox-rules-v2','1')")
+        if not connection.execute("SELECT 1 FROM settings WHERE key='roblox-capture-quality-v3'").fetchone():
+            with connection:
+                row=connection.execute("SELECT content FROM notes WHERE namespace='global' AND id='roblox-rules'").fetchone()
+                if row:
+                    old=row['content']
+                    new=old.replace('Bildstandard: 640x360, JPEG, quality=60, kleine Vorschau; max_bytes=6000; Datei-Ausgabe optional, Pfad ist PC-lokal.',
+                                    'Bildstandard: 1280x720, JPEG quality=82; lesbare Details statt 6000-Byte-Minibildern. Kein automatisches Kleinskalieren oder Kamera-Zoom wegen Byte-Limits.')
+                    connection.execute("UPDATE notes SET content=?,updated=? WHERE namespace='global' AND id='roblox-rules'",(new,time.time()))
+                connection.execute("INSERT INTO settings VALUES('roblox-capture-quality-v3','1')")
         connection.commit()
         return connection
 

@@ -38,6 +38,7 @@ class LibraryTools:
         self.workspace = workspace
         self.builtin = Path(getattr(sys, "_MEIPASS", Path(__file__).parent)) / "starter_skills"
         self.brickwire = self.builtin.parent / "reference_libraries" / "Brickwire-3.1.0" / "Brickwire"
+        self.syphodev = self.builtin.parent / 'reference_libraries' / 'SyphoDev-PlazCode-1.24.20'
 
     def entries(self, _=None):
         with self.workspace.lock:
@@ -51,6 +52,10 @@ class LibraryTools:
         if self.brickwire.is_dir():
             entries.insert(0, {"library": "brickwire", "name": "Brickwire 3.1.0", "root": str(self.brickwire), "bundled": True,
                                "includes": "50 skills, Luau helpers, UI/gameplay kits, asset packs, source and documentation"})
+        if self.syphodev.is_dir():
+            entries.insert(0, {'library':'syphodev','name':'SyphoDev text references from PlazCode 1.24.20',
+                              'root':str(self.syphodev),'bundled':True,'text_only':True,
+                              'credit':'https://www.youtube.com/@SyphoDev','license':'LICENSE.txt'})
         return {"libraries": entries, "mode": "Folders are referenced in place; original files are never executed automatically"}
 
     def add(self, args):
@@ -109,7 +114,7 @@ class LibraryTools:
 
     def remove(self, args):
         ident = self.workspace._text(args.get("library"), "library", 200)
-        if ident in {"builtin-roblox", "brickwire"}:
+        if ident in {"builtin-roblox", "brickwire", "syphodev"}:
             raise ValueError("Bundled starter skills are part of the app; remove only user-added libraries")
         with self.workspace.lock:
             db = self.workspace._db()

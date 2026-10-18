@@ -44,8 +44,8 @@ def run_fast_checks(bridge, request):
         gateway.capture_dir = Path(directory)
         small = gateway.capture({'studio_id': 'fixture'})
         img = Image.open(io.BytesIO(base64.b64decode(small['content'][0]['data'])))
-        assert img.size == (480, 270) and img.format == 'JPEG'
-        assert len(small['content'][0]['data']) < len(base64.b64encode(png.getvalue()))
+        assert img.size == (1280, 720) and img.format == 'JPEG'
+        assert json.loads(small['content'][-1]['text'])['automatic_resolution_reduction'] is False
         file_result = gateway.capture({'studio_id': 'fixture', 'return_mode': 'file', 'width': 640, 'format': 'png', 'skip_unchanged': False})
         metadata = json.loads(file_result['content'][0]['text'])
         assert metadata['local_only'] and metadata['width'] == 640 and Path(metadata['path']).is_file()
@@ -81,6 +81,6 @@ def run_fast_checks(bridge, request):
     updater = AutoUpdater('5.5.0', bridge.workspace.data_dir, lambda *_: None, repository='')
     assert updater.check()['status'] == 'not_configured' and not updater.apply_on_exit()
     return ['Compact rules migration, optional once-per-chat bundle and FAST skip verified',
-            '640x360 with 480px preview/default, PNG/file-only output and invalid capture arguments verified without OS capture',
+            'Readable 1280x720 JPEG default, full local frames, file-only output and invalid capture arguments verified without OS capture',
             'Luau text/structured payload capped at 4000 characters, errors preserved',
             'Edit-only builder wrapping, compact model helpers and update path guards verified']
