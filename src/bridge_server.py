@@ -41,6 +41,74 @@ VERSION = "5.5.0"
 PROTOCOLS = ("2025-03-26", "2025-06-18", "2025-11-25")
 BRIDGE_TOOLS = [tool if tool["name"] != "screen_capture" else capture_schema() for tool in TOOLS] + REA_TOOLS + WORKSPACE_TOOLS + ROBLOX_TOOLS + SCREEN_TOOLS + LIBRARY_TOOLS + BRICKWIRE_TOOLS + DESIGN_TOOLS + RUNTIME_TOOLS + BUILDER_TOOLS + [CONTEXT_TOOL]
 
+# Lazy tool loading: only core tools are listed; everything else via tool_catalog/tool_call.
+CORE_TOOL_NAMES = {"roblox_call_tool", "roblox_studios", "roblox_state", "run_builder", "model_summary",
+                   "model_check", "screen_capture", "capture_get", "memory_put", "memory_search"}
+CATALOG_TOOLS = [
+    {"name": "tool_catalog", "title": "tool_catalog",
+     "description": "Find additional bridge tools (shell, files, processes, REA, Brickwire, libraries, skills, design profiles, projects, roblox_list_tools, roblox_context ...). query filters by text; name returns the full input schema.",
+     "inputSchema": {"type": "object", "properties": {"query": {"type": "string"}, "name": {"type": "string"}}},
+     "annotations": {"readOnlyHint": True}},
+    {"name": "tool_call", "title": "tool_call",
+     "description": "Call any additional bridge tool found with tool_catalog. Get its schema with tool_catalog(name) first.",
+     "inputSchema": {"type": "object", "properties": {"name": {"type": "string"}, "arguments": {"type": "object", "additionalProperties": True, "properties": {}}}, "required": ["name"]}},
+]
+LISTED_TOOLS = [t for t in BRIDGE_TOOLS if t["name"] in CORE_TOOL_NAMES] + CATALOG_TOOLS
+
+
+class PluginTools:
+    """Hot-reloadable extra tools: %LOCALAPPDATA%/PC-MCP-Bridge/plugins/*.py with TOOLS (schemas) and HANDLERS (name -> fn(args))."""
+    def __init__(self):
+        self.dir = Path(os.environ.get("LOCALAPPDATA") or str(Path.home())) / "PC-MCP-Bridge" / "plugins"
+        self.tools, self.handlers, self.errors, self.loaded_at = [], {}, [], None
+
+    def refresh(self, _args=None):
+        import importlib.util
+        builtin = {t["name"] for t in BRIDGE_TOOLS} | {"tool_catalog", "tool_call", "tools_refresh"}
+        tools, handlers, errors = [], {}, []
+        try:
+            self.dir.mkdir(parents=True, exist_ok=True)
+            files = sorted(self.dir.glob("*.py"))
+        except Exception as exc:
+            files, errors = [], [f"plugin dir: {exc}"]
+        for f in files:
+            try:
+                spec = importlib.util.spec_from_file_location(f"bridge_plugin_{f.stem}_{int(time.time()*1000)}", f)
+                mod = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(mod)
+                fns = dict(getattr(mod, "HANDLERS", {}))
+                for t in getattr(mod, "TOOLS", []):
+                    n = t.get("name")
+                    if not n or n in builtin or n in handlers or n not in fns:
+                        errors.append(f"{f.name}: skipped tool {n!r} (missing handler or name clash)")
+                        continue
+                    tools.append({**t, "plugin": f.name})
+                    handlers[n] = fns[n]
+            except Exception as exc:
+                errors.append(f"{f.name}: {type(exc).__name__}: {exc}")
+        self.tools, self.handlers, self.errors, self.loaded_at = tools, handlers, errors, time.strftime("%Y-%m-%d %H:%M:%S")
+        return {"plugin_dir": str(self.dir), "plugin_tools": [t["name"] for t in tools], "errors": errors,
+                "loaded_at": self.loaded_at, "builtin_tools": len(BRIDGE_TOOLS)}
+
+
+PLUGINS = PluginTools()
+try:
+    PLUGINS.refresh()
+except Exception:
+    pass
+
+
+def tool_catalog(args):
+    wanted = args.get("name")
+    if wanted:
+        for t in BRIDGE_TOOLS + PLUGINS.tools:
+            if t["name"] == wanted:
+                return t
+        raise ValueError(f"Unknown tool: {wanted}")
+    q = str(args.get("query") or "").lower()
+    return [{"name": t["name"], "description": str(t.get("description", ""))[:140]} for t in BRIDGE_TOOLS + PLUGINS.tools
+            if t["name"] not in CORE_TOOL_NAMES and (not q or q in (t["name"] + " " + str(t.get("description", ""))).lower())]
+
 
 class Bridge:
     def __init__(self, data_dir=None, persistent=None, listen_port=None):
@@ -95,7 +163,7 @@ class Bridge:
         elif method == "ping":
             value = {}
         elif method == "tools/list":
-            value = {"tools": BRIDGE_TOOLS}
+            value = {"tools": LISTED_TOOLS}
         elif method == "tools/call":
             name = params.get("name")
             args = params.get("arguments", {})
@@ -103,6 +171,20 @@ class Bridge:
                         "rea_status": self.rea.status, "rea_list_tools": self.rea.list_tools, "rea_call_tool": self.rea.call,
                         "roblox_status": self.roblox.status, "roblox_studios": self.roblox.studios, "roblox_state": self.roblox.state,
                         "roblox_list_tools": self.roblox.list_tools, "roblox_call_tool": self.roblox.call}
+            handlers.update(PLUGINS.handlers)
+            handlers["tool_catalog"] = tool_catalog
+            handlers["tools_refresh"] = PLUGINS.refresh
+            # Route bridge tools through the always-enabled roblox_call_tool: name="bridge.<tool>"
+            if name == "roblox_call_tool" and isinstance(args, dict) and str(args.get("name") or "").startswith("bridge."):
+                inner = str(args["name"])[7:]
+                args = args.get("arguments") or {}
+                name = {"catalog": "tool_catalog", "tools": "tool_catalog", "refresh": "tools_refresh"}.get(inner, inner)
+                if name in ("roblox_call_tool", "tool_call"):
+                    name = None
+            if name == "tool_call" and isinstance(args, dict):
+                name, args = args.get("name"), args.get("arguments") or {}
+                if name in ("tool_call",):
+                    name = None
             if not isinstance(name, str) or name not in handlers or not isinstance(args, dict):
                 return {"jsonrpc": "2.0", "id": ident, "error": {"code": -32602, "message": "Unknown tool or invalid arguments"}}
             self.emit("log", f"Tool requested: {name}")
@@ -350,6 +432,7 @@ class App:
         ttk.Button(controls, text="Revoke OAuth access", command=self.revoke_oauth).pack(side="left", padx=4)
         ttk.Button(controls, text="Add library folder", command=self.add_library).pack(side="left", padx=4)
         ttk.Button(controls, text="Rotate key", command=self.rotate_key).pack(side="left", padx=4)
+        ttk.Button(controls, text="Refresh tools", command=self.refresh_tools).pack(side="left", padx=4)
         ttk.Label(controls, textvariable=self.status, font=("Segoe UI", 9, "bold")).pack(side="left", padx=8)
         ttk.Label(frame, textvariable=self.local, foreground="#555555").pack(anchor="w", pady=(10, 4))
         ttk.Label(frame, text="Memory: " + str(WorkspaceTools().db_path), foreground="#555555", wraplength=840).pack(anchor="w", pady=(0, 5))
@@ -374,6 +457,18 @@ class App:
                 self.add_log("Reference library registered: " + entry["name"] + ". Use library_list / skills_list. Brickwire is already bundled.")
             except Exception as exc:
                 self.add_log("Library could not be added: " + str(exc))
+
+    def refresh_tools(self):
+        try:
+            info = PLUGINS.refresh()
+            msg = f"Tools refreshed {info['loaded_at']}: {len(info['plugin_tools'])} plugin tools" + (f", {len(info['errors'])} errors" if info['errors'] else "")
+            self.status.set(msg)
+            try:
+                self.append_log(msg + ("\n" + "\n".join(info['errors']) if info['errors'] else ""))
+            except Exception:
+                pass
+        except Exception as exc:
+            self.status.set(f"Refresh failed: {exc}")
 
     def toggle_token(self):
         self.token_entry.configure(show="" if self.token_entry.cget("show") else "\u2022")
@@ -513,8 +608,8 @@ def self_test(report_path=None, tunnel=False):
         assert request(bridge.local_url, init, bridge.token)[1]["result"]["protocolVersion"] == "2025-06-18"
         assert request(bridge.local_url, {"jsonrpc": "2.0", "method": "notifications/initialized"}, bridge.token)[0] == 202
         listed = request(bridge.local_url, {"jsonrpc": "2.0", "id": 2, "method": "tools/list"}, bridge.token)[1]
-        assert len(listed["result"]["tools"]) == len(BRIDGE_TOOLS)
-        passed.append(f"MCP initialization, notifications and {len(BRIDGE_TOOLS)} tools")
+        assert len(listed["result"]["tools"]) == len(LISTED_TOOLS)
+        passed.append(f"MCP initialization, notifications and {len(LISTED_TOOLS)} listed tools")
         from workspace_checks import run_workspace_checks
         passed.extend(run_workspace_checks(bridge, request))
         from library_checks import run_library_checks

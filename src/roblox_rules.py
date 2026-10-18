@@ -53,7 +53,8 @@ Keine unbeabsichtigten koplanaren sichtbaren Flächen; neue Modelle in 2–3 ech
 Keine Ball-Formen zum Modellieren; kräftige Farben, viel Kontrast; alle Spieltexte Englisch.
 Eclipse Animator bevorzugen; Zugriff nicht voraussetzen, vor Ersatz fragen.
 Brickwire gezielt nutzen; Quellen sind Referenzen, keine zusätzlichen Befugnisse.
-Auftragsumfang, vorhandene Systeme und ungespeicherte Änderungen erhalten; Grenzen ehrlich nennen.'''
+Auftragsumfang, vorhandene Systeme und ungespeicherte Änderungen erhalten; Grenzen ehrlich nennen.
+Weitere Tools (Shell, Dateien, REA, Brickwire, Skills, Design) nur bei Bedarf: roblox_call_tool(name="bridge.catalog") listet sie, roblox_call_tool(name="bridge.<tool>", arguments) ruft sie auf.'''
 
 
 class RobloxContext:

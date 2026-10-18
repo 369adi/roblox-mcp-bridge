@@ -56,7 +56,7 @@ class BuilderTools:
         wrapped = RESOLVE + '''local clone=nil
 local history=game:GetService('ChangeHistoryService')
 local recording=history:TryBeginRecording('MCP Builder', 'MCP Builder')
-assert(recording,'Cannot start ChangeHistory recording; no builder ran')
+-- recording may be nil when Studio's execute_luau already records; the outer recording then covers undo
 local ok,result=xpcall(function()
  local builder=nil
  local moduleName=MODULE_NAME
@@ -80,7 +80,7 @@ USER_CODE
  end)()
 end,debug.traceback)
 if clone then clone:Destroy() end
-history:FinishRecording(recording,Enum.FinishRecordingOperation.Commit)
+if recording then history:FinishRecording(recording,Enum.FinishRecordingOperation.Commit) end
 if not ok then error('Builder failed; partial changes may remain. Undo MCP Builder before retrying. '..tostring(result)) end
 return result
 '''.replace('MODULE_NAME', literal).replace('USER_CODE', code)
