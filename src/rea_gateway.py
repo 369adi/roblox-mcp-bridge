@@ -134,6 +134,24 @@ class REAGateway:
         return {"version": "6.5.0", "running": self.process.poll() is None, "tool_count": len(self.tools),
                 "source": "https://github.com/morluto/rea", "gateway": ["rea_list_tools", "rea_call_tool"]}
 
+    def refresh_tools(self):
+        """Re-read an already running provider without restarting it or its tasks."""
+        with self.lock:
+            if not self.process or self.process.poll() is not None:
+                return {"state": "not_running", "tool_count": 0}
+            tools, cursor, seen = [], None, set()
+            for _ in range(100):
+                result = self.request("tools/list", {"cursor": cursor} if cursor else {}, timeout=20)
+                tools.extend(result["tools"])
+                cursor = result.get("nextCursor")
+                if not cursor:
+                    self.tools = tools
+                    return {"state": "refreshed", "tool_count": len(tools)}
+                if cursor in seen:
+                    raise ValueError("Provider repeated its tool cursor")
+                seen.add(cursor)
+            raise ValueError("Provider tool catalog exceeds pagination limit")
+
     def list_tools(self, args):
         self.start()
         name = args.get("name")

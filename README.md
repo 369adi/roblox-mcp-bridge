@@ -1,4 +1,10 @@
-# Roblox MCP Bridge 5.7.1
+# Roblox MCP Bridge 5.7.2
+
+## Refresh tools
+
+The visible **Refresh tools** button re-reads running Studio/REA catalogs without restarting them, changing the connection key, or editing the game. Dormant providers are not started. Compatible connected clients receive MCP `notifications/tools/list_changed` over an authenticated SSE stream. Clients without a live stream must reconnect once to reload their cached tool schemas and server instructions; a notification is not proof that a client refreshed.
+
+Older cached `tool_catalog`, `tool_call`, and `roblox_call_tool(name="bridge.catalog" | "bridge.<tool>")` calls work again and retain the same Studio safety checks. `tool_catalog` returns the current instructions/version and compact paginated results.
 
 Visible Windows MCP bridge for local Roblox Studio, with persistent notes, focused
 Brickwire references, optional REA tooling and Tailscale Funnel connectivity.

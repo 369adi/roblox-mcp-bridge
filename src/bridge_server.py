@@ -39,9 +39,14 @@ from roblox_rules import SERVER_INSTRUCTIONS, RobloxContext
 from builder_tools import BuilderTools, BUILDER_TOOLS, CONTEXT_TOOL
 import tailscale_gateway
 
-VERSION = "5.7.1"
+VERSION = "5.7.2"
 PROTOCOLS = ("2025-03-26", "2025-06-18", "2025-11-25")
 BRIDGE_TOOLS = [tool if tool["name"] != "screen_capture" else capture_schema() for tool in TOOLS if tool["name"] not in {"mouse_action","keyboard_type","keyboard_hotkey"}] + REA_TOOLS + WORKSPACE_TOOLS + ROBLOX_TOOLS + SCREEN_TOOLS + LIBRARY_TOOLS + BRICKWIRE_TOOLS + DESIGN_TOOLS + RUNTIME_TOOLS + BUILDER_TOOLS + [CONTEXT_TOOL] + ULTRACODE_TOOLS + STUDIO_UI_TOOLS
+BRIDGE_TOOLS += [
+    {"name": "tool_catalog", "description": "Search the current bridge catalog; name returns its full schema. Includes current instructions and version, even in older chats.", "inputSchema": {"type": "object", "properties": {"name": {"type": "string"}, "query": {"type": "string"}, "offset": {"type": "integer", "minimum": 0}, "limit": {"type": "integer", "minimum": 1, "maximum": 30}}}},
+    {"name": "tool_call", "description": "Call a discovered bridge tool by name, preserving image results and safety checks. Supports older cached clients.", "inputSchema": {"type": "object", "properties": {"name": {"type": "string"}, "arguments": {"type": "object"}}, "required": ["name"]}},
+    {"name": "refresh_tools", "description": "Refresh catalogs of running providers without restarting tasks; notify connected SSE clients. Other clients must reconnect to reload cached schemas/instructions.", "inputSchema": {"type": "object", "properties": {}}},
+]
 
 
 class Bridge:
@@ -64,6 +69,10 @@ class Bridge:
         self.lifecycle = threading.Lock()
         self.slots = threading.BoundedSemaphore(8)
         self.worker = None
+        self.catalog_revision = 0
+        self.catalog_lock = threading.Lock()
+        self.catalog_subscribers = set()
+        self.refresh_lock = threading.Lock()
         self.rea = REAGateway(self.emit)
         self.ready = threading.Event()
         self.oauth = OAuthProvider(self)
@@ -81,6 +90,44 @@ class Bridge:
     def emit(self, kind, text):
         self.events.put((kind, text))
 
+    def tool_catalog(self, args):
+        name = args.get("name")
+        if name:
+            found = next((tool for tool in BRIDGE_TOOLS if tool["name"] == name), None)
+            if found is None:
+                raise ValueError("Unknown bridge tool")
+            return found
+        query = str(args.get("query", "")).lower()
+        matches = [tool for tool in BRIDGE_TOOLS if query in (tool["name"] + " " + tool.get("description", "")).lower()]
+        offset, limit = max(0, int(args.get("offset", 0))), max(1, min(30, int(args.get("limit", 20))))
+        return {"version": VERSION, "revision": self.catalog_revision, "instructions": SERVER_INSTRUCTIONS,
+                "total": len(matches), "tools": [{"name": t["name"], "description": t.get("description", "")[:300]} for t in matches[offset:offset+limit]],
+                "next_offset": offset+limit if offset+limit < len(matches) else None}
+
+    def refresh_tools(self, _):
+        if not self.refresh_lock.acquire(blocking=False):
+            raise ValueError("Tool refresh is already running")
+        try:
+            providers = {}
+            for label, provider in (("roblox", self.roblox), ("rea", self.rea)):
+                try:
+                    providers[label] = provider.refresh_tools()
+                except Exception as exc:
+                    providers[label] = {"state": "error", "error": str(exc)[:300]}
+            with self.catalog_lock:
+                self.catalog_revision += 1
+                subscribers = list(self.catalog_subscribers)
+                for subscriber in subscribers:
+                    try: subscriber.put_nowait(self.catalog_revision)
+                    except queue.Full: pass
+            result = {"version": VERSION, "tool_count": len(BRIDGE_TOOLS), "revision": self.catalog_revision,
+                      "providers": providers, "notified_connections": len(subscribers),
+                      "client_action": "SSE clients receive tools/list_changed. Reconnect other clients to reload tools and instructions; no client acknowledgment is implied."}
+            self.emit("log", f"Refresh tools: {len(BRIDGE_TOOLS)} bridge tools; {len(subscribers)} connections notified. Reconnect clients without live refresh support.")
+            return result
+        finally:
+            self.refresh_lock.release()
+
     def dispatch(self, req):
         if not isinstance(req, dict) or req.get("jsonrpc") != "2.0":
             return {"jsonrpc": "2.0", "id": None, "error": {"code": -32600, "message": "Invalid Request"}}
@@ -93,7 +140,7 @@ class Bridge:
         if method == "initialize":
             version = params.get("protocolVersion")
             value = {"protocolVersion": version if version in PROTOCOLS else PROTOCOLS[-1],
-                     "capabilities": {"tools": {"listChanged": False}},
+                     "capabilities": {"tools": {"listChanged": True}},
                      "serverInfo": {"name": "PC MCP Bridge", "version": VERSION},
                      "instructions": SERVER_INSTRUCTIONS}
         elif method == "ping":
@@ -103,10 +150,20 @@ class Bridge:
         elif method == "tools/call":
             name = params.get("name")
             args = params.get("arguments", {})
+            # Backwards compatibility for compact clients cached before v5.6.
+            if name == "roblox_call_tool" and isinstance(args, dict) and isinstance(args.get("name"), str) and args["name"].startswith("bridge."):
+                alias = args["name"][7:]
+                name = {"catalog": "tool_catalog"}.get(alias, alias)
+                args = args.get("arguments", {})
+            if name == "tool_call" and isinstance(args, dict):
+                name, args = args.get("name"), args.get("arguments", {})
+                if isinstance(name, str) and name in {"tool_call", "roblox_call_tool"} and (name == "tool_call" or isinstance(args, dict) and str(args.get("name", "")).startswith("bridge.")):
+                    return {"jsonrpc": "2.0", "id": ident, "result": result_text("Recursive bridge adapters are not allowed", is_error=True)}
             handlers = {**HANDLERS, **self.workspace.handlers(), **self.libraries.handlers(), **self.brickwire.handlers(), **self.design.handlers(), **self.runtime.handlers(), **self.builders.handlers(), **self.ultracode.handlers(), **self.studio_ui.handlers(), "roblox_context": self.context.get, "capture_get": self.roblox.capture_get, "screen_capture": self.roblox.capture, "screen_windows": self.roblox.studios,
                         "rea_status": self.rea.status, "rea_list_tools": self.rea.list_tools, "rea_call_tool": self.rea.call,
                         "roblox_status": self.roblox.status, "roblox_studios": self.roblox.studios, "roblox_state": self.roblox.state,
-                        "roblox_list_tools": self.roblox.list_tools, "roblox_call_tool": self.roblox.call}
+                        "roblox_list_tools": self.roblox.list_tools, "roblox_call_tool": self.roblox.call,
+                        "tool_catalog": self.tool_catalog, "refresh_tools": self.refresh_tools}
             for legacy in ("mouse_action","keyboard_type","keyboard_hotkey"):
                 handlers.pop(legacy,None)
             if not isinstance(name, str) or name not in handlers or not isinstance(args, dict):
@@ -217,7 +274,39 @@ class Bridge:
                 if bridge.oauth.route(self):
                     return
                 if self.authorized():
-                    self.respond(405, {"error": "Use HTTP POST for MCP requests"}, Allow="POST")
+                    if "text/event-stream" not in self.headers.get("Accept", ""):
+                        self.respond(405, {"error": "Use HTTP POST or Accept: text/event-stream"}, Allow="POST, GET")
+                        return
+                    subscriber = queue.Queue(maxsize=1)
+                    with bridge.catalog_lock:
+                        if len(bridge.catalog_subscribers) >= 16:
+                            self.respond(429, {"error": "Too many notification streams"})
+                            return
+                        bridge.catalog_subscribers.add(subscriber)
+                    authorization = self.headers.get("Authorization", "")[7:]
+                    try:
+                        self.send_response(200)
+                        self.send_header("Content-Type", "text/event-stream")
+                        self.send_header("Cache-Control", "no-store")
+                        self.send_header("X-Accel-Buffering", "no")
+                        self.end_headers()
+                        self.wfile.write(b": connected\n\n")
+                        self.wfile.flush()
+                        while not bridge.stopped.is_set():
+                            if not (hmac.compare_digest(authorization.encode(), bridge.token.encode()) or bridge.oauth.valid_token(authorization)):
+                                break
+                            try:
+                                subscriber.get(timeout=10)
+                                raw = b'event: message\ndata: {"jsonrpc":"2.0","method":"notifications/tools/list_changed"}\n\n'
+                            except queue.Empty:
+                                raw = b": heartbeat\n\n"
+                            self.wfile.write(raw)
+                            self.wfile.flush()
+                    except (OSError, TimeoutError):
+                        pass
+                    finally:
+                        with bridge.catalog_lock:
+                            bridge.catalog_subscribers.discard(subscriber)
 
             def do_DELETE(self):
                 if self.authorized():
@@ -364,6 +453,8 @@ class App:
         ttk.Button(ui_controls,text="STOP UI (Ctrl+Alt+F12)",command=self.stop_studio_ui).pack(side="left",padx=8)
         self.studio_ui_status=StringVar(value="Studio UI: off")
         ttk.Label(ui_controls,textvariable=self.studio_ui_status).pack(side="left")
+        self.refresh_button = ttk.Button(ui_controls, text="Refresh tools", command=self.refresh_tools)
+        self.refresh_button.pack(side="left", padx=8)
         ttk.Label(frame, textvariable=self.local, foreground="#555555").pack(anchor="w", pady=(10, 4))
         ttk.Label(frame, text="Memory: " + str(WorkspaceTools().db_path), foreground="#555555", wraplength=840).pack(anchor="w", pady=(0, 5))
         self.log = Text(frame, height=12, state="disabled", font=("Consolas", 9), wrap="word")
@@ -393,6 +484,24 @@ class App:
             if not self.bridge: raise ValueError("Start the bridge first")
             self.bridge.studio_ui.arm()
         except Exception as exc: self.add_log(str(exc))
+
+    def refresh_tools(self):
+        if not self.bridge:
+            self.add_log("Start the bridge before refreshing tools.")
+            return
+        bridge = self.bridge
+        self.refresh_button.configure(state="disabled")
+        self.add_log("Refreshing tool catalogs without restarting Studio or changing your key...")
+        def run():
+            try:
+                result = bridge.refresh_tools({})
+                for label, state in result["providers"].items():
+                    bridge.emit("log", f"Refresh {label}: {state['state']}" + (": " + state["error"] if "error" in state else ""))
+            except Exception as exc:
+                bridge.emit("log", "Refresh failed: " + str(exc))
+            finally:
+                bridge.emit("refresh_done", "")
+        threading.Thread(target=run, daemon=True).start()
 
     def stop_studio_ui(self):
         if self.bridge: self.bridge.studio_ui.stop()
@@ -470,6 +579,8 @@ class App:
                     kind, value = self.bridge.events.get_nowait()
                     if kind == "log":
                         self.add_log(value)
+                    elif kind == "refresh_done":
+                        self.refresh_button.configure(state="normal")
                     elif kind == "url":
                         self.url.set(value)
                     elif kind == "local":
@@ -589,11 +700,13 @@ def self_test(report_path=None, tunnel=False):
         passed.append("installed Tailscale CLI executes; Cloudflare is not used")
         app = App(auto_start=False)
         app.root.update()
+        assert app.refresh_button.cget("text") == "Refresh tools"
+        app.refresh_button.invoke()  # Stopped GUI: explanatory log only, no provider started.
         app.token.set("test-token")
         app.toggle_token()
         assert app.token_entry.cget("show") == ""
         app.root.destroy()
-        passed.append("GUI builds and token display toggles")
+        passed.append("GUI builds, Refresh tools is visible/clickable, and token display toggles")
         if tunnel:
             bridge.stop()
             bridge = Bridge(data_dir=test_data.name, listen_port=tailscale_gateway.LOCAL_PORT)
