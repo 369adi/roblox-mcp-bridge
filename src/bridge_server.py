@@ -19,11 +19,10 @@ from datetime import datetime
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from tkinter import Tk, StringVar, Text, ttk, filedialog
-from urllib.parse import urlsplit, quote
+from urllib.parse import urlsplit
 
 from pc_mcp_bridge import HANDLERS, TOOLS, result_text
 from rea_gateway import REAGateway, REA_TOOLS
-from bridge_oauth import OAuthProvider
 from roblox_gateway import RobloxGateway, ROBLOX_TOOLS
 from workspace_tools import WorkspaceTools, WORKSPACE_TOOLS
 from library_tools import LibraryTools, LIBRARY_TOOLS
@@ -37,11 +36,12 @@ from ultracode_tools import UltraCodeTools, ULTRACODE_TOOLS
 from studio_ui import StudioUI, STUDIO_UI_TOOLS
 from desktop_ui import DesktopUI, DESKTOP_UI_TOOLS
 from visual_feedback import attach_capture
+from startup_tools import canonical_executable
 from roblox_rules import SERVER_INSTRUCTIONS, RobloxContext
 from builder_tools import BuilderTools, BUILDER_TOOLS, CONTEXT_TOOL
 import tailscale_gateway
 
-VERSION = "5.8.2"
+VERSION = "5.8.3"
 PROTOCOLS = ("2025-03-26", "2025-06-18", "2025-11-25")
 BRIDGE_TOOLS = [tool if tool["name"] != "screen_capture" else capture_schema() for tool in TOOLS if tool["name"] not in {"mouse_action","keyboard_type","keyboard_hotkey"}] + REA_TOOLS + WORKSPACE_TOOLS + ROBLOX_TOOLS + SCREEN_TOOLS + LIBRARY_TOOLS + BRICKWIRE_TOOLS + DESIGN_TOOLS + RUNTIME_TOOLS + BUILDER_TOOLS + [CONTEXT_TOOL] + ULTRACODE_TOOLS + STUDIO_UI_TOOLS
 BRIDGE_TOOLS += [
@@ -67,7 +67,7 @@ class Bridge:
         self.stopped = threading.Event()
         self.server = None
         self.process = None
-        self.public_url = ""
+        self.public_url = self.store.get('public_url','') if self.store else ""
         self.local_url = ""
         self.lifecycle = threading.Lock()
         self.slots = threading.BoundedSemaphore(8)
@@ -78,7 +78,6 @@ class Bridge:
         self.refresh_lock = threading.Lock()
         self.rea = REAGateway(self.emit)
         self.ready = threading.Event()
-        self.oauth = OAuthProvider(self)
         self.libraries = LibraryTools(self.workspace)
         self.brickwire = BrickwireTools(self.libraries)
         self.roblox = RobloxGateway(self.emit)
@@ -94,6 +93,13 @@ class Bridge:
 
     def emit(self, kind, text):
         self.events.put((kind, text))
+
+    def remember_public_url(self,url):
+        if self.persistent and self.public_url and self.public_url != url:
+            raise ValueError('Tailscale device URL changed; keeping the saved identity/URL. Explicit reconfiguration required.')
+        self.public_url=url
+        if self.store and self.store.get('public_url')!=url:
+            self.store.set('public_url',url)
 
     def tool_catalog(self, args):
         name = args.get("name")
@@ -236,9 +242,8 @@ class Bridge:
                     return False
                 auth = self.headers.get("Authorization", "")
                 token = auth[7:] if auth.lower().startswith("bearer ") else ""
-                if not token or not (hmac.compare_digest(token.encode(), bridge.token.encode()) or bridge.oauth.valid_token(token)):
-                    metadata_url = bridge.oauth.issuer + "/.well-known/oauth-protected-resource/mcp"
-                    self.respond(401, {"error": "Bearer token required"}, WWW_Authenticate=f'Bearer resource_metadata="{metadata_url}", scope="pc:full"')
+                if not token or not hmac.compare_digest(token.encode(), bridge.token.encode()):
+                    self.respond(401, {"error": "Bearer token required"}, WWW_Authenticate='Bearer realm="PC MCP Bridge"')
                     return False
                 origin = self.headers.get("Origin")
                 allowed = {urlsplit(url).scheme + '://' + urlsplit(url).netloc for url in (bridge.local_url, bridge.public_url) if url}
@@ -252,8 +257,6 @@ class Bridge:
                 return True
 
             def do_POST(self):
-                if bridge.oauth.route(self):
-                    return
                 if not self.authorized():
                     return
                 if self.headers.get_content_type() != "application/json":
@@ -280,8 +283,6 @@ class Bridge:
                     bridge.slots.release()
 
             def do_GET(self):
-                if bridge.oauth.route(self):
-                    return
                 if self.authorized():
                     if "text/event-stream" not in self.headers.get("Accept", ""):
                         self.respond(405, {"error": "Use HTTP POST or Accept: text/event-stream"}, Allow="POST, GET")
@@ -302,7 +303,7 @@ class Bridge:
                         self.wfile.write(b": connected\n\n")
                         self.wfile.flush()
                         while not bridge.stopped.is_set():
-                            if not (hmac.compare_digest(authorization.encode(), bridge.token.encode()) or bridge.oauth.valid_token(authorization)):
+                            if not hmac.compare_digest(authorization.encode(), bridge.token.encode()):
                                 break
                             try:
                                 subscriber.get(timeout=10)
@@ -321,23 +322,6 @@ class Bridge:
                 if self.authorized():
                     self.respond(405, {"error": "This server is stateless"}, Allow="POST")
 
-            def send_html(self, page, callback=None):
-                raw = page.encode("utf-8")
-                self.send_response(200)
-                self.send_header("Content-Type", "text/html; charset=utf-8")
-                self.send_header("Content-Length", str(len(raw)))
-                self.send_header("Cache-Control", "no-store")
-                self.send_header("X-Frame-Options", "DENY")
-                self.send_header("Referrer-Policy", "same-origin")
-                form_targets = "'self'"
-                if callback:
-                    parsed = urlsplit(callback)
-                    # Only the exact registered OAuth callback origin may follow the POST redirect.
-                    form_targets += " " + quote(f"{parsed.scheme}://{parsed.netloc}", safe=":/[]-.")
-                self.send_header("Content-Security-Policy", f"default-src 'none'; style-src 'unsafe-inline'; form-action {form_targets}; frame-ancestors 'none'; base-uri 'none'")
-                self.end_headers()
-                self.wfile.write(raw)
-
             def do_OPTIONS(self):
                 self.respond(204, None, Access_Control_Allow_Origin="*", Access_Control_Allow_Methods="GET, POST, OPTIONS",
                              Access_Control_Allow_Headers="Content-Type, Authorization, MCP-Protocol-Version, Accept")
@@ -351,7 +335,7 @@ class Bridge:
             self.local_url = f"http://127.0.0.1:{self.server.server_port}/mcp"
             threading.Thread(target=self.server.serve_forever, daemon=True).start()
         self.emit("local", self.local_url)
-        self.emit("log", "Local MCP server started. OAuth with PKCE and manual Bearer authentication are available.")
+        self.emit("log", "Local MCP server started. Stable Bearer-only authentication; no OAuth/login flow.")
 
     @staticmethod
     def tunnel_binary():
@@ -373,7 +357,7 @@ class Bridge:
                     public = tailscale_gateway.ensure(self.local_url.removesuffix('/mcp'))
                     if self.stopped.is_set():
                         return
-                    self.public_url = public
+                    self.remember_public_url(public)
                     self.ready.set()
                     self.emit('url', public)
                     self.emit('status', 'Online via Tailscale - full PC access enabled')
@@ -397,8 +381,6 @@ class Bridge:
         self.studio_ui.close()
         self.desktop_ui.close()
         self.stopped.set()  # Reject new calls immediately, including on existing connections.
-        if not self.persistent:
-            self.oauth.revoke_all()
         with self.lifecycle:
             proc, server = self.process, self.server
             self.server = None
@@ -445,7 +427,7 @@ class App:
         ttk.Button(form, text="Copy key", command=lambda: self.copy(self.token.get())).grid(row=3, column=1, padx=(10, 0), pady=(5, 8))
         ttk.Button(form, text="Show / hide key", command=self.toggle_token).grid(row=4, column=0, sticky="w")
         ttk.Button(form, text="Copy Codex config", command=self.copy_codex_config).grid(row=4, column=1, padx=(10, 0))
-        ttk.Label(frame, text="ChatGPT: choose OAuth, then paste this key on the bridge approval page.", wraplength=750).pack(anchor="w", pady=(14, 6))
+        ttk.Label(frame, text="Bearer only: configure Authorization: Bearer <key> in your MCP client. No OAuth login.", wraplength=750).pack(anchor="w", pady=(14, 6))
         ttk.Label(frame, text="Anyone with both values can control this PC with your Windows account's permissions.", foreground="#9b2c2c", wraplength=730).pack(anchor="w", pady=(0, 14))
         controls = ttk.Frame(frame)
         controls.pack(fill="x")
@@ -453,7 +435,7 @@ class App:
         self.start_button.pack(side="left")
         self.stop_button = ttk.Button(controls, text="Stop", command=self.stop, state="disabled")
         self.stop_button.pack(side="left", padx=8)
-        ttk.Button(controls, text="Revoke OAuth access", command=self.revoke_oauth).pack(side="left", padx=4)
+        ttk.Button(controls, text="Enable autostart", command=self.install_autostart).pack(side="left", padx=4)
         ttk.Button(controls, text="Add library folder", command=self.add_library).pack(side="left", padx=4)
         ttk.Button(controls, text="Rotate key", command=self.rotate_key).pack(side="left", padx=4)
         ttk.Label(controls, textvariable=self.status, font=("Segoe UI", 9, "bold")).pack(side="left", padx=8)
@@ -544,10 +526,19 @@ class App:
         self.copy(config)
         self.add_log("Codex configuration copied. Replace the existing mcp_bridge entry; do not paste the key into an environment-variable-name field.")
 
-    def revoke_oauth(self):
-        if self.bridge:
-            self.bridge.oauth.revoke_all()
-            self.add_log("All OAuth tokens and pending authorizations revoked. Reconnect from ChatGPT to authorize again.")
+    def install_autostart(self):
+        if not getattr(sys,'frozen',False):
+            self.add_log('Autostart requires the installed EXE, not a Python source session.')
+            return
+        def run():
+            try:
+                script=Path(sys._MEIPASS)/'setup_startup.ps1'
+                target=canonical_executable(sys.executable,self.bridge.workspace.data_dir) if self.bridge else None
+                result=subprocess.run(['powershell.exe','-NoProfile','-NonInteractive','-ExecutionPolicy','Bypass','-File',str(script),'-BridgeExe',str(target or sys.executable)],capture_output=True,text=True,timeout=60,creationflags=subprocess.CREATE_NO_WINDOW)
+                if self.bridge: self.bridge.emit('log','Autostart configured.' if result.returncode==0 else 'Autostart failed: '+result.stderr[:400])
+            except Exception as exc:
+                if self.bridge: self.bridge.emit('log','Autostart failed: '+str(exc))
+        threading.Thread(target=run,daemon=True).start()
 
     def rotate_key(self):
         if self.bridge:
@@ -555,9 +546,8 @@ class App:
             if self.bridge.store:
                 self.bridge.store.set('token', value)
             self.bridge.token = value
-            self.bridge.oauth.revoke_all()
             self.token.set(value)
-            self.add_log('Key rotated and OAuth grants revoked. Update/reconnect your MCP clients.')
+            self.add_log('Key explicitly rotated. Update the Bearer header in your MCP clients.')
 
     def add_log(self, text):
         self.log.configure(state="normal")
@@ -575,7 +565,7 @@ class App:
             self.updater = AutoUpdater(VERSION, self.bridge.workspace.data_dir, self.bridge.emit)
             self.updater.background()
         self.token.set(self.bridge.token)
-        self.url.set("Connecting Tailscale Funnel...")
+        self.url.set(self.bridge.public_url or "Connecting Tailscale Funnel...")
         self.start_button.configure(state="disabled")
         self.stop_button.configure(state="normal")
         self.bridge.start()
@@ -672,8 +662,6 @@ def self_test(report_path=None, tunnel=False):
         status, body = request(bridge.local_url, ping, bridge.token)
         assert status == 200 and body["id"] == 0 and body["result"] == {}
         passed.append("authenticated HTTP MCP ping, including request id 0")
-        from oauth_checks import run_oauth_checks
-        passed.extend(run_oauth_checks(bridge))
         init = {"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {"protocolVersion": "2025-06-18"}}
         assert request(bridge.local_url, init, bridge.token)[1]["result"]["protocolVersion"] == "2025-06-18"
         assert request(bridge.local_url, {"jsonrpc": "2.0", "method": "notifications/initialized"}, bridge.token)[0] == 202
@@ -684,8 +672,6 @@ def self_test(report_path=None, tunnel=False):
         passed.extend(run_workspace_checks(bridge, request))
         from library_checks import run_library_checks
         passed.extend(run_library_checks(bridge, request))
-        from persistence_checks import run_persistence_checks
-        passed.extend(run_persistence_checks(Bridge))
         from update_checks import run_update_checks
         passed.extend(run_update_checks())
         from fast_checks import run_fast_checks
@@ -698,6 +684,8 @@ def self_test(report_path=None, tunnel=False):
         passed.extend(run_visual_feedback_checks(bridge))
         from camera_restore_checks import run_camera_restore_checks
         passed.extend(run_camera_restore_checks(bridge))
+        from restart_checks import run_restart_checks
+        passed.extend(run_restart_checks(Bridge))
         from quality_checks import run_quality_checks
         passed.extend(run_quality_checks(bridge))
         from creative_checks import run_creative_checks
@@ -753,14 +741,6 @@ def self_test(report_path=None, tunnel=False):
                         status, body = request(bridge.public_url, ping, bridge.token)
                         if status == 200 and body["result"] == {}:
                             assert request(bridge.public_url, ping)[0] == 401
-                            passed.extend(run_oauth_checks(bridge))
-                            parsed = urlsplit(bridge.public_url)
-                            origin = parsed.scheme + '://' + parsed.netloc
-                            for route, field in [('/.well-known/oauth-authorization-server' + tailscale_gateway.PREFIX, 'issuer'),
-                                                 ('/.well-known/oauth-protected-resource' + tailscale_gateway.PREFIX + '/mcp', 'resource')]:
-                                with urllib.request.urlopen(origin + route, timeout=20) as discovered:
-                                    assert field in json.load(discovered)
-                            passed.append('canonical path-aware OAuth metadata discovery works through Tailscale')
                             passed.append("public Tailscale Funnel: authenticated ping succeeds, anonymous request rejected")
                             break
                     except (OSError, ValueError):
@@ -805,6 +785,11 @@ if __name__ == "__main__":
         ctypes.windll.shcore.SetProcessDpiAwareness(1)
     except Exception:
         pass
+    if getattr(sys,'frozen',False):
+        target=canonical_executable(sys.executable,Path(os.environ['LOCALAPPDATA'])/'PC-MCP-Bridge')
+        if target:
+            subprocess.Popen([str(target)],cwd=str(target.parent),creationflags=subprocess.CREATE_NO_WINDOW)
+            raise SystemExit(0)
     kernel = ctypes.WinDLL('kernel32', use_last_error=True)
     kernel.CreateMutexW.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_wchar_p]
     kernel.CreateMutexW.restype = ctypes.c_void_p

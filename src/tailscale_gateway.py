@@ -33,9 +33,7 @@ def plan(config, dns, target):
     if tcp and not tcp.get('HTTPS'):
         raise ValueError('Tailscale port 443 has an unrelated non-HTTPS service; not changing it.')
     handlers = config.get('Web', {}).get(authority, {}).get('Handlers', {})
-    routes = {PREFIX: target,
-              '/.well-known/oauth-authorization-server' + PREFIX: target + '/.well-known/oauth-authorization-server',
-              '/.well-known/oauth-protected-resource' + PREFIX + '/mcp': target + '/.well-known/oauth-protected-resource/mcp'}
+    routes = {PREFIX: target}
     changes = []
     for mount, proxy in routes.items():
         current = handlers.get(mount) or handlers.get(mount + '/')
@@ -54,6 +52,14 @@ def ensure(target):
     if not re.fullmatch(r'[a-zA-Z0-9.-]+\.ts\.net', dns):
         raise ValueError('Tailscale did not return a valid ts.net name')
     config = json.loads(cli('funnel', 'status', '--json') or '{}')
+    # Retire only this bridge's old OAuth discovery mounts; never touch other apps.
+    handlers=config.get('Web',{}).get(dns+':443',{}).get('Handlers',{})
+    for mount,proxy in {
+        '/.well-known/oauth-authorization-server'+PREFIX:target+'/.well-known/oauth-authorization-server',
+        '/.well-known/oauth-protected-resource'+PREFIX+'/mcp':target+'/.well-known/oauth-protected-resource/mcp',
+    }.items():
+        if handlers.get(mount)=={'Proxy':proxy}:
+            cli('funnel','--bg','--yes','--https=443','--set-path='+mount,'off')
     changes = plan(config, dns, target)
     for mount, proxy in changes:
         cli('funnel', '--bg', '--yes', '--https=443', '--set-path=' + mount, proxy)

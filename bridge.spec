@@ -10,6 +10,7 @@ a = Analysis([str(root / 'src/bridge_server.py')], pathex=[str(root / 'src')],
         (str(root / 'src/starter_skills'), 'starter_skills'),
         (str(root / 'src/reference_libraries'), 'reference_libraries'),
         (str(root / 'src/apply_update.ps1'), '.'),
+        (str(root / 'src/setup_startup.ps1'), '.'),
         (str(root / 'node-LICENSE'), '.'), (str(root / 'THIRD-PARTY-NOTICES.txt'), '.')],
     hiddenimports=[], hookspath=[], hooksconfig={}, runtime_hooks=[], excludes=[], noarchive=False)
 pyz = PYZ(a.pure)

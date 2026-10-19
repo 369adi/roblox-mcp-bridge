@@ -1,4 +1,10 @@
-# PC / Roblox MCP Bridge 5.8.2
+# PC / Roblox MCP Bridge 5.8.3
+
+## Stable Bearer-only connection and Windows startup
+
+Authentication is now exclusively `Authorization: Bearer <existing key>`. No OAuth registration, consent page, token endpoint or OAuth-token acceptance. The unchanged master key and saved public URL survive restarts; network failures never rotate them. Clients must support a manual Authorization header; OAuth-only clients cannot connect to a Bearer-only server. Old OAuth authorizations no longer grant access.
+
+Use **Enable autostart** in the installed EXE or run `src/setup_startup.ps1 -BridgeExe "C:\absolute\install\PC-MCP-Bridge.exe"` once. This creates a limited, interactive current-user logon task with crash restart, keeps Tailscale unattended, and backs up only the recognized legacy 3747 launcher. It does not reboot the PC, elevate the bridge, start before Windows sign-in, or replace unrelated Funnel services. Current updated download copies redirect to the explicitly configured canonical installation. Old copies without this redirect should not be used.
 
 For visual work specify `target="Workspace.Model"` in run_builder/brickwire_prepare or `capture_target` in roblox_call_tool. The renderer temporarily frames that model, captures it, and the bridge verifies/restores the original Studio camera CFrame, Focus, FOV and type in a finally-cleanup, including renderer errors/timeouts. No avatar teleport or Play. Without a target, the current view is captured (no guessed object). If Studio disconnects or recovery fails, report that camera restoration could not be verified; never pretend recovery succeeded or replay the builder.
 
@@ -25,7 +31,7 @@ Brickwire references, optional REA tooling and Tailscale Funnel connectivity.
 
 This is **full-PC access with your Windows user's permissions**, not a sandbox.
 Only connect trusted clients. Keep keys private and use the visible Stop/revoke controls.
-Identity/OAuth data is DPAPI-encrypted per Windows user; local notes are ordinary SQLite.
+The Bearer identity is DPAPI-encrypted per Windows user; local notes are ordinary SQLite. Retired OAuth data, if present in an old identity file, is ignored and cannot grant access.
 Neither belongs in this repository or a release. Tailscale is installed/configured separately.
 No auto-Play. Roblox renderer/window tools retain their narrower scope; the separately consented desktop tools can capture/control unrelated applications and all monitors for general PC tasks.
 
